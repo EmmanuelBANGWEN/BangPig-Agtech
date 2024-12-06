@@ -1,0 +1,24 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div>
+<h5>Numéros d'identifications des Animaux</h5>
+{% for i in animals %}
+    <a href="{% url 'history' i.animal_id %} ">{{i.animal_id}}</a>
+    <form method='GET' action="{% url 'delete' i.animal_id %}">
+    {% csrf_token %}
+            <button class="btn btn-success btn-lg" type="submit">Delete</button>
+    </form>
+{% endfor %}
+</div>
+<br>
+<form>
+            <button class="btn btn-success btn-lg" type="submit" formaction="/dataentry">Retour</button>
+    </form>
+
+{% endblock content %}   

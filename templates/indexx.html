@@ -1,0 +1,162 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+
+{% block content %}
+        <div class="container">
+          <div class="page-inner">
+            <div
+              class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+            >
+              <div>
+                <h3 class="fw-bold mb-3">Dashboard</h3>
+                <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-primary bubble-shadow-small"
+                        >
+                          <i class="fas fa-users"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Total</p>
+                          <h4 class="card-title">{{ total_animals }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-info bubble-shadow-small"
+                        >
+                          <i class="fas fa-user-check"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Femelles</p>
+                          <h4 class="card-title">{{ total_females }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-success bubble-shadow-small"
+                        >
+                          <i class="fas fa-luggage-cart"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Male</p>
+                          <h4 class="card-title">{{ total_males }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3">
+                <div class="card card-stats card-round">
+                  <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-icon">
+                        <div
+                          class="icon-big text-center icon-secondary bubble-shadow-small"
+                        >
+                          <i class="far fa-check-circle"></i>
+                        </div>
+                      </div>
+                      <div class="col col-stats ms-3 ms-sm-0">
+                        <div class="numbers">
+                          <p class="card-category">Porcelets</p>
+                          <h4 class="card-title">{{ total_piglets }}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                <!-- Statistiques des utilisateurs -->
+                <div class="col-md-8">
+                  <div class="card card-round">
+                    <div class="card-header">
+                      <div class="card-head-row">
+                        <div class="card-title">Catégories de Porcs</div>
+                        <div class="card-tools"></div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <!-- Remplacement du contenu de chart-container -->
+                      <div class="chart-container" style="min-height: 375px">
+                        <ul class="list-group mt-3">
+                          <li class="list-group-item">
+                            <strong>Charcutiers :</strong> 120 porcs
+                          </li>
+                          <li class="list-group-item">
+                            <strong>Reproducteurs :</strong> 45 porcs
+                          </li>
+                        </ul>
+                      </div>
+                      <div id="myChartLegend"></div>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Ventes quotidiennes -->
+                <div class="col-md-4">
+                  <div class="card card-primary card-round">
+                    <div class="card-header">
+                      <div class="card-head-row">
+                        <div class="card-title">Liste truie gestante</div>
+                        <div class="card-tools"></div>
+                      </div>
+                      
+                      <ul class="list-group">
+                        <li class="list-group-item">
+                          <strong>Truie #1</strong> - Gestation : 30 jours
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Truie #2</strong> - Gestation : 45 jours
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Truie #3</strong> - Gestation : 20 jours
+                        </li>
+                        <li class="list-group-item">
+                          <strong>Truie #4</strong> - Gestation : 60 jours
+                        </li>
+                      </ul>
+                      <div class="pull-in">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            
+{% endblock content %}

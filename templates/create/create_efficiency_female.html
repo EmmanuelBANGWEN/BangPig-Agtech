@@ -1,0 +1,82 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form method="POST">
+   {% csrf_token %}
+
+  <!-- <div class="">
+                    <input type="text" name="gip" value="{{animal_id}}" class="textinput form-control" id="id_gip" >
+ </div> -->
+ {{ form.gip.as_hidden}}
+  <div class="form-row">
+      <div class="form-group col-md-12">
+        {{ form.dow|as_crispy_field }}
+      </div>
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-12">
+        {{ form.litter_size_weaning|as_crispy_field }}
+      </div>
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+      {{ form.weaning_age.as_hidden}}
+        </div>
+  </div>
+  <div class="form-row">
+
+        <div class="form-group col-md-12">
+          {{ form.weaning_weight|as_crispy_field }}
+          
+        </div>
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.dos|as_crispy_field }}
+          
+      </div> 
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.dosm|as_crispy_field }}
+          
+      </div> 
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.sexual_maturity_weight|as_crispy_field }}
+          
+      </div>
+</div>
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weight_six|as_crispy_field }}
+         
+      </div>
+</div>
+
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weight_eight|as_crispy_field }}
+         
+      </div>
+</div>
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.conform_at_eight|as_crispy_field }}
+         
+      </div>
+</div>
+
+
+  <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
+</form>
+
+{% endblock content %}

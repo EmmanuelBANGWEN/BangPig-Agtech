@@ -1,0 +1,99 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <h5 class="text-center mb-4">Numéros d'identifications des Animaux</h5>
+    <div class="list-group">
+        {% for i in animals %}
+            <!-- Lien vers l'historique de l'animal, stylisé comme un bouton -->
+            <a href="{% url 'history' i.animal_id %}" class="list-group-item list-group-item-action animal-link my-2">
+                Animal ID: {{ i.animal_id }}
+            </a>
+            <!-- Formulaire de mise à jour pour chaque animal -->
+            <form method="POST" action="{% url 'update' %}" class="d-inline-block my-2 update-form">
+                {% csrf_token %}
+                <input type="hidden" name="animal_id" id="animal_id" value="{{ i.animal_id }}">
+                <button class="btn btn-animated btn-success btn-sm update-btn" type="submit">Modifier</button>
+            </form>
+        {% endfor %}
+    </div>
+
+    <br>
+    <!-- Bouton retour -->
+    <div class="text-center mt-4">
+        <form>
+            <button class="btn btn-animated btn-secondary btn-lg" type="submit" formaction="/report">Retour</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Style général */
+    .container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    /* Styles pour les liens d'animaux */
+    .animal-link {
+        font-weight: bold;
+        color: #388e3c;
+        background-color: #f8f9fa;
+        padding: 10px 15px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        text-align: center;
+    }
+    .animal-link:hover {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+
+    /* Effet de hover et clic pour les boutons */
+    .btn-animated {
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    .btn-animated:hover {
+        background-color: #43a047;
+        transform: translateY(-2px); /* Effet de levée */
+    }
+
+    .btn-animated:active {
+        transform: scale(0.98); /* Réduction au clic */
+    }
+
+    /* Effet d'onde sur le bouton au clic */
+    .btn-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        transform: scale(1);
+        opacity: 0;
+        transition: width 0.5s, height 0.5s, opacity 0.5s;
+    }
+
+    .btn-animated:active::after {
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+</style>
+
+
+
+{% endblock content %}

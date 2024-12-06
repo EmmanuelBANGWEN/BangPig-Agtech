@@ -1,0 +1,144 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<div class="container py-4">
+    <!-- Formulaire de création de porc -->
+    <form action="/create/general" method="GET">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-success-custom" type="submit">Ajouter Un Porc</button>
+        </div>
+    </form>
+
+    <!-- Formulaire de suppression de porcs -->
+    <form action="/deletepigs" method="GET">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-danger-custom" type="submit">Supprimer Un Porc</button>
+        </div>
+    </form>
+
+    <!-- Formulaire de mise à jour de porc -->
+    <form action="/update/" method="POST">
+        {% csrf_token %}
+        <div class="row justify-content-center py-2">
+            <input type="text" name="animal_id" id="animal_id" class="form-control form-control-lg" placeholder="Entrer L'Indentifiant du Porc">
+            <button class="btn btn-animated btn-lg btn-warning-custom" type="submit">Modifier Ce Porc</button>
+        </div>
+    </form>
+
+    <!-- Messages de retour -->
+    <div class="feedback-messages mt-4 text-center">
+        {% for message in messages %}
+            <p class="feedback-message">{{ message }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- Bouton Retour Accueil -->
+    <form>
+        <div class="text-center mt-4">
+            <button class="btn btn-animated btn-lg btn-secondary-custom" type="submit" formaction="/">Retour</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Styles généraux */
+    .container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+    /* Boutons stylisés */
+    .btn-animated {
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .btn-success-custom {
+        background-color: #43a047;
+    }
+
+    .btn-danger-custom {
+        background-color: #d32f2f;
+    }
+
+    .btn-warning-custom {
+        background-color: #f9a825;
+    }
+
+    .btn-secondary-custom {
+        background-color: #455a64;
+    }
+
+    .btn-animated:hover {
+        transform: translateY(-2px); /* Effet de levée */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-animated:active {
+        transform: scale(0.98); /* Effet de clic */
+    }
+
+    /* Effet d'onde au clic */
+    .btn-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        transform: scale(1);
+        opacity: 0;
+        transition: width 0.5s, height 0.5s, opacity 0.5s;
+    }
+
+    .btn-animated:active::after {
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Champ de texte stylisé */
+    #animal_id {
+        max-width: 300px;
+        text-align: center;
+        margin-right: 10px;
+    }
+
+    /* Styles pour les messages de retour */
+    .feedback-message {
+        font-size: 1.1em;
+        color: #388e3c;
+        opacity: 0;
+        animation: fadeIn 0.8s ease forwards;
+    }
+
+    /* Animation d'apparition pour les messages */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+
+
+{% endblock content %}

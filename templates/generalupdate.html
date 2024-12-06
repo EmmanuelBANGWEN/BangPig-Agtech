@@ -1,0 +1,33 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}}
+
+<div class="container mt-4">
+    <h3 class="mb-4 text-center">Update Animal Information</h3>
+
+    <!-- Formulaire de mise à jour -->
+    <form autocomplete="off" method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %}
+
+        <!-- Django form rendu avec crispy -->
+        <div class="card p-4 shadow">
+            {{ form|crispy }}
+        </div>
+
+        <!-- Boutons de navigation -->
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-success btn-lg" type="submit">Mettre à jour</button>
+            <button class="btn btn-secondary btn-lg" type="button" onclick="history.back()">Annuler</button>
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

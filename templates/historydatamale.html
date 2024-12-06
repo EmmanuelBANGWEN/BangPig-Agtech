@@ -1,0 +1,326 @@
+{% extends 'basex.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+{% comment %} general {% endcomment %}
+
+<div class="row">
+Numéro d'identification  : {{gen.animal_id}}
+</div>
+<div class="row">
+Date de naissance  : {{gen.dob}}
+</div>
+<div class="row">
+Sexe :  {{gen.gender}}
+</div>
+<div class="row">
+Race : {{gen.breed}}
+</div>
+<div class="row">
+Numéro de la mère (DAM) :  {{gen.dam_no}}
+</div>
+<div class="row">
+Numéro du père (SIRE) :  {{gen.sire_no}}
+</div>
+<div class="row">
+Great DAM : {{gen.grand_dam}}
+</div>
+<div class="row">
+Grand SIRE : {{gen.grand_sire}}
+</div>
+<div class="row">
+Taille de la portée à la naissance  : {{gen.colitter_size_of_birth}}
+</div>
+<div class="row">
+Couleurs et marques :  {{gen.color_and_marking}}
+</div>
+<div class="row">
+Anomalies :  {{gen.abnormalities}}
+</div>
+<div class="row">
+
+{% comment %} efficiency {% endcomment %}
+Date de sevrage : {{ efficiency.dow|default_if_none:"N/A"}}
+</div>
+<div class="row">
+Taille de la portée au sevrage : {{litter_size_weaning}} 
+</div>
+<div class="row">
+Âge au sevrage (en jours) : {{ efficiency.weaning_age }}
+</div>
+<div class="row">
+Poids au sevrage : {{ efficiency.weaning_weight }}
+</div>
+<div class="row">
+Date de séparation de la femelle : {{ efficiency.dos }}
+</div>
+<div class="row">
+Date of Castration : {{ efficiency.doc }}
+</div>
+<div class="row">
+Date de maturité sexuelle : {{ efficiency.dosm }}
+</div>
+<div class="row">
+Poids à la maturité sexuelle : {{ efficiency.sexual_maturity_weight }}
+</div>
+<div class="row">
+Poids à six mois : {{ efficiency.weight_six }}
+</div>
+<div class="row">
+Poids à huit mois : {{ efficiency.weight_eight }}
+</div>
+<div class="row">
+Conformation à huit mois : {{ efficiency.conform_at_eight }}
+</div>
+<div class="row">
+
+
+{% comment %} qualification {% endcomment %}
+{% if qualification %}
+    <div class="row">
+        Physical Fitness : {{ qualification.physical_fitness }}
+    </div>
+    <div class="row">
+        Date Of Onset Of Training : {{ qualification.date_of_training }}
+    </div>
+    <div class="row">
+        Period Of Training : {{ qualification.period_of_training }}
+    </div>
+    <div class="row">
+        Training Score : {{ qualification.training_score }}
+    </div>
+    <div class="row">
+        Evaluation Based On Seminal Characteristics : {{ qualification.seminal_characteristics }}
+    </div>
+    <div class="row">
+        Suitability For Insemination : {{ qualification.suitability }}
+    </div>
+{% else %}
+    <div class="row">
+        No qualification data available.
+    </div>
+{% endif %}
+
+
+{% comment %} service {% endcomment %}
+
+<div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+
+
+          <thead id="theadthid">
+            <tr >
+            <th scope="col"> Numéro d'identification </th>
+            <th scope="col"> SOW Number</th>
+            <th scope="col"> Date de service </th>
+            <th scope="col"> Nature du Service</th>
+            <th scope="col"> Date Of Farrowing</th>
+            <th scope="col"> Interfarrowing Interval</th>
+            <th scope="col"> Parity</th>
+            <th scope="col"> Number of male born</th>
+            <th scope="col"> Number of female born</th>
+            <th scope="col"> Total Number</th>
+            <th scope="col"> Litter Weight At Birth</th>
+            <th scope="col"> Number Of Weaned Male</th>
+            <th scope="col"> Number Of Weaned Female</th>
+            <th scope="col"> Number Of Total Weaned</th>
+            <th scope="col"> Weaning Weight</th>
+            <th scope="col"> Still Birth Or Abnormality</th>   
+              </tr>
+          </thead>
+
+          <tbody id="tbodydata">
+
+
+{% for service in services %}
+          <tr>
+            <th scope="row">{{ forloop.counter}}</th>
+            <td>{{ service.gip }}</td>
+            <td>{{ service.sow_no }}</td>
+            <td>{{ service.dos }}</td>
+            <td>{{ service.dof }}</td>
+            <td>{{ service.parity }}</td>
+            <td>{{ service.born_male }}</td>
+            <td>{{ service.born_female }}</td>
+            <td>{{ service.born_total }}</td>
+            <td>{{ service.litter_weight_birth }}</td>
+            <td>{{ service.weaned_male }}</td>
+            <td>{{ service.weaned_female }}</td>
+            <td>{{ service.total_weaned }}</td>
+            <td>{{ service.weaning_weight }}</td>
+            <td>{{ service.still_birth_abnormality }}</td>
+          </tr>
+{% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+
+{% comment %} vaccination {% endcomment %}
+
+<div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+
+
+          <thead id="theadthid">
+            <tr >
+                  <th scope="col">Numéro de série,</th>
+                  <th scope="col">Disease</th>
+                  <th scope="col">Make</th>
+                  <th scope="col">First Dose</th>
+                  <th scope="col">Booster Dose</th>
+                  <th scope="col">Repeat</th>
+                  
+              </tr>
+          </thead>
+
+          <tbody id="tbodydata">
+
+
+{% for vaccine in vaccinations %}
+          <tr>
+            <th scope="row">{{ forloop.counter}}</th>
+            <td>{{ vaccine.disease }}</td>
+            <td>{{ vaccine.make }}</td>
+            <td>{{ vaccine.first_dose }}</td>
+            <td>{{ vaccine.booster_dose }}</td>
+            <td>{{ vaccine.repeat }}</td>
+
+            
+          </tr>
+{% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+
+{% comment %} vetexam {% endcomment %}
+
+<div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+
+
+          <thead id="theadthid">
+            <tr >
+                  <th scope="col">Numéro de série,</th>
+                  <th scope="col">Reason/Symptom</th>
+                  <th scope="col">Date of Treatment</th>
+                  <th scope="col">Medication</th>
+                  <th scope="col">Remarks</th>
+                  
+              </tr>
+          </thead>
+
+          <tbody id="tbodydata">
+
+
+{% for vet_exam in vetexams %}
+          <tr>
+            <th scope="row">{{ forloop.counter}}</th>
+            <td>{{ vet_exam.reason }}</td>
+            <td>{{ vet_exam.date_of_treatment }}</td>
+            <td>{{ vet_exam.medication }}</td>
+            <td>{{ vet_exam.remarks }}</td>
+
+            
+          </tr>
+{% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+<div class="row">
+Cause Of Death: {{ death.cause_death }}
+</div>
+<div class="row">
+Date Of Death : {{ death.date_death }}
+</div>
+<div class="row">
+Postmortem Findings : {{ death.postmortem_findings }}
+</div>
+        
+
+
+<div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+
+
+          <thead id="theadthid">
+            <tr >
+                  <th scope="col">Numéro de série,</th>
+                  <th scope="col">Treatment</th>
+                  <th scope="col">Make</th>
+                  <th scope="col">Start</th>
+                  <th scope="col">End</th>
+                  <th scope="col">Remarks</th>
+                  
+              </tr>
+          </thead>
+
+          <tbody id="tbodydata">
+
+
+{% for nutrition in nutritions %}
+          <tr>
+            <th scope="row">{{ forloop.counter}}</th>
+            <td>{{ nutrition.treatment }}</td>
+            <td>{{ nutrition.make }}</td>
+            <td>{{ nutrition.start_date }}</td>
+            <td>{{ nutrition.end_date }}</td>
+            <td>{{ nutrition.remarks }}</td>
+
+            
+          </tr>
+{% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+<div class="row">
+Reason For Sale/Transfer : {{ disposal.reason }}
+</div>
+<div class="row">
+Date Of Sale/Transfer : {{ disposal.sale_date }}
+</div>
+<div class="row">
+Weight At Sale/Transfer : {{ disposal.weight_sale }}
+</div>
+<div class="row">
+Revenue Generated : {{ disposal.revenue }}
+</div>
+<div class="row">
+        
+
+Book Value : {{ economic.book_value }}
+</div>
+<div class="row">
+Amount Realized : {{ economic.amount_realized }}
+</div>
+
+<form>
+            <button class="btn btn-success btn-lg" type="submit" formaction="/report">Retour</button>
+    </form>
+
+
+{% endblock content %}   
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

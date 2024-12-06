@@ -1,0 +1,105 @@
+{% extends 'basex.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block basecontent %}
+{{ form.media }}
+
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg card-animated">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0 text-center">{{tablename}}</h3>
+                </div>
+                <div class="card-body">
+                    {% block cardcontent %}
+                    {% endblock cardcontent %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Style général */
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: #f8f9fa;
+        color: #333;
+    }
+
+    /* Carte stylisée */
+    .card {
+        border-radius: 10px;
+        border: none;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Ombre et effet de levée au survol */
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        background-color: #296629; /* Couleur de fond bleu pour le header */
+        color: #fff;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    /* Animation d'apparition pour le contenu de la carte */
+    .card-animated {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    /* Keyframes pour l'animation d'apparition */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Bouton stylisé */
+    .btn-success-custom {
+        background: linear-gradient(135deg, #6c5ce7, #00b894);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-success-custom:hover {
+        background: linear-gradient(135deg, #00b894, #6c5ce7);
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-success-custom:active {
+        transform: scale(0.98);
+        box-shadow: none;
+    }
+</style>
+
+<script>
+    // Animation pour faire apparaître la carte avec un effet de décalage
+    document.addEventListener("DOMContentLoaded", function() {
+        const card = document.querySelector('.card-animated');
+        if (card) {
+            card.style.opacity = 1;
+            card.style.transform = 'translateY(0)';
+        }
+    });
+</script>
+
+{% endblock basecontent %}

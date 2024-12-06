@@ -1,0 +1,382 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>BangPig - Agtech Innovation</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="{% static 'assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{% static ' assets/css/fonts.min.css' %}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Sidebar -->
+      <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+          <!-- Logo Header -->
+          <div class="logo-header" data-background-color="dark">
+            <a href="{% url 'index' %}" class="logo">
+              <img
+                src="{% static 'assets/img/kaiadmin/logo_light.svg' %}"
+                alt="navbar brand"
+                class="navbar-brand"
+                height="20"
+              />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          <!-- End Logo Header -->
+        </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item active">
+                <a
+                  data-bs-toggle="collapse"
+                  href="#dashboard"
+                  class="collapsed"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-home"></i>
+                  <p>trebmal</p>
+                </a>
+                
+              </li>
+              <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+                <h4 class="text-section">Components</h4>
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'create_general' %}">
+                  <i class="fas fa-layer-group"></i>
+                  <p>ajouter</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'deletepigs' %}">
+                    <i class="fas fa-th-list"></i>
+                  <p>supprimer</p>
+                  <span class="" ></span>
+                </a>
+                
+              </li>
+              <li class="nav-item">
+                <input type="text" name="animal_id" id="animal_id" class="form-control form-control-sm" placeholder="Entrer L'Indentifiant du Porc à modifier"
+                style="width: 290px; max-width: 97%;"
+                >
+
+                <a  href="{% url 'update' %}">
+                    <i class="fas fa-pen-square"></i>
+                  <p>modifier</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'allpigs' %}">
+                    <i class="fas fa-table"></i>
+                  <p>mes porcs</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'report' %}">
+                    <i class="fas fa-map-marker-alt"></i>
+                  <p>plus</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
+              
+              <li class="nav-item">
+                <a  href="{% url 'index' %}">
+                    <i class="fas fa-desktop"></i>
+                  <p>account</p>
+                  <span class="badge badge-success">Un insigne du style certifier</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'index' %}">
+                    <i class="fas fa-file"></i>
+                  <p>help</p>
+                  <span class="badge badge-secondary">aussi un insigne du style aide</span>
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- End Sidebar -->
+
+      <div class="main-panel">
+        <div class="main-header">
+          <div class="main-header-logo">
+            <!-- Logo Header -->
+            <div class="logo-header" data-background-color="dark">
+              <a href="index.html" class="logo">
+                <img
+                  src="{% static 'assets/img/kaiadmin/logo_light.svg' %}"
+                  alt="navbar brand"
+                  class="navbar-brand"
+                  height="20"
+                />
+              </a>
+              <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                  <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                  <i class="gg-menu-left"></i>
+                </button>
+              </div>
+              <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+              </button>
+            </div>
+            <!-- End Logo Header -->
+          </div>
+          <!-- Navbar Header -->
+          <nav
+            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+          >
+            <div class="container-fluid">
+              <nav
+                class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
+              >
+                
+              </nav>
+
+
+                  
+                    
+                    
+                  </a>
+                  <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        {% if request.user.is_authenticated %}
+                        <span class="profile-username">
+
+                        <li class="nav-item">
+                            <span class="op-7">Hi,</span> 
+                            <span class="fw-bold"></span>{{ request.user }}</span>
+                        </li>
+                      </span>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logoutuser' %}">Déconnexion</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'loginuser' %}">Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registeruser' %}">Inscription</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                  
+              </ul>
+            </div>
+          </nav>
+          <!-- End Navbar -->
+        </div>
+
+
+
+
+
+
+
+
+<style>
+  
+  .navbar {
+  height: 50px; /* Réduit la hauteur de la barre */
+  padding: 5px 15px; /* Réduit les espacements internes */
+}
+
+.navbar-header-left,
+.nav-search {
+  font-size: 0.85rem; /* Réduit la taille des polices */
+}
+
+.navbar-brand {
+  height: 20px; /* Réduit la taille du logo */
+}
+
+.navbar .profile-username {
+  font-size: 1.5rem; /* Réduit la taille des textes de profil */
+}
+
+.btn.btn-toggle {
+  padding: 3px 8px; /* Réduit la taille des boutons */
+}
+
+
+  </style>
+
+
+
+
+        {% block content %}
+
+        {% endblock content %}
+
+
+        <footer class="footer">
+            <div class="container-fluid d-flex justify-content-between">
+              <nav class="pull-left">
+                <ul class="nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/company/bangri-agtech/">
+                      BangPig
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"> Help </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#"> Licenses </a>
+                  </li>
+                </ul>
+              </nav>
+              <div class="copyright">
+                2024, made with <i class="fa fa-heart heart text-danger"></i> by
+                <a href="www.linkedin.com/in/emmanuel-bangwen-75091117b">Emmanuel Bangwen</a>
+              </div>
+              <div>
+                Distributed by
+                <a target="_blank" href="https://www.linkedin.com/company/bangri-agtech/">Bangri-Agtech</a>.
+              </div>
+            </div>
+          </footer>
+        </div>
+  
+        
+         
+      </div>
+      <!--   Core JS Files   -->
+      <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+      <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+      <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+  
+      <!-- jQuery Scrollbar -->
+      <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+  
+      <!-- Chart JS -->
+      <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+  
+      <!-- jQuery Sparkline -->
+      <script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+  
+      <!-- Chart Circle -->
+      <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+  
+      <!-- Datatables -->
+      <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+  
+      <!-- Bootstrap Notify -->
+      <script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+  
+      <!-- jQuery Vector Maps -->
+      <script src="{% static 'assets/js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+      <script src="{% static 'assets/js/plugin/jsvectormap/world.js' %}"></script>
+  
+      <!-- Sweet Alert -->
+      <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+  
+      <!-- Kaiadmin JS -->
+      <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+  
+      <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+      <script src="{% static 'assets/js/setting-demo.js' %}"></script>
+      <script src="{% static 'assets/js/demo.js' %}"></script>
+      <script>
+        $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+          type: "line",
+          height: "70",
+          width: "100%",
+          lineWidth: "2",
+          lineColor: "#177dff",
+          fillColor: "rgba(23, 125, 255, 0.14)",
+        });
+  
+        $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+          type: "line",
+          height: "70",
+          width: "100%",
+          lineWidth: "2",
+          lineColor: "#f3545d",
+          fillColor: "rgba(243, 84, 93, .14)",
+        });
+  
+        $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+          type: "line",
+          height: "70",
+          width: "100%",
+          lineWidth: "2",
+          lineColor: "#ffa534",
+          fillColor: "rgba(255, 165, 52, .14)",
+        });
+      </script>
+    </body>
+  </html>
+  

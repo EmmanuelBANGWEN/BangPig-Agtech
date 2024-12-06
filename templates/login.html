@@ -6,7 +6,14 @@
 
 
 {% block content %}
+<div class="container py-5">
 
+    <div class="row">
+<div class="container py-4">
+
+<div class="container py-5">
+
+  <div class="row">
 <form autocomplete="off" method="POST">
   {% csrf_token %}
   {{form|crispy}}
@@ -16,7 +23,10 @@
 	{% endfor %}
 </form>
 <p><a href="{% url 'registeruser' %}">create new user</a></p>
+</div>
+</div>
 
-
+</div>
+</div>
 
 {% endblock content %}

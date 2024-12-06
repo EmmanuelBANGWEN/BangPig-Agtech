@@ -192,15 +192,15 @@ Circles.create({
 //Notify
 $.notify({
 	icon: 'icon-bell',
-	title: 'trrr',
-	message: 'Premium Bootstrap 5 Admin Dashboard',
+	title: 'BangPig',
+	message: 'Your Trusted Digital Farm Partner With BangPig',
 },{
 	type: 'secondary',
 	placement: {
 		from: "bottom",
 		align: "right"
 	},
-	time: 1000,
+	time: 10000,
 });
 
 // Jsvectormap

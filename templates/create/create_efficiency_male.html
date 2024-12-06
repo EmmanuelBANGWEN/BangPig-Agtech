@@ -4,7 +4,9 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
+<div class="container py-5">
 
+    <div class="row">
 <form method="POST">
    {% csrf_token %}
 
@@ -83,5 +85,6 @@
 
   <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
 </form>
-
+</div>
+</div>
 {% endblock content %}

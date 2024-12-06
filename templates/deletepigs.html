@@ -6,7 +6,10 @@
 
 
 {% block content %}
-<div>
+<div class="container py-5">
+
+    <div class="row">
+<div class="container py-4">
 <h5>Numéros d'identifications des Animaux</h5>
 {% for i in animals %}
     <a href="{% url 'history' i.animal_id %} ">{{i.animal_id}}</a>
@@ -20,5 +23,9 @@
 <form>
             <button class="btn btn-success btn-lg" type="submit" formaction="/dataentry">Retour</button>
     </form>
+
+</div>
+</div>
+</div>
 
 {% endblock content %}   

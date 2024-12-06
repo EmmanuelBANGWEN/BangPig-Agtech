@@ -632,14 +632,15 @@ def update_economics(request, animal_id):
     if request.method=='POST':
         form=economics_update_form(request.POST, instance=animal)
         if form.is_valid():
+
             form.save()
             return redirect('successupdate')
-    if request.method == 'POST':
-        form = economics_update_form(request.POST)
-        if not form.is_valid():
-            print("Form Errors:", form.errors)
-        else:
-            print("Form Data:", form.cleaned_data)
+    # if request.method == 'POST':
+    #     form = economics_update_form(request.POST)
+    #     if not form.is_valid():
+    #         print("Form Errors:", form.errors)
+    #     else:
+    #         print("Form Data:", form.cleaned_data)
 
     context={
         'form':form,

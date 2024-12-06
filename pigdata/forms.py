@@ -472,8 +472,9 @@ class nutrition_update_form(forms.ModelForm):
 class economics_update_form(forms.ModelForm):
     class Meta:
         model=economics
-        # fields='__all__'
-        exclude = ['user']       
+        fields='__all__'
+               
+   
 
         labels={
             'gip': 'Identification Number',
@@ -481,9 +482,9 @@ class economics_update_form(forms.ModelForm):
             'amount_realized': 'Amount Realized',
         }
         widgets={
-            #'gip': forms.TextInput(attrs={'disabled':True}),
-            #'book_value': forms.TextInput(attrs={'disabled':True}),
-            #'amount_realized': forms.TextInput(attrs={'disabled':True}),
+            # 'gip': forms.TextInput(attrs={'disabled':True}),
+            # 'book_value': forms.TextInput(attrs={'disabled':True}),
+            # 'amount_realized': forms.TextInput(attrs={'disabled':True}),
         }
 
 class vaccination_update_form(forms.ModelForm):

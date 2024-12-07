@@ -582,22 +582,31 @@ def update_general(request, animal_id):
     return render(request,"generalupdate.html",context)
 
 
+
 @login_required(login_url='loginuser')
 def update_disposal(request, animal_id):
-    obj=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    animal, create=disposal_culling.objects.get_or_create(gip=obj)
-    form=disposal_update_form(instance=animal)
-    if request.method=='POST':
-        form=disposal_update_form(request.POST, instance=animal)
-        if form.is_valid():
-            form.save()
-            return redirect('successupdate')
-    context={
-        'form':form,
-        'tablename': 'Disposition/Abattage'
-    }
+    try:
+        obj = general_identification_and_parentage.objects.get(animal_id=animal_id)
+        disposal_instance, created = disposal_culling.objects.get_or_create(gip=obj)
+    except general_identification_and_parentage.DoesNotExist:
+        return HttpResponse("Animal not found", status=404)
 
-    return render(request,"create/create_disposal.html",context)
+    form = disposal_update_form(instance=disposal_instance)
+    if request.method == 'POST':
+        form = disposal_update_form(request.POST, instance=disposal_instance)
+        if form.is_valid():
+            disposal_instance = form.save(commit=False)
+            disposal_instance.user = request.user  # Assigne l'utilisateur connecté
+            disposal_instance.save()
+            return redirect('successupdate')
+        else:
+            print("Form Errors:", form.errors)  # Debugging
+
+    context = {
+        'form': form,
+        'tablename': 'Disposal',
+    }
+    return render(request, "updatedisposal.html", context)
 
 
 @login_required(login_url='loginuser')
@@ -624,32 +633,34 @@ def update_nutrition(request, animal_id):
     }
     return render(request, "nutrition_update_template.html", context)
 
+
+
 @login_required(login_url='loginuser')
 def update_economics(request, animal_id):
-    obj=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    animal, create=economics.objects.get_or_create(gip=obj)
-    form=economics_update_form(instance=animal)
-    if request.method=='POST':
-        form=economics_update_form(request.POST, instance=animal)
+    try:
+        obj = general_identification_and_parentage.objects.get(animal_id=animal_id)
+        economics_instance, created = economics.objects.get_or_create(gip=obj)
+        
+    except general_identification_and_parentage.DoesNotExist:
+        return HttpResponse("Animal not found", status=404)
+
+    form = economics_update_form(instance=economics_instance)
+    if request.method == 'POST':
+        form = economics_update_form(request.POST, instance=economics_instance)
         if form.is_valid():
-
-            form.save()
+            economics_instance = form.save(commit=False)
+            economics_instance.user = request.user  # Assigne l'utilisateur connecté
+            economics_instance.save()
             return redirect('successupdate')
-    # if request.method == 'POST':
-    #     form = economics_update_form(request.POST)
-    #     if not form.is_valid():
-    #         print("Form Errors:", form.errors)
-    #     else:
-    #         print("Form Data:", form.cleaned_data)
+        else:
+            print("Form Errors:", form.errors)  # Debugging
 
-    context={
-        'form':form,
+    context = {
+        'form': form,
         'tablename': 'Economics',
     }
+    return render(request, "updateeconomics.html", context)
 
-
-
-    return render(request,"create/create_economics.html",context)
 
 @login_required(login_url='loginuser')
 def update_efficiency(request,animal_id):
@@ -707,22 +718,50 @@ def update_qualification(request, animal_id):
 
     return render(request,"create/create_qualification.html",context)
 
+
+
+
 @login_required(login_url='loginuser')
 def update_death(request, animal_id):
-    obj, create=general_identification_and_parentage.objects.get_or_create(animal_id=animal_id)
-    animal=death.objects.get(gip=obj)
-    form=death_update_form(instance=animal)
-    if request.method=='POST':
-        form=death_update_form(request.POST, instance=animal)
-        if form.is_valid():
-            form.save()
-            return redirect('successupdate')
-    context={
-        'form':form,
-        'tablename': 'Information about death'
-    }
+    try:
+        obj = general_identification_and_parentage.objects.get(animal_id=animal_id)
+        death_instance, created = death.objects.get_or_create(gip=obj)
+    except general_identification_and_parentage.DoesNotExist:
+        return HttpResponse("Animal not found", status=404)
 
-    return render(request,"create/create_death.html",context)
+    form = death_update_form(instance=death_instance)
+    if request.method == 'POST':
+        form = death_update_form(request.POST, instance=death_instance)
+        if form.is_valid():
+            death_instance = form.save(commit=False)
+            death_instance.user = request.user  # Assigne l'utilisateur connecté
+            death_instance.save()
+            return redirect('successupdate')
+        else:
+            print("Form Errors:", form.errors)  # Debugging
+
+    context = {
+        'form': form,
+        'tablename': 'Death',
+    }
+    return render(request, "updatedisposal.html", context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @login_required(login_url='loginuser')
 def update_service(request, animal_id):

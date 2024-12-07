@@ -393,8 +393,7 @@ class general_update_form(forms.ModelForm):
 class disposal_update_form(forms.ModelForm):
     class Meta:
         model=disposal_culling
-        fields='__all__'
-        exclude = ['user', 'gip']        
+        exclude = ['user']        
 
         labels={
             'gip': 'Identification Number',
@@ -417,7 +416,6 @@ class disposal_update_form(forms.ModelForm):
 class death_update_form(forms.ModelForm):
     class Meta:
         model=death
-        fields='__all__'
         exclude = ['user']        
 
         labels={
@@ -469,23 +467,24 @@ class nutrition_update_form(forms.ModelForm):
             # Filtrer par utilisateur
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
+
+
 class economics_update_form(forms.ModelForm):
     class Meta:
-        model=economics
-        fields='__all__'
-               
-   
-
-        labels={
+        model = economics
+        # fields = ['book_value', 'amount_realized']  # Exclude 'gip' to prevent editing
+        exclude = ['user']
+        labels = {
             'gip': 'Identification Number',
+
             'book_value': 'Book Value',
             'amount_realized': 'Amount Realized',
         }
-        widgets={
-            # 'gip': forms.TextInput(attrs={'disabled':True}),
-            # 'book_value': forms.TextInput(attrs={'disabled':True}),
-            # 'amount_realized': forms.TextInput(attrs={'disabled':True}),
+        widgets = {
+            'book_value': forms.TextInput(attrs={'class': 'form-control'}),
+            'amount_realized': forms.TextInput(attrs={'class': 'form-control'}),
         }
+        
 
 class vaccination_update_form(forms.ModelForm):
     class Meta:
@@ -506,7 +505,6 @@ class vaccination_update_form(forms.ModelForm):
             'first_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
             'booster': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
             'repeat': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
-            'booster': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
 
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'disease': forms.TextInput(attrs={'disabled':True}),

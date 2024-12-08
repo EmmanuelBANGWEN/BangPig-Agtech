@@ -11,6 +11,9 @@
     <div class="row">
 <div class="container py-4">
 <form autocomplete="off" method="POST">
+    
+<h1>Calculer le total des revenus générés par les ventes 
+    ou sessions effectuées entre deux dates spécifiques.</h1>
   {% csrf_token %}
   {{form|crispy}}
       <button class="btn btn-success btn-lg float-right" type="submit">Rechercher</button>

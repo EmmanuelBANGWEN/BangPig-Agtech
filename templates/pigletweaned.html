@@ -10,6 +10,8 @@
 
     <div class="row">
 <div class="container py-4">
+    Cette fonctionnalité vise à afficher les statistiques sur les porcelets sevrés dans une période donnée. 
+    Elle permet de visualiser le nombre total de porcelets sevrés (mâles et femelles) et leur poids total au moment du sevrage.
 <form autocomplete="off" method="POST">
   {% csrf_token %}
   {{form|crispy}}

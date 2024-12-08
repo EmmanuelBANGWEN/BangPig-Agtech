@@ -10,6 +10,8 @@
 
     <div class="row">
 <div class="container py-4">
+    afficher des statistiques sur les porcelets nés dans une ferme sur une période donnée,
+     notamment le nombre total de porcelets, ainsi que le nombre de mâles et de femelles.
 <form autocomplete="off" method="POST">
   {% csrf_token %}
   {{form|crispy}}

@@ -83,9 +83,41 @@
                   aria-expanded="false"
                 >
                   <i class="fas fa-home"></i>
-                  <p>trebmal</p>
+                  <p >{{ request.user }} Data</p>
+                  <span class="caret"></span>
                 </a>
+                <div class="collapse" id="dashboard">
+                  <ul class="nav nav-collapse ">
+                    <li>
+                      <a >
+                        <!-- <span class="sub-item">Dashboard 1</span> -->
+                          <p class="card-category">Total</p>
+                          <h4 class="card-title">{{ total_animals }}</h4>
+                      </a>
+                    </li>
+                    <li>
+                      <a >
+                        <!-- <span class="sub-item">Dashboard 1</span> -->
+                          <p class="card-category">Femelles</p>
+                          <h4 class="card-title">{{ total_females }}</h4>
+                      </a>
+                    </li><li>
+                      <a >
+                        <!-- <span class="sub-item">Dashboard 1</span> -->
+                          <p class="card-category">Male</p>
+                          <h4 class="card-title">{{ total_males }}</h4>
+                      </a>
+                    </li><li>
+                      <a >
+                        <!-- <span class="sub-item">Dashboard 1</span> -->
+                          <p class="card-category">Porcelets</p>
+                          <h4 class="card-title">{{ total_piglets }}</h4>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
                 
+
               </li>
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
@@ -96,7 +128,7 @@
               <li class="nav-item">
                 <a  href="{% url 'create_general' %}">
                   <i class="fas fa-layer-group"></i>
-                  <p>ajouter</p>
+                  <p>Ajouter</p>
                   <span class=""></span>
                 </a>
                 
@@ -104,27 +136,44 @@
               <li class="nav-item">
                 <a  href="{% url 'deletepigs' %}">
                     <i class="fas fa-th-list"></i>
-                  <p>supprimer</p>
+                  <p>Supprimer</p>
                   <span class="" ></span>
                 </a>
                 
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
+                
+                <form action="/update/" method="POST">
+                  {% csrf_token %}
+                  <div class="row justify-content-center py-2">
+                     
                 <input type="text" name="animal_id" id="animal_id" class="form-control form-control-sm" placeholder="Entrer L'Indentifiant du Porc à modifier"
                 style="width: 290px; max-width: 97%;"
                 >
 
-                <a  href="{% url 'update' %}">
                     <i class="fas fa-pen-square"></i>
-                  <p>modifier</p>
-                  <span class=""></span>
-                </a>
+                    <button class="btn btn-animated " type="submit">Modifier Ce Porc</button>
+                    <span class=""></span>
+              </div>
+            </form> -->
+        
+
+
+              <!-- Messages de retour -->
+              <!-- <div class="feedback-messages mt-4 text-center">
+                  {% for message in messages %}
+                      <p class="feedback-message">{{ message }}</p>
+                  {% endfor %}
+              </div> -->
+
+
+
                 
               </li>
               <li class="nav-item">
                 <a  href="{% url 'allpigs' %}">
                     <i class="fas fa-table"></i>
-                  <p>mes porcs</p>
+                  <p>Mes Animaux</p>
                   <span class=""></span>
                 </a>
                 
@@ -132,24 +181,24 @@
               <li class="nav-item">
                 <a  href="{% url 'report' %}">
                     <i class="fas fa-map-marker-alt"></i>
-                  <p>plus</p>
+                  <p>Plus</p>
                   <span class=""></span>
                 </a>
                 
               </li>
               
               <li class="nav-item">
-                <a  href="{% url 'index' %}">
+                <a  href="{% url 'account' %}">
                     <i class="fas fa-desktop"></i>
-                  <p>account</p>
-                  <span class="badge badge-success">Un insigne du style certifier</span>
+                  <p>Mon Compte</p>
+                  <span class="badge badge-success">.</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a  href="{% url 'index' %}">
+                <a  href="{% url 'help' %}">
                     <i class="fas fa-file"></i>
-                  <p>help</p>
-                  <span class="badge badge-secondary">aussi un insigne du style aide</span>
+                  <p>Aide</p>
+                  <span class="badge badge-secondary">.</span>
                 </a>
               </li>
               
@@ -240,12 +289,6 @@
         </div>
 
 
-
-
-
-
-
-
 <style>
   
   .navbar {
@@ -291,11 +334,11 @@
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#"> Help </a>
+                    <a class="nav-link" href="{% url 'help' %}"> Help </a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a class="nav-link" href="#"> Licenses </a>
-                  </li>
+                  </li> -->
                 </ul>
               </nav>
               <div class="copyright">

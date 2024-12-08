@@ -64,8 +64,8 @@
         <thead id="theadthid">
           <tr>
               <th>Date de sevrage</th>
-              <th>Date Of Sale/Transfer</th>
-              <th>Weight At Sale/Transfer</th>
+              <!-- <th>Date Of Sale/Transfer</th>
+              <th>Weight At Sale/Transfer</th> -->
               <th>Taille de la portée au sevrage</th>
               <th>Âge au sevrage (en jours)</th>
               <th>Poids au sevrage</th>
@@ -86,6 +86,8 @@
               <td>{{ efficiency.dow|default_if_none:"N/A"}}</td>
               <td>{{efficiency.efflitter_size_weaning}} </td>
               <td>{{ efficiency.weaning_age }}</td>
+              <td>{{ efficiency.weaning_weight }}</td>
+
               <td>{{ efficiency.dos }}</td>
               <td>{{ efficiency.doc }}</td>
               <td>{{ efficiency.dosm }}</td>
@@ -93,8 +95,7 @@
               <td>{{ efficiency.weight_six }}</td>
               <td>{{ efficiency.weight_eight }}</td>
               <td>{{ efficiency.conform_at_eight }}</td>
-              <td>{{ efficiency.weaning_weight }}</td>
-              <td>{{ efficiency.weaning_weight }}</td>
+
   
   
             </tr>

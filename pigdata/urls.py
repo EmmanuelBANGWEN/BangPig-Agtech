@@ -57,4 +57,8 @@ urlpatterns=[
     path('delete/vaccination/<str:animal_id>/<int:pk>', views.delete_vaccination, name='deletevaccination'),
     path('delete/vetexam/<str:animal_id>/<int:pk>', views.delete_vetexam, name='deletevetexam'),
     path('delete/nutrition/<str:animal_id>/<int:pk>', views.delete_nutrition, name='deletenutrition'),    
+    
+    path('account/', views.account, name='account'),
+    path('help/', views.help, name='help'),
+
 ]

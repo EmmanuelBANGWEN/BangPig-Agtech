@@ -94,8 +94,8 @@ def delete(request, animal_id):                  #permet de supprimer un enregis
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='loginuser')
-def deletepigs(request):              #Affiche une page où tous les animaux sont listés et permettent de choisir ceux à supprimer.
-    animals=general_identification_and_parentage.objects.all()
+def deletepigs(request):              #Affiche une page où les animaux dun user sont listés et permettent de choisir ceux à supprimer.
+    animals=general_identification_and_parentage.objects.filter(user=request.user)
     context={
         'animals':animals,
         'tablename':'Supprimer Un Porc',
@@ -252,7 +252,6 @@ def create_general(request):
 #Cette fonction permet de créer un nouvel enregistrement d'animal en utilisant un formulaire general_form.
 #Elle vérifie d'abord si l'animal existe déjà dans la base de données en utilisant l'identifiant animal_id. Si ce n'est pas le cas, elle sauvegarde les données.
 #En cas de succès, l'utilisateur est redirigé vers create_efficiency pour saisir des paramètres d'efficacité.
-
 
 
 
@@ -682,6 +681,7 @@ def update_efficiency(request,animal_id):
             'tablename': 'Paramètre Efficacité'
         }
 
+
         return render(request,"create/create_efficiency_male.html",context)
     elif gender=='Female':
         animal, create=efficiency_parameter_female.objects.get_or_create(gip=obj)
@@ -966,6 +966,7 @@ def history(request, animal_id):
         'qualification': animal_qualification_boar,
         'services':animal_service_record_male
         }
+
         return render(request, "historydatamale.html", context)
     
     elif animal_gender=='Female':
@@ -1038,22 +1039,28 @@ def pigletborn(request):
             totalcount=0
             femalecount=0
             malecount=0
+            # maleweight = 0
+            # femaleweight = 0
             for pig in allborn:
                 totalcount+=1
                 if pig.gender=='Male':
                     malecount+=1
+                    # maleweight += pig.weight  # Si "weight" est un champ dans votre modèle
+
                 elif pig.gender=='Female':
                     femalecount+=1
+                    # femaleweight += pig.weight  # Idem
+
             context={
                 'tablename':'Nombre de porcelets nés',
                 'malecount':malecount,
                 'femalecount':femalecount,
                 'totalcount':totalcount,
+                # 'maleweight': maleweight,
+                # 'femaleweight': femaleweight,
                 'form':form
             }
             return render(request, "pigletborn.html",context)
-
-
 
     form=datetodate()
     context={
@@ -1075,18 +1082,18 @@ def pigletweaned(request):
             todate=form.cleaned_data['to_date']
             allweanedmale=efficiency_parameter_male.objects.filter(dow__range=(fromdate,todate))
             allweanedfemale=efficiency_parameter_female.objects.filter(dow__range=(fromdate,todate))
-            totalcount=0
-            femalecount=0
-            malecount=0
-            maleweight=0
-            femaleweight=0
+            totalcount = 0
+            femalecount = 0
+            malecount = 0
+            maleweight = 0
+            femaleweight = 0
             for pig in allweanedmale:
-                totalcount+=1
-                malecount+=1
-                maleweight+=pig.weaning_weight
+                totalcount +=1
+                malecount +=1
+                maleweight += pig.weaning_weight
             for pig in allweanedfemale:
-                femalecount+=1
-                femaleweight+=pig.weaning_weight
+                femalecount += 1
+                femaleweight += pig.weaning_weight
             context={
                 'tablename':'Porcelets sevrés',
                 'malecount':malecount,
@@ -1262,3 +1269,12 @@ def disease(request):
         'diseases':diseaseDict
     }
     return render(request, "disease.html", context)
+
+
+
+
+def account(request):
+    return render(request, 'account.html')
+
+def help(request):
+    return render(request, 'help.html')

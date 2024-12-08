@@ -6,13 +6,15 @@ from django.contrib.auth.models import User
 # from bootstrap_datepicker_plus import DatePickerInput
 
 class datetodate(forms.Form):
-    from_date=forms.DateField(label='From')
-    to_date=forms.DateField(label='To')
+    from_date=forms.DateField(label='De')
+    to_date=forms.DateField(label='à')
 
 class selectpigsform(forms.Form):
-    CHOICES = (('1','Litter size of birth is less than'),('2','Litter size of birth is greater than'),
-    ( '3','Litter size of weaning is greater than'),('4','Litter size of weaning is equal to'))
-    task = forms.ChoiceField(choices=CHOICES, label='The')
+    CHOICES = (('1','Les porcs avec une taille de portée à la naissance inférieure à amount'),
+               ('2','Les porcs avec une taille de portée à la naissance supérieure à amount'),
+                ( '3','Les porcs avec une taille de portée au sevrage supérieure ou égale à amount'),
+                ('4','Les porcs avec une taille de portée au sevrage exactement égale à amount'))
+    task = forms.ChoiceField(choices=CHOICES, label='Rechercher')
     amount=forms.CharField(label='', max_length='150')
 
 class CreateUserForm(UserCreationForm):

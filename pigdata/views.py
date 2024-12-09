@@ -197,18 +197,18 @@ def dbsuccess(request):    #dbsuccess : Renvoie un template dbsuccess.html avec 
 @login_required(login_url='loginuser')
 def index(request):
     # Total des animaux enregistrés
-    total_animals = general_identification_and_parentage.objects.count()
+    total_animals = general_identification_and_parentage.objects.filter(user=request.user).count()
     
     # Nombre de femelles
-    total_females = general_identification_and_parentage.objects.filter(gender='Female').count()
+    total_females = general_identification_and_parentage.objects.filter(user=request.user, gender='Female').count()
     
     # Nombre de mâles
-    total_males = general_identification_and_parentage.objects.filter(gender='Male').count()
+    total_males = general_identification_and_parentage.objects.filter(user=request.user, gender='Male').count()
     
     # Nombre de porcelets (hypothèse : âge < 6 mois)
     from datetime import date, timedelta
     six_months_ago = date.today() - timedelta(days=6*30)
-    total_piglets = general_identification_and_parentage.objects.filter(dob__gte=six_months_ago).count()
+    total_piglets = general_identification_and_parentage.objects.filter(user=request.user, dob__gte=six_months_ago).count()
     
     context = {
         'total_animals': total_animals,

@@ -50,7 +50,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="{% url 'index' %}" class="logo">
+            <a href="/" class="logo">
               <img
                 src="{% static 'assets/img/bangri_logo.png' %}"
                 alt="navbar brand"
@@ -213,7 +213,7 @@
           <div class="main-header-logo">
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
-              <a href="index.html" class="logo">
+              <a href="/" class="logo">
                 <img
                   src="{% static 'assets/img/bangri_logo.png' %}"
                   alt="navbar brand"
@@ -263,14 +263,14 @@
                       </span>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/">Accueil</a>
+                            <a class="nav-link" href="{% url 'index' %}">Accueil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logoutuser' %}">Déconnexion</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/">Accueil</a>
+                            <a class="nav-link" href="{% url 'index' %}">Accueil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'loginuser' %}">Connexion</a>
@@ -329,7 +329,7 @@
               <nav class="pull-left">
                 <ul class="nav">
                   <li class="nav-item">
-                    <a class="nav-link" href="https://www.linkedin.com/company/bangri-agtech/">
+                    <a target="_blank" class="nav-link" href="https://www.linkedin.com/company/bangri-agtech/">
                       BangPig
                     </a>
                   </li>
@@ -343,7 +343,7 @@
               </nav>
               <div class="copyright">
                 2024, made with <i class="fa fa-heart heart text-danger"></i> by
-                <a href="www.linkedin.com/in/emmanuel-bangwen-75091117b">Emmanuel Bangwen</a>
+                <a target="_blank" href="https://www.linkedin.com/in/emmanuel-bangwen-75091117b/">Emmanuel Bangwen</a>
               </div>
               <div>
                 Distributed by

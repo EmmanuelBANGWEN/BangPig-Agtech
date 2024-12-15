@@ -1,17 +1,30 @@
-
 {% extends 'basex.html' %}
 {% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container py-5">
-    <div class="row">
-        <form method="POST">
-            {% csrf_token %}
-            <h3>{{ tablename }}</h3>
-            {{ form|crispy }}
-            <button class="btn btn-success" type="submit">Save Changes</button>
-        </form>
-        
+
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h2 class="display-5">{{ tablename }}</h2>
+            <p class="text-muted">Formulaire pour mettre à jour les données.</p>
+        </div>
     </div>
+
+    <!-- Form Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-10">
+            <form method="POST" class="shadow p-4 rounded bg-light">
+                {% csrf_token %}
+                <h4 class="mb-4">Modifier les Données</h4>
+                {{ form|crispy }}
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success btn-lg">Enregistrer les modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
 {% endblock %}

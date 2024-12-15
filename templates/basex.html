@@ -11,7 +11,7 @@
     />
     <link
       rel="icon"
-      href="{% static 'assets/img/kaiadmin/favicon.ico"
+      href="{% static 'assets/img/kaiadmin/favicon.ico"}
       type="image/x-icon"
     />
 
@@ -36,6 +36,8 @@
     </script>
 
     <!-- CSS Files -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
@@ -135,7 +137,7 @@
               </li>
               <li class="nav-item">
                 <a  href="{% url 'deletepigs' %}">
-                    <i class="fas fa-th-list"></i>
+                    <i class="fas fa-trash"></i>
                   <p>Supprimer</p>
                   <span class="" ></span>
                 </a>
@@ -180,7 +182,7 @@
               </li>
               <li class="nav-item">
                 <a  href="{% url 'report' %}">
-                    <i class="fas fa-map-marker-alt"></i>
+                    <i class="fas fa-plus"></i>
                   <p>Plus</p>
                   <span class=""></span>
                 </a>
@@ -189,16 +191,14 @@
               
               <li class="nav-item">
                 <a  href="{% url 'account' %}">
-                    <i class="fas fa-desktop"></i>
+                    <i class="fas fa-user"></i>
                   <p>Mon Compte</p>
-                  <span class="badge badge-success">.</span>
                 </a>
               </li>
               <li class="nav-item">
                 <a  href="{% url 'help' %}">
-                    <i class="fas fa-file"></i>
+                    <i class="fas fa-question-circle"></i>
                   <p>Aide</p>
-                  <span class="badge badge-secondary">.</span>
                 </a>
               </li>
               
@@ -323,35 +323,52 @@
 
         {% endblock content %}
 
-
+        <style>
+          .footer a {
+            color: #6c757d; /* Couleur bleue par défaut */
+            text-decoration: none;
+          }
+        
+          .footer a:hover {
+            color: #6c757d; /* Couleur bleue foncée au survol */
+            text-decoration: underline;
+          }
+        
+          .footer a:visited {
+            color: #6c757d; /* Couleur pour les liens déjà visités */
+          }
+        </style>
+        
         <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-              <nav class="pull-left">
-                <ul class="nav">
-                  <li class="nav-item">
-                    <a target="_blank" class="nav-link" href="https://www.linkedin.com/company/bangri-agtech/">
-                      BangPig
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'help' %}"> Help </a>
-                  </li>
-                  <!-- <li class="nav-item">
-                    <a class="nav-link" href="#"> Licenses </a>
-                  </li> -->
-                </ul>
-              </nav>
-              <div class="copyright">
-                2024, made with <i class="fa fa-heart heart text-danger"></i> by
-                <a target="_blank" href="https://www.linkedin.com/in/emmanuel-bangwen-75091117b/">Emmanuel Bangwen</a>
-              </div>
-              <div>
-                Distributed by
-                <a target="_blank" href="https://www.linkedin.com/company/bangri-agtech/">Bangri-Agtech</a>.
-              </div>
+          <div class="container-fluid d-flex justify-content-between">
+            <!-- Navigation Section -->
+            <nav class="pull-left">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a target="_blank" class="nav-link" href="https://www.linkedin.com/company/bangri-agtech/">
+                    BangPig
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'help' %}">Help</a>
+                </li>
+              </ul>
+            </nav>
+        
+            <!-- Copyright Section -->
+            <div class="copyright">
+              2024, made with <i class="fa fa-heart heart text-danger"></i> by
+              <a target="_blank" href="https://www.linkedin.com/in/emmanuel-bangwen-75091117b/">Emmanuel Bangwen</a>
             </div>
-          </footer>
-        </div>
+        
+            <!-- Distribution Section -->
+            <div>
+              Distributed by
+              <a target="_blank" href="https://www.linkedin.com/company/bangri-agtech/">Bangri-Agtech</a>.
+            </div>
+          </div>
+        </footer>
+                </div>
   
       </div>
       <!--   Core JS Files   -->
@@ -361,10 +378,7 @@
   
       <!-- jQuery Scrollbar -->
       <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-  
-      <!-- Chart JS -->
-      <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
-  
+    
       <!-- jQuery Sparkline -->
       <script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
   

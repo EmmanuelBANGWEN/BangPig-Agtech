@@ -1,65 +1,79 @@
 {% extends 'basex.html' %}
 
-
 {% load static %}
 
 {% block content %}
-
 <div class="container py-5">
 
     <div class="row">
-<div class="container py-4">
-    
-    <h5 class="text-center mb-4">Numéros d'identifications des Animaux</h5>
-    <div class="list-group">
-        {% for i in animals %}
-            <!-- Lien vers l'historique de l'animal, stylisé comme un bouton -->
-            <a href="{% url 'history' i.animal_id %}" class="list-group-item list-group-item-action animal-link my-2">
-                Animal ID: {{ i.animal_id }}
-            </a>
-            <!-- Formulaire de mise à jour pour chaque animal -->
-            <form method="POST" action="{% url 'update' %}" class="d-inline-block my-2 update-form">
-                {% csrf_token %}
-                <input type="hidden" name="animal_id" id="animal_id" value="{{ i.animal_id }}">
-                <button class="btn btn-animated btn-success btn-sm update-btn" type="submit">Modifier</button>
-            </form>
-        {% endfor %}
+        <div class="col-md-4">
+            <!-- Search Widget -->
+            <div class="search-widget widget-item mb-4">
+                <h3 class="widget-title text-center">Recherche</h3>
+                <form action="{% url 'pig_searchall' %}" method="get">
+                    <div class="mb-3">
+                        <input 
+                            type="text" 
+                            name="query" 
+                            maxlength="200" 
+                            required 
+                            id="id_query" 
+                            class="form-control" 
+                            placeholder="Entrez l'identifiant...">
+                    </div>
+                    <button class="btn btn-success btn-block w-100" type="submit" title="Rechercher">
+                        <i class="bi bi-search"></i> Rechercher
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h5 class="text-center mb-4">Numéros d'identifications des Animaux</h5>
+            <div class="list-group">
+                {% for i in animals %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+
+                    <!-- Lien vers l'historique de l'animal, stylisé comme un bouton -->
+                    <a href="{% url 'history' i.animal_id %}">
+                         {{ i.animal_id }}
+                    </a>
+                    <!-- Formulaire de mise à jour pour chaque animal -->
+                    <form method="POST" action="{% url 'update' %}" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="animal_id" id="animal_id" value="{{ i.animal_id }}">
+                        <button class="btn btn-danger btn-sm btn-animated" type="submit">Modifier</button>
+                    </form>
+                </div>
+
+                {% endfor %}
+            </div>
+
+            <!-- Bouton retour -->
+            <div class="mt-4">
+                <form>
+                    <button class="btn btn-success w-100" type="submit" formaction="/report">Retour</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <br>
-    <!-- Bouton retour -->
-    <div class="text-center mt-4">
-        <form>
-            <button class="btn btn-animated btn-secondary btn-lg" type="submit" formaction="/report">Retour</button>
-        </form>
-    </div>
 </div>
 
 <style>
-    /* Style général */
-    .container {
-        max-width: 600px;
-        margin: auto;
-    }
-
-    /* Styles pour les liens d'animaux */
+    /* Style des liens pour les animaux */
     .animal-link {
         font-weight: bold;
         color: #388e3c;
-        background-color: #f8f9fa;
-        padding: 10px 15px;
-        border-radius: 5px;
-        transition: all 0.3s;
-        text-align: center;
-    }
-    .animal-link:hover {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-        transform: translateY(-2px);
         text-decoration: none;
     }
 
-    /* Effet de hover et clic pour les boutons */
+    .animal-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+    }
+
+    /* Effet d'animation pour les boutons */
     .btn-animated {
         position: relative;
         overflow: hidden;
@@ -67,15 +81,14 @@
     }
 
     .btn-animated:hover {
-        background-color: #43a047;
-        transform: translateY(-2px); /* Effet de levée */
+        background-color: #d32f2f;
+        transform: translateY(-2px);
     }
 
     .btn-animated:active {
-        transform: scale(0.98); /* Réduction au clic */
+        transform: scale(0.98);
     }
 
-    /* Effet d'onde sur le bouton au clic */
     .btn-animated::after {
         content: '';
         position: absolute;
@@ -96,9 +109,6 @@
         opacity: 0;
         transform: translate(-50%, -50%) scale(1);
     }
-
 </style>
-</div>
-</div>
 
 {% endblock content %}

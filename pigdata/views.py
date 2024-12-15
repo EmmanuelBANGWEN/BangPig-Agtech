@@ -1271,10 +1271,70 @@ def disease(request):
     return render(request, "disease.html", context)
 
 
-
-
 def account(request):
     return render(request, 'account.html')
 
 def help(request):
     return render(request, 'help.html')
+
+
+
+
+
+
+from django.contrib.postgres.search import SearchVector, SearchQuery
+
+def pig_search(request):
+    query = None
+    results = []
+    search_form = SearchPig()
+
+    if 'query' in request.GET:
+        search_form = SearchPig(request.GET)
+        if search_form.is_valid():
+            query = search_form.cleaned_data['query']
+            vector_search = SearchVector('animal_id', weight='A')
+            query_search = SearchQuery(query)
+            # results = Post.published_posts.annotate(
+            #     search=vector_search, rank=SearchRank(vector_search,query_search)
+            # ).filter(rank__gte=0.3).order_by('rank')
+            # results = Post.published_posts.annotate(
+            #                                         similarity=TrigramSimilarity("title", query),
+            #                                         ).filter(similarity__gt=0.1).order_by("-similarity")
+            results = general_identification_and_parentage.objects.filter(animal_id=query)
+            
+
+    return render(request, 'search.html', {
+        'search_form': search_form,
+        'query': query,
+        'results': results,
+    })
+
+
+from django.contrib.postgres.search import SearchVector, SearchQuery
+
+def pig_searchall(request):
+    query = None
+    results = []
+    search_form = SearchPig()
+
+    if 'query' in request.GET:
+        search_form = SearchPig(request.GET)
+        if search_form.is_valid():
+            query = search_form.cleaned_data['query']
+            vector_search = SearchVector('animal_id', weight='A')
+            query_search = SearchQuery(query)
+            # results = Post.published_posts.annotate(
+            #     search=vector_search, rank=SearchRank(vector_search,query_search)
+            # ).filter(rank__gte=0.3).order_by('rank')
+            # results = Post.published_posts.annotate(
+            #                                         similarity=TrigramSimilarity("title", query),
+            #                                         ).filter(similarity__gt=0.1).order_by("-similarity")
+            results = general_identification_and_parentage.objects.filter(animal_id=query)
+            
+
+    return render(request, 'searchall.html', {
+        'search_form': search_form,
+        'query': query,
+        'results': results,
+    })

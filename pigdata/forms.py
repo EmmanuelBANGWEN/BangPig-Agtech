@@ -768,3 +768,10 @@ class service_update_form_female(forms.ModelForm):
             # 'still_birth_abnormality': forms.TextInput(attrs={'disabled':True}),
             # 'date_of_abortion':forms.TextInput(attrs={'disabled':True}),
         }
+
+
+
+class SearchPig(forms.Form):
+    query = forms.CharField(max_length=200)
+    class Meta:
+        fields = ['query']

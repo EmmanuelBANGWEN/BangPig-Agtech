@@ -1,9 +1,7 @@
 {% extends 'basex.html' %}
 
-
 {% load static %}
 {% load crispy_forms_tags %}
-
 
 {% block content %}
 <div class="container py-5">
@@ -11,14 +9,14 @@
     <div class="row">
 <div class="container py-4">
 <div class="container py-4">
-    <div class="row justify-content-center py-2">
-        <input type="text" name="num" id="num" class="form-control form-control-lg text-center" placeholder="Entrer l'Indentifiant du Porc">
+    <div class="row justify-content-center py-3">
+        <input type="text" name="num" id="num" class="form-control form-control-lg text-center shadow" placeholder="Entrer l'Indentifiant du Porc">
     </div>
 
     <!-- Bouton Histoire -->
     <form id="gipform">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-success-custom" type="button" id="gip">History Sheet</button>
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="button" id="gip">History Sheet</button>
         </div>
     </form>
 
@@ -32,49 +30,49 @@
     <!-- Autres boutons -->
     <form id="ecof" action="/allpigs">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-secondary-custom" type="submit">Mes Porcs</button>
+            <button class="btn btn-animated btn-lg btn-secondary-custom shadow" type="submit">Mes Porcs</button>
         </div>
     </form>
 
     <form id="epform" action="pigletborn">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-success-custom" type="submit">Porcelets Nées</button>
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="submit">Porcelets Nées</button>
         </div>
     </form>
 
     <form id="qbbform" action="pigletweaned">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-success-custom" type="submit">Porcelets Sevrés</button>
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="submit">Porcelets Sevrés</button>
         </div>
     </form>
 
     <form id="srlcform" action="pigmortality">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-danger-custom" type="submit">Mortalités</button>
+            <button class="btn btn-animated btn-lg btn-danger-custom shadow" type="submit">Mortalités</button>
         </div>
     </form>
 
     <form id="nfform" action="revenue">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-warning-custom" type="submit">Revenue Received</button>
+            <button class="btn btn-animated btn-lg btn-warning-custom shadow" type="submit">Revenue Received</button>
         </div>
     </form>
 
     <form id="dcform" action="disease">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-danger-custom" type="submit">Liste des Maladies</button>
+            <button class="btn btn-animated btn-lg btn-danger-custom shadow" type="submit">Liste des Maladies</button>
         </div>
     </form>
 
     <form id="ecoform" action="selectpigs">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-success-custom" type="submit">Selectioner les Porcs</button>
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="submit">Selectioner les Porcs</button>
         </div>
     </form>
 
     <div class="text-center mt-4">
         <form>
-            <button class="btn btn-animated btn-lg btn-secondary-custom" type="submit" formaction="/">Retour</button>
+            <button class="btn btn-animated btn-lg btn-secondary-custom shadow" type="submit" formaction="/">Retour</button>
         </form>
     </div>
 </div>
@@ -89,12 +87,12 @@
         font-weight: bold;
         border: none;
         border-radius: 8px;
+        padding: 10px 20px;
     }
 
     /* Différentes couleurs de boutons */
     .btn-success-custom { background-color: #43a047; }
     .btn-secondary-custom { background-color: #455a64; }
-    .btn-success-custom { background-color: #388e3c; }
     .btn-danger-custom { background-color: #d32f2f; }
     .btn-warning-custom { background-color: #f9a825; }
 
@@ -131,7 +129,15 @@
 
     /* Champ de texte stylisé */
     #num {
-        max-width: 300px;
+        max-width: 400px;
+        border: 2px solid #43a047;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    #num:focus {
+        border-color: #388e3c;
+        box-shadow: 0 0 10px rgba(56, 142, 60, 0.5);
     }
 
     /* Animation d'apparition pour les messages */

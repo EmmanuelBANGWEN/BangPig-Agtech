@@ -1,31 +1,105 @@
 {% extends 'basex.html' %}
 
-
 {% load static %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
 <div class="container py-5">
-
     <div class="row">
-<div class="container py-4">
-<h5>Numéros d'identifications des Animaux</h5>
-{% for i in animals %}
-    <a href="{% url 'history' i.animal_id %} ">{{i.animal_id}}</a>
-    <form method='GET' action="{% url 'delete' i.animal_id %}">
-    {% csrf_token %}
-            <button class="btn btn-success btn-lg" type="submit">Delete</button>
-    </form>
-{% endfor %}
-</div>
-<br>
-<form>
-            <button class="btn btn-success btn-lg" type="submit" formaction="/dataentry">Retour</button>
-    </form>
+        <!-- Zone de recherche -->
+        <div class="col-md-4">
+            <div class="search-widget widget-item mb-4">
+                <h5 class="widget-title text-center">Recherche</h5>
+                <form action="{% url 'pig_search' %}" method="get">
+                    <div class="mb-3">
+                        <input 
+                            type="text" 
+                            name="query" 
+                            maxlength="200" 
+                            required 
+                            id="id_query" 
+                            class="form-control" 
+                            placeholder="Entrez l'identifiant...">
+                    </div>
+                    <button class="btn btn-primary btn-block w-100" type="submit" title="Rechercher">
+                        <i class="bi bi-search"></i> Rechercher
+                    </button>
+                </form>
+            </div>
+        </div>
 
-</div>
-</div>
+        <!-- Liste des animaux -->
+        <div class="col-md-8">
+            <h5 class="text-center mb-4">Numéros d'identifications des Animaux</h5>
+            <div class="list-group">
+                {% for i in animals %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'history' i.animal_id %}" class="animal-link">{{ i.animal_id }}</a>
+                        <form method="GET" action="{% url 'delete' i.animal_id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-sm btn-animated" type="submit">Supprimer</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4">
+                <form>
+                    <button class="btn btn-success w-100" type="submit" formaction="/dataentry">Retour</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
-{% endblock content %}   
+<style>
+    /* Style des liens pour les animaux */
+    .animal-link {
+        font-weight: bold;
+        color: #388e3c;
+        text-decoration: none;
+    }
+
+    .animal-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+    }
+
+    /* Effet d'animation pour les boutons */
+    .btn-animated {
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    .btn-animated:hover {
+        background-color: #d32f2f;
+        transform: translateY(-2px);
+    }
+
+    .btn-animated:active {
+        transform: scale(0.98);
+    }
+
+    .btn-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        transform: scale(1);
+        opacity: 0;
+        transition: width 0.5s, height 0.5s, opacity 0.5s;
+    }
+
+    .btn-animated:active::after {
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+    }
+</style>
+{% endblock content %}

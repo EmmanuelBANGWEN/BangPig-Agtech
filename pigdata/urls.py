@@ -62,4 +62,8 @@ urlpatterns=[
     path('account/', views.account, name='account'),
     path('help/', views.help, name='help'),
 
+    path('search/', views.pig_search, name='pig_search'),
+    path('searchall/', views.pig_searchall, name='pig_searchall'),
+
+
 ]

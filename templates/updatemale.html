@@ -89,6 +89,88 @@
             <button class="btn btn-success btn-lg" type="submit" formaction="/dataentry/">Return</button>
     </form>
 
+
+
+    <style>
+        /* Styles généraux */
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 0 50px;
+        }
+    
+        .form-container {
+            margin-top: 20px;
+        }
+    
+        .form-button {
+            margin-bottom: 20px;
+        }
+    
+        .btn-animated {
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.3s, transform 0.2s ease-in-out;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+    
+        .btn-primary-custom {
+            background-color: #007bff;
+        }
+    
+        .btn-secondary-custom {
+            background-color: #6c757d;
+        }
+    
+        .btn-animated:hover {
+            transform: translateY(-5px); /* Effet de levée */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+    
+        .btn-animated:active {
+            transform: scale(0.98); /* Effet de clic */
+        }
+    
+        /* Effet d'onde au clic */
+        .btn-animated::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: scale(1);
+            opacity: 0;
+            transition: width 0.5s, height 0.5s, opacity 0.5s;
+        }
+    
+        .btn-animated:active::after {
+            width: 120px;
+            height: 120px;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    
+        /* Amélioration de la responsivité */
+        @media (max-width: 767px) {
+            .container {
+                padding: 0 15px;
+            }
+    
+            .btn-animated {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+    
+
 <script>
     var gip=document.getElementById("gip");
     gip.addEventListener("click", gipfunc);

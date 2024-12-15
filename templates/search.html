@@ -1,0 +1,79 @@
+{% extends 'basex.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade" style="background-image: url('{% static "assets/img/page-title-bg.webp" %}');">
+        <div class="container text-center">
+            {% if query %}
+                <h1>Résultat pour l'identifiant : "{{ query }}"</h1>
+            {% else %}
+                <h1>Recherchez un porc</h1>
+            {% endif %}
+        </div>
+    </div>
+    <!-- End Page Title -->
+
+    <!-- Main Content Section -->
+    <section class="content-section py-5">
+        <div class="container">
+            <div class="row">
+                <!-- Search Form Column -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">Recherche</div>
+                        <div class="card-body">
+                            <form action="{% url 'pig_search' %}" method="get" class="d-flex">
+                                <input class="form-control me-2" type="text" name="query" maxlength="200" required id="id_query" placeholder="Entrez l'identifiant...">
+                                <button class="btn btn-success" type="submit" title="Rechercher">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Search Form Column -->
+
+                <!-- Results Column -->
+                <div class="col-lg-8">
+                    {% if results %}
+                        <h3 class="mb-4">
+                            {% with results.count as total_results %}
+                                {{ total_results }} Porc{{ total_results|pluralize }} trouvé{{ total_results|pluralize }}
+                            {% endwith %}
+                        </h3>
+                        <ul class="list-group">
+                            {% for i in results %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <a href="{% url 'history' i.animal_id %}" class="text-decoration-none text-dark">
+                                            <strong>ID :</strong> {{ i.animal_id }}
+                                        </a>
+                                    </span>
+                                    <div>
+                                        <form method="GET" action="{% url 'delete' i.animal_id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-warning mt-4" role="alert">
+                            Aucun porc trouvé avec l'identifiant "{{ query }}"
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- End Results Column -->
+            </div>
+        </div>
+    </section>
+    <!-- End Main Content Section -->
+
+</main>
+{% endblock %}

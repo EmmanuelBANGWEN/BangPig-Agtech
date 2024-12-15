@@ -1,29 +1,72 @@
 {% extends 'basex.html' %}
 
-
 {% load static %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
 <div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- En-tête de la page -->
+            <div class="text-center mb-4">
+                <h2 class="display-6">Inscription</h2>
+                <p class="text-muted">Créez un compte pour accéder à toutes nos fonctionnalités</p>
+            </div>
 
-    <div class="row">
-<div class="container py-4">
+            <!-- Formulaire d'inscription -->
+            <div class="card shadow-sm p-4">
+                <form autocomplete="off" method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button class="btn btn-success btn-lg w-100" type="submit">S'inscrire</button>
+                </form>
+            </div>
 
-<div class="container py-5">
+            <!-- Lien vers la page de connexion -->
+            <div class="text-center mt-3">
+                <p class="mb-0">Vous avez déjà un compte ? <a href="{% url 'loginuser' %}" class="text-success fw-bold">Connectez-vous ici</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-  <div class="row">
-<form autocomplete="off" method="POST">
-  {% csrf_token %}
-  {{form|crispy}}
-      <button class="btn btn-success btn-lg float-right" type="Login">Next</button>
-</form>
-<p>go to the <a href="{% url 'loginuser' %}">login</a> page</p>
+<style>
+    /* Conteneur principal */
+    .container {
+        max-width: 600px;
+        margin: auto;
+    }
 
-</div>
-</div>
-</div>
-</div>
+    /* Style du formulaire */
+    .card {
+        border: none;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+    /* Bouton d'inscription */
+    .btn-success {
+        background-color: #43a047;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+    .btn-success:hover {
+        background-color: #388e3c;
+    }
+
+    /* Lien de connexion */
+    a {
+        text-decoration: none;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Texte en-tête */
+    h2 {
+        color: #388e3c;
+        font-weight: bold;
+    }
+</style>
 
 {% endblock content %}

@@ -74,7 +74,7 @@ class disposal_form(forms.ModelForm):
 class death_form(forms.ModelForm):
     class Meta:
         model=death
-        fields='__all__'
+        exclude = ['user'] 
         labels={
             'gip': 'Identification Number',
             'cause_death': 'Cause Of Death',
@@ -86,6 +86,20 @@ class death_form(forms.ModelForm):
             'date_death': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
 
         }
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
+        super().__init__(*args, **kwargs)
+        if specific_animal:
+            # Restreindre le champ `gip` à l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+
 
 
 class nutrition_form(forms.ModelForm):
@@ -122,12 +136,26 @@ class nutrition_form(forms.ModelForm):
 class economics_form(forms.ModelForm):
     class Meta:
         model=economics
-        fields='__all__'
+        exclude = ['user'] 
         labels={
             'gip': 'Identification Number',
             'book_value': 'Book Value',
             'amount_realized': 'Amount Realized',
         }
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
+        super().__init__(*args, **kwargs)
+        if specific_animal:
+            # Restreindre le champ `gip` à l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+
 
 class vaccination_form(forms.ModelForm):
     class Meta:
@@ -199,7 +227,7 @@ class vetexam_form(forms.ModelForm):
 class efficiency_form_female(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_female
-        fields='__all__'
+        exclude = ['user'] 
         labels={
             'gip': 'Identification Number',
             'dow': 'Date Of Weaning',
@@ -220,12 +248,25 @@ class efficiency_form_female(forms.ModelForm):
             'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
 
         }
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
+        super().__init__(*args, **kwargs)
+        if specific_animal:
+            # Restreindre le champ `gip` à l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
 
 
 class efficiency_form_male(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_male
-        fields='__all__'
+        exclude = ['user'] 
         labels={
             'gip': 'Identification Number',
             'dow': 'Date Of Weaning',
@@ -253,10 +294,25 @@ class efficiency_form_male(forms.ModelForm):
 
         }
 
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
+        super().__init__(*args, **kwargs)
+        if specific_animal:
+            # Restreindre le champ `gip` à l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+
+
 class qualification_form(forms.ModelForm):
     class Meta:
         model=qualification_boar
-        fields='__all__'
+        exclude = ['user'] 
         labels={
             'gip': 'Identification Number',
             'physical_fitness': 'Physical Fitness',
@@ -271,6 +327,20 @@ class qualification_form(forms.ModelForm):
 
             
         }
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
+        super().__init__(*args, **kwargs)
+        if specific_animal:
+            # Restreindre le champ `gip` à l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+
 
 class service_form_male(forms.ModelForm):
     class Meta:

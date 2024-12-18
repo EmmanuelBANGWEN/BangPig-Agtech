@@ -269,7 +269,10 @@ def create_efficiency(request, animal_id):
                 instance.weaning_age=agevar.days
                 obj = form.save(commit=False)
                 obj.user = request.user  # Associer l'utilisateur connecté
-                obj.save()
+                instance.user = request.user
+
+                instance.save()
+                
                 return redirect('create_qualification',animal_id=animal_id)
                 
         context={
@@ -286,7 +289,9 @@ def create_efficiency(request, animal_id):
                 instance=form.save(commit=False)
                 agevar=instance.dow-instance.gip.dob  # Calcul de l'âge au sevrage
                 instance.weaning_age=agevar.days
-                form.save()
+                instance.user = request.user
+
+                instance.save()
                 return redirect('create_qualification',animal_id=animal_id)
         context={
             'form':form,
@@ -314,6 +319,8 @@ def create_qualification(request, animal_id):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
+
+                
             obj.save()
             return redirect('create_service',animal_id=animal_id)
     context={

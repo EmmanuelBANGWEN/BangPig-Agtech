@@ -25,7 +25,7 @@
     <h3 class="mb-4 text-center">Add New Animal</h3>
 
     <!-- Formulaire interactif -->
-    <form autocomplete="off" method="POST" class="needs-validation" novalidate>
+    <form autocomplete="on" method="POST" class="needs-validation" novalidate>
         {% csrf_token %}
         {% for message in messages %}
             <div class="alert alert-info">{{ message }}</div>

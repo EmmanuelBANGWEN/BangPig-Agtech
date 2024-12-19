@@ -10,10 +10,84 @@
 
 
 <!-- Formulaire -->
-<form method="POST">
+
+<form autocomplete="on" method="POST" class="needs-validation" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enregistrer</button>
+    {{ form.gip.as_hidden}}
+
+  <!-- <div class="">
+                    <input type="text" name="gip" value="{{animal_id}}" class="textinput form-control" id="id_gip" >
+ </div> -->
+  <div class="form-row">
+      <div class="form-group col-md-12">
+        {{ form.dow|as_crispy_field }}
+        
+      </div>
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-12">
+        {{ form.litter_size_weaning|as_crispy_field }}
+      </div>
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+      {{ form.weaning_age.as_hidden }}
+        </div>
+  </div>
+  <div class="form-row">
+
+        <div class="form-group col-md-12">
+          {{ form.weaning_weight|as_crispy_field }}
+        </div>
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.dos|as_crispy_field }}
+      </div> 
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.doc|as_crispy_field }}
+      </div> 
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.dosm|as_crispy_field }}
+
+      </div> 
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.sexual_maturity_weight|as_crispy_field }}
+          
+      </div>
+</div>
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weight_six|as_crispy_field }}
+    
+      </div>
+</div>
+
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weight_eight|as_crispy_field }}
+          
+      </div>
+</div>
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.conform_at_eight|as_crispy_field }}
+          
+      </div>
+</div>
+
+
+  <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
 </form>
 
     </div>

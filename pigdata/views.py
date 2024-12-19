@@ -267,17 +267,14 @@ def create_efficiency(request, animal_id):
                 instance=form.save(commit=False)
                 agevar=instance.dow-instance.gip.dob  # Calcul de l'âge au sevrage
                 instance.weaning_age=agevar.days
-                obj = form.save(commit=False)
-                obj.user = request.user  # Associer l'utilisateur connecté
                 instance.user = request.user
 
                 instance.save()
-                
                 return redirect('create_qualification',animal_id=animal_id)
                 
         context={
             'form':form,
-            'tablename':'Paramètre Efficacité'
+            'tablename':'Paramètre Efficacité Male'
         }
 
         return render(request,"create/create_efficiency_male.html",context)
@@ -295,7 +292,7 @@ def create_efficiency(request, animal_id):
                 return redirect('create_qualification',animal_id=animal_id)
         context={
             'form':form,
-            'tablename':'Paramètre Efficacité'
+            'tablename':'Paramètre Efficacité Femelle'
         }
 
         return render(request,"create/create_efficiency_female.html",context)

@@ -10,6 +10,7 @@
     <form autocomplete="on" method="POST" class="needs-validation" novalidate>
    {% csrf_token %}
 
+
   <!-- <div class="">
                     <input type="text" name="gip" value="{{animal_id}}" class="textinput form-control" id="id_gip" >
  </div> -->
@@ -27,7 +28,7 @@
   <div class="form-row">
 
       <div class="form-group col-md-12">
-      {{ form.weaning_age.as_hidden}}
+      {{ form.weaning_age|as_crispy_field }}
         </div>
   </div>
   <div class="form-row">

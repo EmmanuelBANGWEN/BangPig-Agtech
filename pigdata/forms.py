@@ -47,7 +47,7 @@ class general_form(forms.ModelForm):
         }
         widgets = {
             # 'dob': DatePickerInput(format='%Y-%m-%d'),
-            'dob': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dob': forms.DateInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD', type:"date"}),
 
             
         }

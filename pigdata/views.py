@@ -495,7 +495,6 @@ def create_disposal(request, animal_id):
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
             obj.save()
-            print("I was here")
             return redirect('create_economics', animal_id=animal_id)
     context={
         'form':form,
@@ -678,7 +677,9 @@ def update_efficiency(request,animal_id):
                 instance=form.save(commit=False)
                 agevar=instance.dow-instance.gip.dob
                 instance.weaning_age=agevar.days
-                form.save()
+                instance.user = request.user  # Associer l'utilisateur connecté
+                instance.save()
+           
                 return redirect('successupdate')
         context={
             'form':form,
@@ -696,7 +697,9 @@ def update_efficiency(request,animal_id):
                 instance=form.save(commit=False)
                 agevar=instance.dow-instance.gip.dob
                 instance.weaning_age=agevar.days
-                form.save()
+                instance.user = request.user  # Associer l'utilisateur connecté
+                instance.save()
+
                 return redirect('successupdate')
         context={
             'form':form,
@@ -713,7 +716,11 @@ def update_qualification(request, animal_id):
     if request.method=='POST':
         form=qualification_update_form(request.POST, instance=animal)
         if form.is_valid():
-            form.save()
+
+            instance = form.save(commit=False)
+            instance.user = request.user  # Assigne l'utilisateur connecté
+            instance.save()
+            
             return redirect('successupdate')
     context={
         'form':form,

@@ -41,7 +41,7 @@ class health_parameter_vetexam(models.Model):
     remarks=models.TextField(blank=True)
     
 class disposal_culling(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     reason=models.TextField(blank=True)
@@ -58,14 +58,14 @@ class nutrition_and_feeding(models.Model):
     remarks=models.TextField(blank=True)
     
 class economics(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     book_value=models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     amount_realized =models.IntegerField(blank=True, null=True)
     
 class death(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     date_death=models.DateField(blank=True,null=True)
@@ -73,7 +73,7 @@ class death(models.Model):
     cause_death=models.TextField(blank=True)
 
 class efficiency_parameter_male(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     dow=models.DateField(blank=True,null=True)
@@ -86,10 +86,10 @@ class efficiency_parameter_male(models.Model):
     sexual_maturity_weight=models.DecimalField(max_digits=6, decimal_places=2,blank=True, null=True)
     weight_six=models.DecimalField(max_digits=6, decimal_places=2,blank=True, null=True)
     weight_eight=models.DecimalField(max_digits=6, decimal_places=2,blank=True, null=True)
-    conform_at_eight=models.TextField(blank=True)
+    conform_at_eight=models.TextField(blank=True, null=True)
 
 class efficiency_parameter_female(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     dow=models.DateField(blank=True,null=True)
@@ -102,10 +102,10 @@ class efficiency_parameter_female(models.Model):
     sexual_maturity_weight=models.DecimalField(max_digits=6, decimal_places=2,blank=True, null=True)
     weight_six=models.DecimalField(max_digits=6, decimal_places=2,blank=True, null=True)
     weight_eight=models.DecimalField(max_digits=6, decimal_places=2,blank=True, null=True)
-    conform_at_eight=models.TextField(blank=True)
+    conform_at_eight=models.TextField(blank=True, null=True)
 
 class qualification_boar(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     physical_fitness=models.CharField(max_length=10,choices=(('Poor','Poor'),('Good','Good'),('Very Good','Very Good'),('Excellent','Excellent')), default='Good')

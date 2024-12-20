@@ -485,6 +485,20 @@ class disposal_update_form(forms.ModelForm):
             
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
+        
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+
+
 class death_update_form(forms.ModelForm):
     class Meta:
         model=death
@@ -504,6 +518,19 @@ class death_update_form(forms.ModelForm):
             #'date_death': forms.TextInput(attrs={'disabled':True}),
             #'postmortem_findings':forms.TextInput(attrs={'disabled':True}),
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
+        
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
 
 
 
@@ -556,7 +583,20 @@ class economics_update_form(forms.ModelForm):
             'book_value': forms.TextInput(attrs={'class': 'form-control'}),
             'amount_realized': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
         
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+
 
 class vaccination_update_form(forms.ModelForm):
     class Meta:
@@ -676,8 +716,7 @@ class efficiency_update_form_female(forms.ModelForm):
 class efficiency_update_form_male(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_male
-        fields='__all__'
-        exclude = ['user', 'gip']        
+        exclude = ['user']        
 
         labels={
             'gip': 'Identification Number',
@@ -719,11 +758,25 @@ class efficiency_update_form_male(forms.ModelForm):
             # 'conform_at_eight': forms.TextInput(attrs={'disabled':True}),
         }
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
+        
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
+    
+
+
 class qualification_update_form(forms.ModelForm):
     class Meta:
         model=qualification_boar
-        fields='__all__'
-        exclude = ['user', 'gip']        
+        exclude = ['user']        
 
         labels={
             'gip': 'Identification Number',
@@ -745,6 +798,20 @@ class qualification_update_form(forms.ModelForm):
             # 'seminal_characteristics': forms.TextInput(attrs={'disabled':True}),
             # 'suitability': forms.TextInput(attrs={'disabled':True}),
         }
+
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
+        
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+
 
 class service_update_form_male(forms.ModelForm):
     class Meta:

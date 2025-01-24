@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h2 class="display-5">Gestion des Informations Animalières</h2>
+            <p class="text-muted">Gérez les données des animaux et leurs informations associées.</p>
+        </div>
+    </div>
+
+    <!-- Form Sections -->
+    <div class="row justify-content-center mb-4">
+        <!-- Identification Form -->
+        <div class="col-md-6 mb-4">
+            <form id="gipform" method="post" action="{% url 'update_general' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Identification Générale et Parenté</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    
+
+        <!-- Efficiency Form -->
+        <div class="col-md-6 mb-4">
+            <form id="epform" method="post" action="{% url 'update_efficiency' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Paramètre Efficacité</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <!-- Veterinary Examination Form -->
+        <div class="col-md-6 mb-4">
+            <form id="vetform" method="post" action="{% url 'update_vetexam' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Examens Vétérinaires</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Vaccination Form -->
+        <div class="col-md-6 mb-4">
+            <form id="vacform" method="post" action="{% url 'update_vaccination' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Vaccinations</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <!-- Death Information Form -->
+        <div class="col-md-6 mb-4">
+            <form id="deathform" method="post" action="{% url 'update_death' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Information sur la Mort</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Service and Birth Data Form -->
+        <div class="col-md-6 mb-4">
+            <form id="srlcform" method="post" action="{% url 'update_service' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Enregistrement des Services et Caractères des Portées</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <!-- Nutrition Data Form -->
+        <div class="col-md-6 mb-4">
+            <form id="nfform" method="post" action="{% url 'update_nutrition' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Nutrition et Alimentation</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Disposal/Slaughter Form -->
+        <div class="col-md-6 mb-4">
+            <form id="dcform" method="post" action="{% url 'update_disposal' animal_id=animal_id %}">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Disposition / Abattage</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- <div class="row justify-content-center mb-4">
+        <div class="col-md-6 mb-4">
+            <form id="ecoform" method="post" action="">
+                {% csrf_token %}
+                <div class="card shadow-sm rounded p-4">
+                    <h4 class="mb-4 text-center">Informations Économiques</h4>
+                    <button class="btn btn-success btn-lg w-100" type="submit">Mettre à jour</button>
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+    <!-- Return Button -->
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <form>
+                <button class="btn btn-primary btn-lg" type="submit" formaction="/dataentry/">Retour</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    /* Styles spécifiques */
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-lg {
+        padding: 15px 30px;
+        font-size: 1.1em;
+    }
+
+    .btn-animated {
+        position: relative;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+    }
+
+    .btn-animated:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-animated:active {
+        transform: scale(0.98);
+    }
+
+    @media (max-width: 767px) {
+        .container {
+            padding: 0 15px;
+        }
+    }
+</style>
+
+{% endblock content %}

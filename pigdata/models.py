@@ -7,21 +7,27 @@ class general_identification_and_parentage(models.Model):
     animal_id=models.CharField(max_length=20)
     dob=models.DateField(blank=True,null=True)
     gender=models.CharField(max_length=8, choices=(('Male','Male'),('Female','Female')), default='Male')
-    breed=models.CharField(max_length=20, blank=True)
-    dam_no=models.CharField(max_length=20, blank=True)
-    sire_no=models.CharField(max_length=20, blank=True)
-    grand_dam=models.CharField(max_length=20, blank=True)
-    grand_sire=models.CharField(max_length=20, blank=True)
+    breed=models.CharField(max_length=20, blank=True, null=True)
+    dam_no=models.CharField(max_length=20, blank=True, null=True)
+    sire_no=models.CharField(max_length=20, blank=True, null=True)
+    grand_dam=models.CharField(max_length=20, blank=True, null=True)
+    grand_sire=models.CharField(max_length=20, blank=True, null=True)
     colitter_size_of_birth=models.IntegerField(null=True, blank=True)
-    color_and_marking=models.TextField(blank=True)
+    color_and_marking=models.TextField(blank=True, null=True)
     abnormalities=models.CharField(max_length=3, choices=(('yes','yes'),('no','no')), default='no')
     
     class Meta:
         unique_together = ('user', 'animal_id')  # Empêcher les doublons pour un même utilisateur
+        # unique_together = ['user']  # Empêcher les doublons pour un même utilisateur
 
 
     def __str__(self):
         return f"{self.animal_id} ({self.user.username})"
+
+
+    
+
+
 
 class health_parameter_vaccination(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -57,12 +63,12 @@ class nutrition_and_feeding(models.Model):
     end_date=models.DateField(blank=True,null=True)
     remarks=models.TextField(blank=True)
     
-class economics(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+# class economics(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
-    gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
-    book_value=models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    amount_realized =models.IntegerField(blank=True, null=True)
+#     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
+#     book_value=models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+#     amount_realized =models.IntegerField(blank=True, null=True)
     
 class death(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

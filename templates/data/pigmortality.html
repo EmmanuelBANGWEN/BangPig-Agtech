@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h2 class="display-5">Statistiques de Mortalité des Porcs</h2>
+            <p class="text-muted">Calculez le nombre de porcs morts avant et après sevrage dans une plage de dates donnée.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <form autocomplete="off" method="POST" class="shadow p-4 rounded bg-light">
+                {% csrf_token %}
+                <h4 class="mb-4">Rechercher</h4>
+                {{ form|crispy }}
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-success btn-lg" type="submit">Rechercher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        {% if not preweaning == none %}
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Pré-Sevrage</h5>
+                    <p class="mb-1"><strong>Nombre de morts :</strong> {{ preweaning }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not postweaning == none %}
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Post-Sevrage</h5>
+                    <p class="mb-1"><strong>Nombre de morts :</strong> {{ postweaning }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <form>
+                <button class="btn btn-secondary btn-lg" type="submit" formaction="/report">Retour</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
+    <div class="card shadow-lg" style="width: 100%; max-width: 500px; border-radius: 10px;">
+        <div class="card-body p-4">
+            <h3 class="card-title text-center mb-4" style="font-weight: bold; color: #343a40;">Connexion</h3>
+            <form autocomplete="off" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form|crispy }}
+                </div>
+                <button class="btn btn-success btn-lg w-100" type="Login">Se connecter</button>
+                {% for message in messages %}
+                    <p class="text-danger mt-3 text-center">{{ message }}</p>
+                {% endfor %}
+            </form>
+            <p class="text-center mt-3">
+                Vous n'avez pas de compte ? <a href="{% url 'registeruser' %}" class="text-decoration-none" style="color: #007bff; font-weight: bold;">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: #343a40;
+    }
+
+    .card {
+        background-color: white;
+        border: none;
+    }
+
+    .btn-success {
+        background-color: #43a047;
+        border: none;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .btn-success:hover {
+        background-color: #388e3c;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-success:active {
+        transform: scale(0.98);
+    }
+</style>
+
+{% endblock content %}

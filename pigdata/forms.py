@@ -6,16 +6,17 @@ from django.contrib.auth.models import User
 # from bootstrap_datepicker_plus import DatePickerInput
 
 class datetodate(forms.Form):
-    from_date=forms.DateField(label='De')
-    to_date=forms.DateField(label='à')
-
+    from_date=forms.DateField(label='De', widget=forms.DateInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}))
+    to_date=forms.DateField(label='à', widget=forms.DateInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}))
+    
+ 
 class selectpigsform(forms.Form):
-    CHOICES = (('1','Les porcs avec une taille de portée à la naissance inférieure à amount'),
-               ('2','Les porcs avec une taille de portée à la naissance supérieure à amount'),
-                ( '3','Les porcs avec une taille de portée au sevrage supérieure ou égale à amount'),
-                ('4','Les porcs avec une taille de portée au sevrage exactement égale à amount'))
+    CHOICES = (('1','Les porcs avec une taille de portée à la naissance inférieure à : '),
+               ('2','Les porcs avec une taille de portée à la naissance supérieure à : '),
+                ( '3','Les porcs avec une taille de portée au sevrage supérieure ou égale à : '),
+                ('4','Les porcs avec une taille de portée au sevrage exactement égale à : '))
     task = forms.ChoiceField(choices=CHOICES, label='Rechercher')
-    amount=forms.CharField(label='', max_length='150')
+    amount=forms.CharField(label='amount', max_length='150')
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -70,37 +71,34 @@ class disposal_form(forms.ModelForm):
             'sale_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
         }
-
 class death_form(forms.ModelForm):
     class Meta:
-        model=death
+        model = death
         exclude = ['user'] 
-        labels={
+        labels = {
             'gip': 'Identification Number',
             'cause_death': 'Cause Of Death',
             'date_death': 'Date Of Death',
-            'postmortem_findings':'Post Mortem Findings'
+            'postmortem_findings': 'Post Mortem Findings',
         }
         widgets = {
-            # 'date_death': DatePickerInput(format='%Y-%m-%d'),
-            'date_death': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
-
+            'date_death': forms.TextInput(attrs={
+                'class': 'flatpickr',
+                'placeholder': 'YYYY-MM-DD',
+                'type': 'date',
+            }),
         }
-    def __init__(self, *args, user=None, **kwargs):
-        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
-        initial = kwargs.get('initial', {})
-        specific_animal = initial.get('gip', None)
 
+    def __init__(self, *args, user=None, specific_animal=None, **kwargs):
         super().__init__(*args, **kwargs)
         if specific_animal:
-            # Restreindre le champ `gip` à l'animal spécifique
+            # Limiter le champ `gip` à l'animal spécifié uniquement
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+            self.fields['gip'].initial = specific_animal
+            self.fields['gip'].widget.attrs['readonly'] = True  # Rendre le champ non modifiable
         elif user:
-            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            # Filtrer les animaux accessibles par l'utilisateur connecté
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
-
-
-
 
 class nutrition_form(forms.ModelForm):
     class Meta:
@@ -133,27 +131,27 @@ class nutrition_form(forms.ModelForm):
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
 
-class economics_form(forms.ModelForm):
-    class Meta:
-        model=economics
-        exclude = ['user'] 
-        labels={
-            'gip': 'Identification Number',
-            'book_value': 'Book Value',
-            'amount_realized': 'Amount Realized',
-        }
-    def __init__(self, *args, user=None, **kwargs):
-        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
-        initial = kwargs.get('initial', {})
-        specific_animal = initial.get('gip', None)
+# class economics_form(forms.ModelForm):
+#     class Meta:
+#         model=economics
+#         exclude = ['user'] 
+#         labels={
+#             'gip': 'Identification Number',
+#             'book_value': 'Book Value',
+#             'amount_realized': 'Amount Realized',
+#         }
+#     def __init__(self, *args, user=None, **kwargs):
+#         # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+#         initial = kwargs.get('initial', {})
+#         specific_animal = initial.get('gip', None)
 
-        super().__init__(*args, **kwargs)
-        if specific_animal:
-            # Restreindre le champ `gip` à l'animal spécifique
-            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
-        elif user:
-            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
-            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+#         super().__init__(*args, **kwargs)
+#         if specific_animal:
+#             # Restreindre le champ `gip` à l'animal spécifique
+#             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+#         elif user:
+#             # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+#             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
 
 
@@ -461,42 +459,41 @@ class general_update_form(forms.ModelForm):
 
         
 
-        
 class disposal_update_form(forms.ModelForm):
     class Meta:
-        model=disposal_culling
+        model = disposal_culling
         exclude = ['user']        
 
-        labels={
+        labels = {
             'gip': 'Identification Number',
             'reason': 'Reason For Sale/Transfer',
             'sale_date': 'Date Of Sale/Transfer',
             'weight_sale': 'Weight At Sale/Transfer',
-            'revenue':'Revenue Generated'
+            'revenue': 'Revenue Generated'
         }
         widgets = {
-            'sale_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
-           
-            #'gip': forms.TextInput(attrs={'disabled':True}),
-            #'reason': forms.TextInput(attrs={'disabled':True}),
-            #'sale_date': forms.TextInput(attrs={'disabled':True}),
-            #'weight_sale': forms.TextInput(attrs={'disabled':True}),
-            #'revenue':forms.TextInput(attrs={'disabled':True})
-            
+            'sale_date': forms.TextInput(attrs={
+                'class': 'flatpickr',
+                'placeholder': 'YYYY-MM-DD',
+                'type': 'date'
+            }),
         }
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        specific_animal = kwargs.pop('specific_animal', None)
+    def __init__(self, *args, user=None, specific_animal=None, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
+        # Restreindre le champ `gip` à l'animal spécifique
         if specific_animal:
-            # Ne garder que l'animal spécifique
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+            self.fields['gip'].initial = specific_animal
+            self.fields['gip'].widget.attrs['readonly'] = True  # Rendre le champ non modifiable
         elif user:
-            # Filtrer par utilisateur
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
+        # Masquer les champs sensibles comme `animal_id` en les désactivant
+        for field_name in ['reason', 'sale_date', 'weight_sale', 'revenue']:
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs['readonly'] = False  # Rendre les champs modifiables
 
 
 class death_update_form(forms.ModelForm):
@@ -567,34 +564,28 @@ class nutrition_update_form(forms.ModelForm):
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
 
+# class economics_update_form(forms.ModelForm):
+#     class Meta:
+#         model = economics
+#         exclude = ['user']  # Exclure 'user' pour qu'il ne soit pas modifiable
+#         labels = {
+#             'book_value': 'Book Value',
+#             'amount_realized': 'Amount Realized',
+#         }
+#         widgets = {
+#             'book_value': forms.TextInput(attrs={'class': 'form-control'}),
+#             'amount_realized': forms.TextInput(attrs={'class': 'form-control'}),
+#             'gip': forms.HiddenInput(),  # Cacher le champ 'gip'
+#         }
 
-class economics_update_form(forms.ModelForm):
-    class Meta:
-        model = economics
-        # fields = ['book_value', 'amount_realized']  # Exclude 'gip' to prevent editing
-        exclude = ['user']
-        labels = {
-            'gip': 'Identification Number',
-
-            'book_value': 'Book Value',
-            'amount_realized': 'Amount Realized',
-        }
-        widgets = {
-            'book_value': forms.TextInput(attrs={'class': 'form-control'}),
-            'amount_realized': forms.TextInput(attrs={'class': 'form-control'}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        specific_animal = kwargs.pop('specific_animal', None)
-        super().__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         specific_animal = kwargs.pop('specific_animal', None)
+#         super().__init__(*args, **kwargs)
         
-        if specific_animal:
-            # Ne garder que l'animal spécifique
-            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
-        elif user:
-            # Filtrer par utilisateur
-            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
+#         if specific_animal:
+#             self.fields['gip'].initial = specific_animal  # Pré-remplir avec l'animal spécifique
+#             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+#             self.fields['gip'].widget.attrs['readonly'] = True  # Empêcher la modification
 
 
 
@@ -607,7 +598,7 @@ class vaccination_update_form(forms.ModelForm):
             'disease': 'Against Disease',
             'make': 'Make',
             'first_dose': 'First Dose',
-            'booster': 'Booster Dose',
+            'booster_dose': 'Booster Dose',
         }
         widgets = {
             # 'first_dose': DatePickerInput(format='%Y-%m-%d'),
@@ -615,7 +606,7 @@ class vaccination_update_form(forms.ModelForm):
             # 'repeat': DatePickerInput(format='%Y-%m-%d'),
 
             'first_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
-            'booster': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
+            'booster_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'repeat': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
             #'gip': forms.TextInput(attrs={'disabled':True}),
@@ -716,7 +707,9 @@ class efficiency_update_form_female(forms.ModelForm):
 class efficiency_update_form_male(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_male
-        exclude = ['user']        
+        fields = '__all__'
+
+        exclude = ['user', 'animal_id'] 
 
         labels={
             'gip': 'Identification Number',
@@ -743,6 +736,7 @@ class efficiency_update_form_male(forms.ModelForm):
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'doc': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
+            'gip': forms.HiddenInput(),  # Cacher le champ 'gip'
 
             # 'gip': forms.TextInput(attrs={'disabled':True}),
             # 'dow': forms.TextInput(attrs={'disabled':True}),
@@ -758,16 +752,20 @@ class efficiency_update_form_male(forms.ModelForm):
             # 'conform_at_eight': forms.TextInput(attrs={'disabled':True}),
         }
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
-        specific_animal = kwargs.pop('specific_animal', None)
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
         super().__init__(*args, **kwargs)
-        
         if specific_animal:
-            # Ne garder que l'animal spécifique
+            # Restreindre le champ `gip` à l'animal spécifique
+            
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+            # self.fields['gip'].widget.attrs['readonly'] = True  # Empêcher la modification
+
         elif user:
-            # Filtrer par utilisateur
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
     
@@ -776,7 +774,9 @@ class efficiency_update_form_male(forms.ModelForm):
 class qualification_update_form(forms.ModelForm):
     class Meta:
         model=qualification_boar
-        exclude = ['user']        
+        # fields='__all__'
+
+        exclude = ['user', 'gip']        
 
         labels={
             'gip': 'Identification Number',
@@ -817,6 +817,8 @@ class service_update_form_male(forms.ModelForm):
     class Meta:
         model=service_record_male
         fields='__all__'
+        # exclude = ['user']        
+
         labels={
             'gip': 'Identification Number',
             'sow_no': 'SOW Number',
@@ -853,6 +855,17 @@ class service_update_form_male(forms.ModelForm):
             # 'weaning_weight': forms.TextInput(attrs={'disabled':True}),
             # 'still_birth_abnormality': forms.TextInput(attrs={'disabled':True}),
         }
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
+        
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
 class service_update_form_female(forms.ModelForm):
     class Meta:
@@ -905,6 +918,17 @@ class service_update_form_female(forms.ModelForm):
             # 'still_birth_abnormality': forms.TextInput(attrs={'disabled':True}),
             # 'date_of_abortion':forms.TextInput(attrs={'disabled':True}),
         }
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        specific_animal = kwargs.pop('specific_animal', None)
+        super().__init__(*args, **kwargs)
+        
+        if specific_animal:
+            # Ne garder que l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Filtrer par utilisateur
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
 
 

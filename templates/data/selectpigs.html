@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h2 class="display-5">Statistiques par Genre</h2>
+            <p class="text-muted">Analyse des statistiques détaillées pour les individus de chaque genre.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-10">
+            <form autocomplete="off" method="POST" class="shadow p-4 rounded bg-light">
+                {% csrf_token %}
+                <h4 class="mb-4">Rechercher</h4>
+                {{ form|crispy }}
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-success btn-lg" type="submit">Rechercher</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow mb-3">
+                <div class="card-header bg-primary text-white">Male</div>
+                <div class="card-body">
+                    <p><strong>Total:</strong> {{ malelen }}</p>
+                    <ul class="list-group">
+                        {% for i in male %}
+                        <li class="list-group-item">{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow mb-3">
+                <div class="card-header bg-success text-white">Female</div>
+                <div class="card-body">
+                    <p><strong>Total:</strong> {{ femalelen }}</p>
+                    <ul class="list-group">
+                        {% for i in female %}
+                        <li class="list-group-item">{{ i }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <form>
+                <button class="btn btn-secondary btn-lg" type="submit" formaction="/report">Retour</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}

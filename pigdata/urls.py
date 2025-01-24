@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns=[
-    path('', views.index, name='index'),
+    path('', views.home, name='home'),
     path('home/', views.index, name='index'),
     path('login/', views.loginuser, name='loginuser'),
     path('register/', views.registeruser, name='registeruser'),
@@ -20,7 +20,7 @@ urlpatterns=[
     path('vetexam/<str:animal_id>', views.vetexam, name='vetexam'),
     path('create/disposal/<str:animal_id>', views.create_disposal, name='create_disposal'),
     path('nutrition/<str:animal_id>', views.create_nutrition, name='create_nutrition'),
-    path('create/economics/<str:animal_id>', views.create_economics, name='create_economics'),
+    # path('create/economics/<str:animal_id>', views.create_economics, name='create_economics'),
     path('create/efficiency/<str:animal_id>', views.create_efficiency, name='create_efficiency'),
     path('create/qualification/<str:animal_id>', views.create_qualification, name='create_qualification'),
     path('service/<str:animal_id>', views.create_service, name='create_service'),
@@ -33,7 +33,7 @@ urlpatterns=[
 
     path('update/general/<str:animal_id>', views.update_general, name='update_general'),
     path('update/disposal/<str:animal_id>', views.update_disposal, name='update_disposal'),
-    path('update/economics/<str:animal_id>', views.update_economics, name='update_economics'),
+    # path('update/economics/<str:animal_id>', views.update_economics, name='update_economics'),
     path('update/efficiency/<str:animal_id>', views.update_efficiency, name='update_efficiency'),
     path('update/qualification/<str:animal_id>', views.update_qualification, name='update_qualification'),
     path('update/death/<str:animal_id>', views.update_death, name='update_death'),
@@ -41,6 +41,8 @@ urlpatterns=[
     path('update/vetexam/<str:animal_id>', views.update_vetexam, name='update_vetexam'),
     path('update/service/<str:animal_id>', views.update_service, name='update_service'),
     path('update/nutrition/<str:animal_id>', views.update_nutrition, name='update_nutrition'),
+    path('update_health_parameter/<int:animal_id>/', views.update_health_parameter, name='update_health_parameter'),
+
 
     path('report/history/<str:animal_id>', views.history, name='history'),
     path('report/pigletborn', views.pigletborn, name='pigletborn'),
@@ -62,8 +64,8 @@ urlpatterns=[
     path('account/', views.account, name='account'),
     path('help/', views.help, name='help'),
 
-    path('search/', views.pig_search, name='pig_search'),
-    path('searchall/', views.pig_searchall, name='pig_searchall'),
+    path('search/', views.searchdelete, name='searchdelete'),
+    path('searchall/', views.searchupdate, name='searchupdate'),
 
 
 ]

@@ -32,7 +32,7 @@ def loginuser(request):
 
     context={'form': form
     ,'tablename':'Login'}
-    return render(request, "login.html", context)
+    return render(request, "account/login.html", context)
 
 def logoutuser(request):
     logout(request)  # Déconnexion de l'utilisateur
@@ -48,7 +48,7 @@ def registeruser(request):
             form.save()  # Enregistrement du nouvel utilisateur
             return redirect('loginuser')  # Redirection vers la page de connexion
     context = {'form': form, 'tablename': 'Register'}
-    return render(request, "register.html", context)
+    return render(request, "account/register.html", context)
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -68,10 +68,10 @@ def registeruser(request):
 #---------------------------------------------------------------------------------------------------------------------------------------
 
 def dataentry(request):  #entrer les donnees
-    return render(request, "dataentry.html", context={'tablename':'Que Voulez-Vous faire ?'})
+    return render(request, "action/dataentry.html", context={'tablename':'Que Voulez-Vous faire ?'})
 
 def report(request):  
-    return render(request, "report.html", context={'tablename':'Mes Enregistrements'})
+    return render(request, "others/report.html", context={'tablename':'Mes Enregistrements'})
 #-------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -88,9 +88,14 @@ def report(request):
 
 
 @login_required(login_url='loginuser')
-def delete(request, animal_id):                  #permet de supprimer un enregistrement d'animal. L'animal est récupéré grâce à son animal_id et supprimé.
-    animal=get_object_or_404(general_identification_and_parentage, animal_id=animal_id)
-    animal.delete()
+def delete(request, animal_id):
+    try:
+        animal = general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user)
+        animal.delete()
+        messages.success(request, "L'animal a été supprimé avec succès.")
+    except general_identification_and_parentage.DoesNotExist:
+        messages.error(request, "Cet animal n'existe pas ou ne vous appartient pas.")
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='loginuser')
@@ -100,51 +105,72 @@ def deletepigs(request):              #Affiche une page où les animaux dun user
         'animals':animals,
         'tablename':'Supprimer Un Porc',
     }
-    return render(request, "deletepigs.html", context)
-
+    return render(request, "action/deletepigs.html", context)
 
 @login_required(login_url='loginuser')
-def delete_service(request, animal_id, pk):     #Supprime un service en fonction du genre de l'animal.
-    if request.method=='POST':
-        backbutton=request.POST.get('backbutton')
-        animal=get_object_or_404(general_identification_and_parentage, animal_id=animal_id)
-        if animal.gender=='Male':
-            #service=get_object_or_404(service_record_male, gip=animal, pk=pk)
-            service=service_record_male.objects.get(gip=animal, pk=pk) 
-            
-            service.delete()
-            return redirect(backbutton)
+def delete_service(request, animal_id, pk):  # Supprime un service en fonction du genre de l'animal.
+    if request.method == 'POST':
+        backbutton = request.POST.get('backbutton')
+        animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
+        
+        # Vérifier si l'animal est mâle ou femelle et supprimer le service correspondant
+        if animal.gender == 'Male':
+            service = service_record_male.objects.filter(gip=animal, pk=pk).first()
         else:
-            service=get_object_or_404(service_record_female, gip=animal, pk=pk)
+            service = service_record_female.objects.filter(gip=animal, pk=pk).first()
+        
+        # Supprimer l'objet s'il existe
+        if service:
             service.delete()
-            return redirect(request.build_absolute_uri())
+        
+        # Redirection sécurisée
+        return redirect(backbutton if backbutton else 'default_page')  # Remplace 'default_page' par l'URL de ton choix
 
 @login_required(login_url='loginuser')
 def delete_vaccination(request, animal_id, pk):
-    if request.method=='POST':
-        backbutton=request.POST.get('backbutton')
-        animal=get_object_or_404(general_identification_and_parentage, animal_id=animal_id)
-        vacc=health_parameter_vaccination.objects.get(gip=animal, pk=pk) 
-        vacc.delete()   # Suppression de la vaccination
-        return redirect(backbutton)
+    if request.method == 'POST':
+        backbutton = request.POST.get('backbutton')
+        animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
 
+        vacc = health_parameter_vaccination.objects.filter(gip=animal, pk=pk).first()
+        
+        if vacc:  # Vérifie si l'objet existe avant de le supprimer
+            vacc.delete()  # Suppression de la vaccination
+        
+        return redirect(backbutton)
 @login_required(login_url='loginuser')
 def delete_vetexam(request, animal_id, pk):
-    if request.method=='POST':
-        backbutton=request.POST.get('backbutton')
-        animal=get_object_or_404(general_identification_and_parentage, animal_id=animal_id)
-        vet=health_parameter_vetexam.objects.get(gip=animal, pk=pk) 
-        vet.delete()  # Suppression de l'examen vétérinaire
-        return redirect(backbutton)
+    if request.method == 'POST':
+        backbutton = request.POST.get('backbutton')
+        animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
 
+        
+        # Récupérer l'examen vétérinaire de manière sécurisée
+        vet = health_parameter_vetexam.objects.filter(gip=animal, pk=pk).first()
+        
+        # Vérifier si l'objet existe avant de le supprimer
+        if vet:
+            vet.delete()
+        
+        # Redirection sécurisée
+        return redirect(backbutton if backbutton else 'default_page')  # Remplace 'default_page' par une URL par défaut
 @login_required(login_url='loginuser')
 def delete_nutrition(request, animal_id, pk):
-    if request.method=='POST':
-        backbutton=request.POST.get('backbutton')
-        animal=get_object_or_404(general_identification_and_parentage, animal_id=animal_id)
-        nutrition=nutrition_and_feeding.objects.get(gip=animal, pk=pk) 
-        nutrition.delete()  # Suppression de l'enregistrement nutritionnel
-        return redirect(backbutton)
+    if request.method == 'POST':
+        backbutton = request.POST.get('backbutton')
+        animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
+        
+        # Récupérer l'enregistrement nutritionnel de manière sécurisée
+        nutrition = nutrition_and_feeding.objects.filter(gip=animal, pk=pk).first()
+        
+        # Vérifier si l'objet existe avant de le supprimer
+        if nutrition:
+            nutrition.delete()
+        
+        # Redirection sécurisée
+        return redirect(backbutton if backbutton else 'default_page')  # Remplace 'default_page' par une URL de secours
 
 
 #Ces fonctions permettent de supprimer des enregistrements spécifiques associés à un animal en utilisant leurs identifiants.
@@ -192,7 +218,7 @@ def delete_nutrition(request, animal_id, pk):
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 @login_required(login_url='loginuser')
 def dbsuccess(request):    #dbsuccess : Renvoie un template dbsuccess.html avec un contexte indiquant que l'opération a été un succès.
-    return render(request, "dbsuccess.html", context={'tablename':'Success'})
+    return render(request, "action/dbsuccess.html", context={'tablename':'Success'})
 
 @login_required(login_url='loginuser')
 def index(request):
@@ -235,7 +261,7 @@ def create_general(request):
         if form.is_valid():
             animal_id=str(form.cleaned_data['animal_id'])
             # Vérifie si l'animal existe déjà
-            if general_identification_and_parentage.objects.filter(animal_id=animal_id).exists()==False:
+            if not general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).exists():
                 obj = form.save(commit=False)
                 obj.user = request.user  # Associer l'utilisateur connecté
                 obj.save()  # Sauvegarde du formulaire si l'animal n'existe pas
@@ -253,279 +279,271 @@ def create_general(request):
 #Elle vérifie d'abord si l'animal existe déjà dans la base de données en utilisant l'identifiant animal_id. Si ce n'est pas le cas, elle sauvegarde les données.
 #En cas de succès, l'utilisateur est redirigé vers create_efficiency pour saisir des paramètres d'efficacité.
 
-
-
 @login_required(login_url='loginuser')
 def create_efficiency(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    gender=animal.gender  # Récupération du genre de l'animal
-    if gender=='Male':
-        form=efficiency_form_male(initial={'gip':animal}) # Formulaire spécifique pour un mâle
-        if request.method=='POST':    
-            form=efficiency_form_male(request.POST)
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+    gender = animal.gender  # Récupération du genre de l'animal
+    
+    if gender == 'Male':
+        form = efficiency_form_male(initial={'gip': animal})  # Formulaire spécifique pour un mâle
+        if request.method == 'POST':    
+            form = efficiency_form_male(request.POST)
             if form.is_valid():
-                instance=form.save(commit=False)
-                agevar=instance.dow-instance.gip.dob  # Calcul de l'âge au sevrage
-                instance.weaning_age=agevar.days
-                instance.user = request.user
+                instance = form.save(commit=False)
 
-                instance.save()
-                return redirect('create_qualification',animal_id=animal_id)
+                # Vérifie si dow est renseigné avant de calculer weaning_age
+                if instance.dow:
+                    agevar = instance.dow - instance.gip.dob  
+                    instance.weaning_age = agevar.days
+                else:
+                    instance.weaning_age = None  # Ne pas calculer si dow est vide
                 
-        context={
-            'form':form,
-            'tablename':'Paramètre Efficacité Male'
-        }
-
-        return render(request,"create/create_efficiency_male.html",context)
-    elif gender=='Female':
-        form=efficiency_form_female(initial={'gip':animal})
-        if request.method=='POST':    
-            form=efficiency_form_female(request.POST)  # Formulaire spécifique pour une femelle
-            if form.is_valid():
-                instance=form.save(commit=False)
-                agevar=instance.dow-instance.gip.dob  # Calcul de l'âge au sevrage
-                instance.weaning_age=agevar.days
                 instance.user = request.user
-
                 instance.save()
-                return redirect('create_qualification',animal_id=animal_id)
-        context={
-            'form':form,
-            'tablename':'Paramètre Efficacité Femelle'
+                return redirect('create_qualification', animal_id=animal_id)
+                
+        context = {
+            'form': form,
+            'tablename': 'Paramètre Efficacité Male'
         }
+        return render(request, "create/create_efficiency_male.html", context)
 
-        return render(request,"create/create_efficiency_female.html",context)
+    elif gender == 'Female':
+        form = efficiency_form_female(initial={'gip': animal})
+        if request.method == 'POST':    
+            form = efficiency_form_female(request.POST)  # Formulaire spécifique pour une femelle
+            if form.is_valid():
+                instance = form.save(commit=False)
 
-# Enregistre les paramètres d'efficacité pour un animal, en fonction de son genre (mâle ou femelle).
-# Le calcul de weaning_age se base sur la différence entre la date du sevrage (dow) et la date de naissance (dob).
-
+                # Vérifie si dow est renseigné avant de calculer weaning_age
+                if instance.dow:
+                    agevar = instance.dow - instance.gip.dob  
+                    instance.weaning_age = agevar.days
+                else:
+                    instance.weaning_age = None  # Ne pas calculer si dow est vide
+                
+                instance.user = request.user
+                instance.save()
+                return redirect('create_qualification', animal_id=animal_id)
+                
+        context = {
+            'form': form,
+            'tablename': 'Paramètre Efficacité Femelle'
+        }
+        return render(request, "create/create_efficiency_female.html", context)
 
 
 
 @login_required(login_url='loginuser')
 def create_qualification(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    gender=animal.gender
-    if gender=='Female':
-        return redirect('create_service',animal_id=animal_id) # Redirection si l'animal est une femelle
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
     
-    form=qualification_form(initial={'gip':animal})
-    if request.method=='POST':    
-        form=qualification_form(request.POST)
+    # Vérifier le genre de l'animal et rediriger si c'est une femelle
+    if animal.gender == 'Female':
+        return redirect('create_service', animal_id=animal_id)
+
+    form = qualification_form(initial={'gip': animal})
+    
+    if request.method == 'POST':
+        form = qualification_form(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
-
-                
             obj.save()
-            return redirect('create_service',animal_id=animal_id)
-    context={
-        'form':form,
+            return redirect('create_service', animal_id=animal_id)
+
+    context = {
+        'form': form,
         'tablename': 'Qualification As Breeding Boar'
     }
 
-    return render(request,"create/create_qualification.html",context)
+    return render(request, "create/create_qualification.html", context)
 
 # Gère la création des qualifications pour les mâles. Les femelles passent directement à la création des services.
 
 
-
 @login_required(login_url='loginuser')
 def create_service(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    gender=animal.gender
-    if gender=='Male':
-        services=service_record_male.objects.filter(gip=animal)
-        form=service_form_male(initial={'gip':animal})
-        if request.method=='POST':    
-            form=service_form_male(request.POST)
-            if form.is_valid():
-                instance=form.save(commit=False)
-                born_total=instance.born_female+instance.born_male
-                weaned_total=instance.weaned_female+instance.weaned_male
-                instance.total_weaned=weaned_total
-                instance.born_total=born_total
-                obj = form.save(commit=False)
-                obj.user = request.user  # Associer l'utilisateur connecté
-                obj.save()
-                return redirect('create_service',animal_id=animal_id)
-        context={
-            'form':form,
-            'services':services,
-            'gip':animal_id,
-            'tablename': 'Enregistrement des Services et Caractères des Portées',
-            'backbut':request.build_absolute_uri(),
-        }
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
 
-        return render(request,"service_male.html",context)
-    elif gender=='Female':
-        services=service_record_female.objects.filter(gip=animal)
-        form=service_form_female(initial={'gip':animal})
-        if request.method=='POST':    
-            form=service_form_female(request.POST)
-            if form.is_valid():
-                instance=form.save(commit=False)
-                born_total=instance.born_female+instance.born_male
-                weaned_total=instance.weaned_female+instance.weaned_male
-                instance.total_weaned=weaned_total
-                instance.born_total=born_total
-                obj = form.save(commit=False)
-                obj.user = request.user  # Associer l'utilisateur connecté
-                obj.save()
-                return redirect('create_service',animal_id=animal_id)
-        context={
-            'form':form,
-            'services':services,
-            'gip':animal_id,
-            'tablename': 'Enregistrement des Services et Caractères des Portées',
-            'backbut':request.build_absolute_uri(),
-        }
-        return render(request,"service_female.html",context)
+    
+    # Déterminer le modèle et le formulaire en fonction du genre
+    if animal.gender == 'Male':
+        service_model = service_record_male
+        service_form = service_form_male
+        template = "create/service_male.html"
+    else:
+        service_model = service_record_female
+        service_form = service_form_female
+        template = "create/service_female.html"
+
+    services = service_model.objects.filter(gip=animal)
+    form = service_form(initial={'gip': animal})
+
+    if request.method == 'POST':    
+        form = service_form(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            
+            # Calcul des totaux
+            instance.born_total = instance.born_female + instance.born_male
+            instance.total_weaned = instance.weaned_female + instance.weaned_male
+            
+            # Associer l'utilisateur connecté
+            instance.user = request.user  
+            instance.save()
+            
+            return redirect('create_service', animal_id=animal_id)
+
+    context = {
+        'form': form,
+        'services': services,
+        'gip': animal_id,
+        'tablename': 'Enregistrement des Services et Caractères des Portées',
+        'backbut': request.build_absolute_uri(),
+    }
+
+    return render(request, template, context)
 
 # Enregistre les services (données de reproduction) pour un animal. Le formulaire et le template changent selon le genre de l'animal.
 # Calcule les totaux des petits nés et sevrés.
 
 
 
-
 @login_required(login_url='loginuser')
 def vaccination(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user)
-    vaccinations=health_parameter_vaccination.objects.filter(gip=animal)
-    form=vaccination_form(initial={'gip':animal})
-    if request.method=='POST':    
-        form = vaccination_form(request.POST, user=request.user)
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    vaccinations = health_parameter_vaccination.objects.filter(gip=animal)
+    
+    form = vaccination_form(initial={'gip': animal})
+
+    if request.method == 'POST':    
+        form = vaccination_form(request.POST)
         if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user  # Associer l'utilisateur connecté
-            obj.save()
-            return redirect('vaccination',animal_id=animal_id)
-    context={
-        'form':form,
-        'vaccinations':vaccinations,
-        'gip':animal_id,
-        'backbut':request.build_absolute_uri(),
-        'tablename':'Vaccinations'
+            instance = form.save(commit=False)
+            instance.user = request.user  # Associer l'utilisateur connecté
+            instance.save()
+            return redirect('vaccination', animal_id=animal_id)
+
+    context = {
+        'form': form,
+        'vaccinations': vaccinations,
+        'gip': animal_id,
+        'backbut': request.build_absolute_uri(),
+        'tablename': 'Vaccinations'
     }
 
-    return render(request,"vaccinationtemplate.html",context)
-
+    return render(request, "create/vaccinationtemplate.html", context)
 @login_required(login_url='loginuser')
 def vetexam(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user )
-    vet_exams=health_parameter_vetexam.objects.filter(gip=animal)
-    form=vetexam_form(initial={'gip':animal})
-    if request.method=='POST':    
-        form=vetexam_form(request.POST)
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    vet_exams = health_parameter_vetexam.objects.filter(gip=animal)
+    form = vetexam_form(initial={'gip': animal})
+
+    if request.method == 'POST':    
+        form = vetexam_form(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
             obj.save()
-            return redirect('vetexam',animal_id=animal_id)
-    context={
-        'form':form,
-        'vet_exams':vet_exams,
-        'gip':animal_id,
-        'backbut':request.build_absolute_uri(),
-        'tablename':'Veterinary Exam'
+            return redirect('vetexam', animal_id=animal_id)
+
+    context = {
+        'form': form,
+        'vet_exams': vet_exams,
+        'gip': animal_id,
+        'backbut': request.build_absolute_uri(),
+        'tablename': 'Veterinary Exam'
     }
 
-    return render(request,"vetexamtemplate.html",context)
-
-
-
+    return render(request, "create/vetexamtemplate.html", context)
 @login_required(login_url='loginuser')
 def create_nutrition(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user )
-    nutritions=nutrition_and_feeding.objects.filter(gip=animal)
-    form=nutrition_form(initial={'gip':animal})
-    if request.method=='POST':
-          
-        form=nutrition_form(request.POST)
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    nutritions = nutrition_and_feeding.objects.filter(gip=animal)
+    form = nutrition_form(initial={'gip': animal})
+
+    if request.method == 'POST':  
+        form = nutrition_form(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
             obj.save()
-            
-            return redirect('create_nutrition',animal_id=animal_id)
-    context={
-        'tablename':'Nutrition',
-        'form':form,
+            return redirect('create_nutrition', animal_id=animal_id)
+
+    context = {
+        'tablename': 'Nutrition',
+        'form': form,
         'nutritions': nutritions,
-        'backbut':request.build_absolute_uri(),
-        'gip':animal_id
+        'backbut': request.build_absolute_uri(),
+        'gip': animal_id
     }
 
-    return render(request,"nutrition_template.html",context)
-
-# Les fonctions suivantes (vaccination, vetexam, create_nutrition) suivent le même schéma :
-
-# Elles récupèrent les données liées à un animal donné (par son animal_id).
-# Elles affichent un formulaire spécifique pour enregistrer de nouvelles données ou consulter les anciennes.
-# Après enregistrement, elles redirigent vers la même page pour afficher la liste mise à jour.
-
-
+    return render(request, "create/nutrition_template.html", context)
 @login_required(login_url='loginuser')
 def deathview(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    form=death_form(initial={'gip':animal})
-    if request.method=='POST':    
-        form=death_form(request.POST)
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    form = death_form(initial={'gip': animal})
+
+    if request.method == 'POST':    
+        form = death_form(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
             obj.save()
-            return redirect('create_nutrition',animal_id=animal_id)
-    context={
-        'tablename':'Information About Death Of Pig',
-        'form':form,
+            return redirect('create_nutrition', animal_id=animal_id)
+
+    context = {
+        'tablename': 'Information About Death Of Pig',
+        'form': form,
     }
 
-    return render(request,"create/create_death.html",context)
-
-
+    return render(request, "create/create_death.html", context)
 @login_required(login_url='loginuser')
 def create_disposal(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    form=disposal_form(initial={'gip':animal})
-    if request.method=='POST':    
-        form=disposal_form(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user  # Associer l'utilisateur connecté
-            obj.save()
-            return redirect('create_economics', animal_id=animal_id)
-    context={
-        'form':form,
-        'tablename':'Disposal And Culling'
-    }
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    form = disposal_form(initial={'gip': animal})
 
-    return render(request,"create/create_disposal.html",context)
-
-
-
-
-
-@login_required(login_url='loginuser')
-def create_economics(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    form=economics_form(initial={'gip':animal})
-    if request.method=='POST':
-        form=economics_form(request.POST)
+    if request.method == 'POST':    
+        form = disposal_form(request.POST)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
             obj.save()
             return redirect('dbsuccess')
-    context={
-        'form':form,
-        'tablename':'Economics'
+
+    context = {
+        'form': form,
+        'tablename': 'Disposal And Culling'
     }
 
-    return render(request,"create/create_economics.html",context)
+    return render(request, "create/create_disposal.html", context)
 
 
+
+# @login_required(login_url='loginuser')
+# def create_economics(request, animal_id):
+#     # Utilisation de get_object_or_404 pour récupérer l'animal ou renvoyer une erreur 404 si l'animal n'existe pas
+#     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
+    
+#     form = economics_form(initial={'gip': animal})
+    
+#     if request.method == 'POST':
+#         form = economics_form(request.POST)
+#         if form.is_valid():
+#             obj = form.save(commit=False)
+#             obj.user = request.user  # Associer l'utilisateur connecté
+#             obj.save()
+#             return redirect('dbsuccess')  # Rediriger vers une page de succès
+    
+#     context = {
+#         'form': form,
+#         'tablename': 'Economics'
+#     }
+
+#     return render(request, "create/create_economics.html", context)
 
 
 
@@ -541,79 +559,109 @@ def create_economics(request, animal_id):
 
 @login_required(login_url='loginuser')
 def successupdate(request):
-    return render(request,"successupdate.html", context={'tablename':'Update Successful'})
+    return render(request,"update/successupdate.html", context={'tablename':'Update Successful'})
 
 
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
+from django.http import HttpResponse
 
+# Update view with gender-specific templates
 @login_required(login_url='loginuser')
 def update(request):
-    animal_id = request.POST.get('animal_id')
-    if animal_id and general_identification_and_parentage.objects.filter(animal_id=animal_id).exists():
-        animal = general_identification_and_parentage.objects.get(animal_id=animal_id)
-        context = {
-            'tablename': 'Mise à Jour des Enregistrements',
-            'animal_id': animal_id,
-            'gender': animal.gender
-        }
-        if animal.gender == 'Female':
-            return render(request, "updatefemale.html", context)
-        elif animal.gender == 'Male':
-            return render(request, "updatemale.html", context)
-    else:
-        messages.error(request, 'The animal does not exist')
-        return redirect('dataentry')
+    animal_id = request.POST.get('animal_id') or request.GET.get('animal_id')
+    
+    # Utilisation de get_object_or_404 pour gérer les erreurs
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
 
+    
+    context = {
+        'tablename': 'Mise à Jour des Enregistrements',
+        'animal_id': animal_id,
+        'gender': animal.gender
+    }
+    
+    # Rendu selon le sexe de l'animal
+    if animal.gender == 'Female':
+        return render(request, "update/updatefemale.html", context)
+    elif animal.gender == 'Male':
+        return render(request, "update/updatemale.html", context)
 
+# Update general information
+from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 
 @login_required(login_url='loginuser')
 def update_general(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    form=general_update_form(instance=animal)
-    if request.method=='POST':
-        form=general_update_form(request.POST, instance=animal)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user  # Associer l'utilisateur connecté
-            obj.save()
-            return redirect('successupdate')
-    context={
-        'form':form,
-        'tablename': 'Identification Générale et Parenté'
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+    
+    form = general_update_form(instance=animal)
+
+    if request.method == 'POST':
+        form = general_update_form(request.POST, instance=animal)
+
+        try:
+
+            animal.dob = request.POST.get('dob', animal.dob)
+            animal.gender = request.POST.get('gender', animal.gender)
+            animal.breed = request.POST.get('breed', animal.breed)
+            animal.dam_no = request.POST.get('dam_no', animal.dam_no)
+            animal.sire_no = request.POST.get('sire_no', animal.sire_no)
+            animal.grand_dam = request.POST.get('grand_dam', animal.grand_dam)
+            animal.grand_sire = request.POST.get('grand_sire', animal.grand_sire)
+            animal.colitter_size_of_birth = request.POST.get('colitter_size_of_birth', animal.colitter_size_of_birth)
+            animal.color_and_marking = request.POST.get('color_and_marking', animal.color_and_marking)
+            animal.abnormalities = request.POST.get('abnormalities', animal.abnormalities)
+
+
+            
+            animal.save()  # Sauvegarde des modifications
+            messages.success(request, "Mise à jour réussie.")
+        except IntegrityError as e:
+            messages.error(request, f"Erreur d'intégrité : {e}")
+    
+    form = general_update_form(instance=animal)
+    context = {
+        'form': form,
+        'animal_data': animal,
     }
-
-    return render(request,"generalupdate.html",context)
-
-
+    return render(request, "update/generalupdate.html", context)
 
 @login_required(login_url='loginuser')
 def update_disposal(request, animal_id):
-    try:
-        obj = general_identification_and_parentage.objects.get(animal_id=animal_id)
-        disposal_instance, created = disposal_culling.objects.get_or_create(gip=obj)
-    except general_identification_and_parentage.DoesNotExist:
-        return HttpResponse("Animal not found", status=404)
+    # Vérifier si l'animal existe et appartient à l'utilisateur
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+    if not animal:
+        messages.error(request, "Animal non trouvé ou non accessible.")
+        return redirect('error_page')  # Rediriger vers une page d'erreur
 
-    form = disposal_update_form(instance=disposal_instance)
+    # Récupérer ou créer une instance de disposal_culling pour cet animal
+    disposal_instance, created = disposal_culling.objects.get_or_create(gip=animal)
+
+    # Initialiser le formulaire avec l'instance de disposal et l'animal spécifique
+    form = disposal_update_form(instance=disposal_instance, specific_animal=animal)
+
     if request.method == 'POST':
-        form = disposal_update_form(request.POST, instance=disposal_instance)
+        form = disposal_update_form(request.POST, instance=disposal_instance, specific_animal=animal)
         if form.is_valid():
             disposal_instance = form.save(commit=False)
-            disposal_instance.user = request.user  # Assigne l'utilisateur connecté
+            disposal_instance.user = request.user  # Associer l'utilisateur connecté
             disposal_instance.save()
-            return redirect('successupdate')
+            messages.success(request, "Mise à jour réussie.")
+            return redirect('successupdate')  # Rediriger après la mise à jour
         else:
-            print("Form Errors:", form.errors)  # Debugging
+            print("Form Errors:", form.errors)  # Pour le débogage
 
     context = {
         'form': form,
         'tablename': 'Disposal',
     }
-    return render(request, "updatedisposal.html", context)
+    return render(request, "update/updatedisposal.html", context)
 
-
+# Update nutrition information
 @login_required(login_url='loginuser')
 def update_nutrition(request, animal_id):
-    animal = general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user)
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
     nutritions = nutrition_and_feeding.objects.filter(gip=animal)
     
     form = nutrition_update_form(initial={'gip': animal}, user=request.user, specific_animal=animal)
@@ -633,241 +681,311 @@ def update_nutrition(request, animal_id):
         'backbut': request.build_absolute_uri(),
         'gip': animal_id
     }
-    return render(request, "nutrition_update_template.html", context)
+    return render(request, "update/nutrition_update_template.html", context)
 
 
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponse
+from django.contrib import messages
 
+# # Update economics information
+# @login_required(login_url='loginuser')
+# def update_economics(request, animal_id):
+#     # Utilisation de get_object_or_404 pour une gestion d'erreur plus propre
+#     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
+    
+#     # Création ou récupération de l'instance economics
+#     economics_instance, created = economics.objects.get_or_create(gip=animal)
+    
+#     form = economics_update_form(instance=economics_instance)
+#     if request.method == 'POST':
+#         form = economics_update_form(request.POST, instance=economics_instance)
+#         if form.is_valid():
+#             economics_instance = form.save(commit=False)
+#             economics_instance.user = request.user  # Assigner l'utilisateur connecté
+#             economics_instance.save()
+#             return redirect('successupdate')
+#         else:
+#             print("Form Errors:", form.errors)  # Debugging
+    
+#     context = {
+#         'form': form,
+#         'tablename': 'Economics',
+#     }
+#     return render(request, "update/updateeconomics.html", context)
+
+
+# Update efficiency information for male and female animals
 @login_required(login_url='loginuser')
-def update_economics(request, animal_id):
-    try:
-        obj = general_identification_and_parentage.objects.get(animal_id=animal_id)
-        economics_instance, created = economics.objects.get_or_create(gip=obj)
+def update_efficiency(request, animal_id):
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
+    gender = animal.gender
+
+    # Fonction pour calculer l'âge en jours
+    def calculate_age(dob, dow):
+        return (dow - dob).days
+    
+    if gender == 'Male':
+        # Récupérer ou créer l'instance pour les mâles
+        animal_efficiency, created = efficiency_parameter_male.objects.get_or_create(gip=animal)
+        form = efficiency_update_form_male(instance=animal_efficiency)
         
-    except general_identification_and_parentage.DoesNotExist:
-        return HttpResponse("Animal not found", status=404)
-
-    form = economics_update_form(instance=economics_instance)
-    if request.method == 'POST':
-        form = economics_update_form(request.POST, instance=economics_instance)
-        if form.is_valid():
-            economics_instance = form.save(commit=False)
-            economics_instance.user = request.user  # Assigne l'utilisateur connecté
-            economics_instance.save()
-            return redirect('successupdate')
-        else:
-            print("Form Errors:", form.errors)  # Debugging
-
-    context = {
-        'form': form,
-        'tablename': 'Economics',
-    }
-    return render(request, "updateeconomics.html", context)
-
-
-@login_required(login_url='loginuser')
-def update_efficiency(request,animal_id):
-    obj=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    gender=obj.gender
-    if gender=='Male':
-        animal, create=efficiency_parameter_male.objects.get_or_create(gip=obj)
-        form=efficiency_update_form_male(instance=animal)
-        if request.method=='POST':
-            form=efficiency_update_form_male(request.POST, instance=animal)
+        if request.method == 'POST':
+            form = efficiency_update_form_male(request.POST, instance=animal_efficiency)
             if form.is_valid():
-                instance=form.save(commit=False)
-                agevar=instance.dow-instance.gip.dob
-                instance.weaning_age=agevar.days
-                instance.user = request.user  # Associer l'utilisateur connecté
+                instance = form.save(commit=False)
+                instance.weaning_age = calculate_age(instance.gip.dob, instance.dow)
+                instance.user = request.user  # Assigner l'utilisateur connecté
                 instance.save()
-           
                 return redirect('successupdate')
-        context={
-            'form':form,
+        form = efficiency_update_form_male(instance=animal_efficiency)
+
+        context = {
+            'form': form,
+            'animal_efficiency':animal_efficiency,
+            'animal_data': animal,
+
             'tablename': 'Paramètre Efficacité'
         }
-
-
-        return render(request,"create/create_efficiency_male.html",context)
-    elif gender=='Female':
-        animal, create=efficiency_parameter_female.objects.get_or_create(gip=obj)
-        form=efficiency_update_form_female(instance=animal)
-        if request.method=='POST':
-            form=efficiency_update_form_female(request.POST, instance=animal)
+        return render(request, "update/update_efficiency_male.html", context)
+    
+    elif gender == 'Female':
+        # Récupérer ou créer l'instance pour les femelles
+        animal_efficiency, created = efficiency_parameter_female.objects.get_or_create(gip=animal)
+        form = efficiency_update_form_female(instance=animal_efficiency)
+        
+        if request.method == 'POST':
+            form = efficiency_update_form_female(request.POST, instance=animal_efficiency)
             if form.is_valid():
-                instance=form.save(commit=False)
-                agevar=instance.dow-instance.gip.dob
-                instance.weaning_age=agevar.days
-                instance.user = request.user  # Associer l'utilisateur connecté
+                instance = form.save(commit=False)
+                instance.weaning_age = calculate_age(instance.gip.dob, instance.dow)
+                instance.user = request.user  # Assigner l'utilisateur connecté
                 instance.save()
-
                 return redirect('successupdate')
-        context={
-            'form':form,
+        form = efficiency_update_form_male(instance=animal_efficiency)
+    
+        context = {
+            'form': form,
+            'animal_efficiency':animal_efficiency,
+            'animal_data': animal,
+
             'tablename': 'Paramètre Efficacité'
         }
+        
+        return render(request, "update/update_efficiency_female.html", context)
 
-        return render(request,"create/create_efficiency_female.html",context)
 
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib import messages
+from django.http import HttpResponse
+
+
+# Update qualification as a breeding boar
 @login_required(login_url='loginuser')
 def update_qualification(request, animal_id):
-    obj=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    animal, create=qualification_boar.objects.get_or_create(gip=obj)
-    form=qualification_update_form(instance=animal)
-    if request.method=='POST':
-        form=qualification_update_form(request.POST, instance=animal)
-        if form.is_valid():
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
 
-            instance = form.save(commit=False)
-            instance.user = request.user  # Assigne l'utilisateur connecté
-            instance.save()
+    qualification_instance, created = qualification_boar.objects.get_or_create(gip=animal)
+    form = qualification_update_form(instance=qualification_instance)
+    
+    if request.method == 'POST':
+        form = qualification_update_form(request.POST)
+        try:
+
+            qualification_instance.gip = request.POST.get('gip', qualification_instance.gip)
+            qualification_instance.physical_fitness = request.POST.get('physical_fitness', qualification_instance.physical_fitness)
+            qualification_instance.date_of_training = request.POST.get('date_of_training', qualification_instance.date_of_training)
+            qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
+            qualification_instance.training_score = request.POST.get('training_score', qualification_instance.training_score)
+            qualification_instance.seminal_characteristics = request.POST.get('seminal_characteristics', qualification_instance.seminal_characteristics)
+            qualification_instance.suitability = request.POST.get('suitability', qualification_instance.suitability)
             
-            return redirect('successupdate')
-    context={
-        'form':form,
+            qualification_instance.save()  # Sauvegarde des modifications
+            messages.success(request, "Mise à jour réussie.")
+        except IntegrityError as e:
+            messages.error(request, f"Erreur d'intégrité : {e}")
+    
+    form = qualification_update_form(instance=qualification_instance)
+    
+    context = {
+        'form': form,
+        'animal_data': animal,
+        'qualification_instance': qualification_instance,
+
         'tablename': 'Qualification As A Breeding Boar'
     }
 
-    return render(request,"create/create_qualification.html",context)
-
-
+    return render(request, "update/qualifications_update.html", context)
 
 
 @login_required(login_url='loginuser')
 def update_death(request, animal_id):
-    try:
-        obj = general_identification_and_parentage.objects.get(animal_id=animal_id)
-        death_instance, created = death.objects.get_or_create(gip=obj)
-    except general_identification_and_parentage.DoesNotExist:
-        return HttpResponse("Animal not found", status=404)
+    # Vérifier si l'animal existe et appartient à l'utilisateur connecté
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+    if not animal:
+        messages.error(request, "Animal non trouvé ou non accessible.")
+        return redirect('error_page')  # Rediriger vers une page d'erreur appropriée
 
-    form = death_update_form(instance=death_instance)
+    # Récupérer ou créer l'instance `death` associée
+    death_instance, created = death.objects.get_or_create(gip=animal)
+
     if request.method == 'POST':
-        form = death_update_form(request.POST, instance=death_instance)
+        # Traiter les données soumises
+        form = death_form(request.POST, instance=death_instance, specific_animal=animal)
+        try:
+            if form.is_valid():
+                # Sauvegarder l'instance du formulaire
+                death_instance = form.save(commit=False)
+                death_instance.user = request.user  # Associer l'utilisateur connecté
+                death_instance.cause_death = request.POST.get('cause_death', death_instance.cause_death)
+                death_instance.date_death = request.POST.get('date_death', death_instance.date_death)
+                death_instance.postmortem_findings = request.POST.get('postmortem_findings', death_instance.postmortem_findings)
+
+                death_instance.save()
+                messages.success(request, "Mise à jour réussie.")
+                return redirect('successupdate')  # Rediriger après la mise à jour réussie
+        except IntegrityError as e:
+            messages.error(request, f"Erreur d'intégrité : {e}")
+
+    # Initialiser le formulaire avec les données de l'instance
+    form = death_form(instance=death_instance, specific_animal=animal)
+    context = {
+        'form': form,
+        'animal_data': animal,
+        'tablename': 'Death',
+    }
+    return render(request, "update/updatedeath.html", context)
+
+
+
+
+
+
+
+
+
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+
+# Update service record
+@login_required(login_url='loginuser')
+# Update service record
+@login_required(login_url='loginuser')
+def update_service(request, animal_id):
+    # Récupérer l'animal correspondant à l'utilisateur et à l'ID
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+    if not animal:
+        return HttpResponse("Animal not found or unauthorized", status=404)
+
+    gender = animal.gender
+
+    # Déterminer le modèle et le formulaire en fonction du genre de l'animal
+    if gender == 'Male':
+        service_model = service_record_male
+        service_form = service_update_form_male
+        template = "update/service_update_male.html"
+    elif gender == 'Female':
+        service_model = service_record_female
+        service_form = service_update_form_female
+        template = "update/service_update_female.html"
+    else:
+        return HttpResponse("Invalid gender", status=400)
+
+    # Récupérer les services existants pour l'animal
+    services = service_model.objects.filter(gip=animal)
+
+    # Préparer le formulaire
+    form = service_form(user=request.user, specific_animal=animal)
+
+    if request.method == 'POST':
+        form = service_form(request.POST, user=request.user, specific_animal=animal)
         if form.is_valid():
-            death_instance = form.save(commit=False)
-            death_instance.user = request.user  # Assigne l'utilisateur connecté
-            death_instance.save()
-            return redirect('successupdate')
-        else:
-            print("Form Errors:", form.errors)  # Debugging
+            instance = form.save(commit=False)
+            born_total = instance.born_female + instance.born_male
+            weaned_total = instance.weaned_female + instance.weaned_male
+            instance.total_weaned = weaned_total
+            instance.born_total = born_total
+            instance.user = request.user
+            instance.save()
+            return redirect('update_service', animal_id=animal_id)
 
     context = {
         'form': form,
-        'tablename': 'Death',
+        'services': services,
+        'gip': animal_id,
+        'backbut': request.build_absolute_uri(),
+        'tablename': 'Enregistrement des Services et Caractères des Portées',
     }
-    return render(request, "updatedisposal.html", context)
+    return render(request, template, context)
 
 
 
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
+
+# Fonction générique pour mettre à jour les paramètres de santé
+def update_health_parameter(request, animal_id, model_class, form_class, template_name, tablename):
+    # Récupérer l'animal de l'utilisateur actuel
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    
+    # Récupérer les paramètres de santé existants pour l'animal
+    health_parameters = model_class.objects.filter(gip=animal)
+    
+    # Initialiser le formulaire avec les données de l'animal
+    form = form_class(initial={'gip': animal}, user=request.user, specific_animal=animal)
+    
+    if request.method == 'POST':
+        form = form_class(request.POST, user=request.user, specific_animal=animal)
+        if form.is_valid():
+            # Enregistrer les données du formulaire
+            obj = form.save(commit=False)
+            obj.user = request.user  # Assigner l'utilisateur connecté
+            obj.save()
+            # return redirect('update_health_parameter', animal_id=animal_id)
+    
+    vet_exams = model_class.objects.filter(gip=animal)
+    vaccinations = model_class.objects.filter(gip=animal)
+    context = {
+        'form': form,
+        'health_parameters': health_parameters,
+        'vet_exams': vet_exams,
+        'vaccinations': vaccinations,
+        'gip': animal_id,
+        'backbut': request.build_absolute_uri(),
+        'tablename': tablename
+    }
 
 
+    return render(request, template_name, context)
 
-
-
-
-
-
-
-
-
-
-
-
-
-@login_required(login_url='loginuser')
-def update_service(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-    gender=animal.gender
-    if gender=='Male':
-        services=service_record_male.objects.filter(gip=animal)
-        form=service_form_male(initial={'gip':animal})
-        if request.method=='POST':    
-            form=service_form_male(request.POST)
-            if form.is_valid():
-                instance=form.save(commit=False)
-                born_total=instance.born_female+instance.born_male
-                weaned_total=instance.weaned_female+instance.weaned_male
-                instance.total_weaned=weaned_total
-                instance.born_total=born_total
-                form.save()
-                return redirect('update_service',animal_id=animal_id)
-        context={
-            'form':form,
-            'services':services,
-            'gip':animal_id,
-            'backbut':request.build_absolute_uri(),
-            'tablename': 'Enregistrement des Services et Caractères des Portées'
-        }
-
-        return render(request,"service_update_male.html",context)
-    elif gender=='Female':
-        services=service_record_female.objects.filter(gip=animal)
-        form=service_form_female(initial={'gip':animal})
-        if request.method=='POST':    
-            form=service_form_female(request.POST)
-            if form.is_valid():
-                instance=form.save(commit=False)
-                born_total=instance.born_female+instance.born_male
-                weaned_total=instance.weaned_female+instance.weaned_male
-                instance.total_weaned=weaned_total
-                instance.born_total=born_total
-                form.save()
-                return redirect('update_service',animal_id=animal_id)
-        context={
-            'form':form,
-            'services':services,
-            'gip':animal_id,
-            'backbut':request.build_absolute_uri(),
-            'tablename': 'Enregistrement des Services et Caractères des Portées'
-        }
-        return render(request,"service_update_female.html",context)
-
+# Vue pour mettre à jour la vaccination
 @login_required(login_url='loginuser')
 def update_vaccination(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id,  user=request.user)
-    vaccinations=health_parameter_vaccination.objects.filter(gip=animal)
-    form=vaccination_update_form(initial={'gip':animal}, user=request.user, specific_animal=animal)
-    if request.method=='POST':    
-        form=vaccination_update_form(request.POST, user=request.user, specific_animal=animal)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user  # Associer l'utilisateur connecté
-            obj.save()
-            return redirect('update_vaccination',animal_id=animal_id)
-    context={
-        'form':form,
-        'vaccinations':vaccinations,
-        'gip':animal_id,
-        'backbut':request.build_absolute_uri(),
-        'tablename':'Vaccinations'
-    }
+    return update_health_parameter(
+        request, 
 
-    return render(request,"vaccination_update_template.html",context)
+        animal_id, 
+        health_parameter_vaccination, 
+        vaccination_update_form, 
+        "update/vaccination_update_template.html",
 
+        "Vaccinations"
+    )
+
+# Vue pour mettre à jour l'examen vétérinaire
 @login_required(login_url='loginuser')
 def update_vetexam(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user)
-    vet_exams=health_parameter_vetexam.objects.filter(gip=animal)
-    form=vetexam_update_form(initial={'gip':animal}, user=request.user, specific_animal=animal)
-    if request.method=='POST':    
-        form=vetexam_update_form(request.POST, user=request.user, specific_animal=animal)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user  # Associer l'utilisateur connecté
-            obj.save()
-            return redirect('update_vetexam',animal_id=animal_id)
-    context={
-        'form':form,
-        'vet_exams':vet_exams,
-        'gip':animal_id,
-        'backbut':request.build_absolute_uri(),
-        'tablename':'Veterinary Exam'
-    }
-
-    return render(request,"vetexam_update_template.html",context)
-
-
-
+    return update_health_parameter(
+        request, 
+        animal_id, 
+        health_parameter_vetexam, 
+        vetexam_update_form, 
+        "update/vetexam_update_template.html", 
+        "Veterinary Exam"
+    )
 
 
 # @login_required(login_url='loginuser')
@@ -923,108 +1041,75 @@ def update_vetexam(request, animal_id):
 
 
 
+from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required(login_url='loginuser')
 def history(request, animal_id):
-    if general_identification_and_parentage.objects.filter(animal_id=animal_id).exists()==False:
-        messages.error(request, 'The animal does not exist')
-        return redirect(report)
-    from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+    # Récupérer l'animal de l'utilisateur actuel
+    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
 
-    try:
-        animal = general_identification_and_parentage.objects.get(animal_id=animal_id)
-    except MultipleObjectsReturned:
-        animal = general_identification_and_parentage.objects.filter(animal_id=animal_id).first()
-    except ObjectDoesNotExist:
-        animal = None  # Gérer le cas où aucun animal n'existe
-    
-    animal_gender=animal.gender
-    animal_health_parameter_vaccination=health_parameter_vaccination.objects.filter(gip=animal)
-    animal_health_parameter_vetexam=health_parameter_vetexam.objects.filter(gip=animal)
-    if disposal_culling.objects.filter(gip=animal).exists():
-        animal_disposal_culling=disposal_culling.objects.get(gip=animal)
-    else:
-        animal_disposal_culling=None
-    animal_nutrition_and_feeding=nutrition_and_feeding.objects.filter(gip=animal)
-    if economics.objects.filter(gip=animal).exists():
-        animal_economics=economics.objects.get(gip=animal)
-    else:
-        animal_economics=None
-    if death.objects.filter(gip=animal).exists():
-        animal_death=death.objects.get(gip=animal)
-    else:
-        animal_death=None
-    if animal_gender=='Male':
-        if efficiency_parameter_male.objects.filter(gip=animal).exists():
-            animal_efficiency_parameter_male=efficiency_parameter_male.objects.get(gip=animal)
-        else:
-            animal_efficiency_parameter_male=None
-        if qualification_boar.objects.filter(gip=animal).exists():
-            animal_qualification_boar=qualification_boar.objects.get(gip=animal)
-        else:
-            animal_qualification_boar=None
-        animal_service_record_male=service_record_male.objects.filter(gip=animal)
-        context={
-        'tablename':'History Sheet',
-        'death':animal_death,
-        'gen': animal,
-        'vaccinations':animal_health_parameter_vaccination,
-        'vetexams':animal_health_parameter_vetexam,
-        'disposal':animal_disposal_culling,
-        'nutritions':animal_nutrition_and_feeding,
-        'economic':animal_economics,
-        'efficiency':animal_efficiency_parameter_male,
-        'qualification': animal_qualification_boar,
-        'services':animal_service_record_male
+    # Récupérer les paramètres de santé et autres données liées à l'animal
+    animal_health_parameter_vaccination = health_parameter_vaccination.objects.filter(gip=animal)
+    animal_health_parameter_vetexam = health_parameter_vetexam.objects.filter(gip=animal)
+    animal_nutrition_and_feeding = nutrition_and_feeding.objects.filter(gip=animal)
+
+    # Récupérer les objets optionnels pour l'animal
+    animal_disposal_culling = disposal_culling.objects.filter(gip=animal).first()
+    # animal_economics = economics.objects.filter(gip=animal).first()
+    animal_death = death.objects.filter(gip=animal).first()
+
+    # Récupérer les informations spécifiques selon le sexe de l'animal
+    if animal.gender == 'Male':
+        animal_efficiency_parameter = efficiency_parameter_male.objects.filter(gip=animal).first()
+        animal_qualification_boar = qualification_boar.objects.filter(gip=animal).first()
+        animal_service_record = service_record_male.objects.filter(gip=animal)
+        context = {
+            'tablename': 'History Sheet',
+            'death': animal_death,
+            'gen': animal,
+            'vaccinations': animal_health_parameter_vaccination,
+            'vetexams': animal_health_parameter_vetexam,
+            'disposal': animal_disposal_culling,
+            'nutritions': animal_nutrition_and_feeding,
+            # 'economic': animal_economics,
+            'efficiency': animal_efficiency_parameter,
+            'qualification': animal_qualification_boar,
+            'services': animal_service_record
         }
+        return render(request, "data/historydatamale.html", context)
 
-        return render(request, "historydatamale.html", context)
-    
-    elif animal_gender=='Female':
-        if efficiency_parameter_female.objects.filter(gip=animal).exists():
-            animal_efficiency_parameter_female=efficiency_parameter_female.objects.get(gip=animal)
-        else:
-            animal_efficiency_parameter_female=None
-        
-        animal_service_record_female=service_record_female.objects.filter(gip=animal)
-        
-        born_sum = 0  #somme totale des animaux nés (mâles et femelles) pour toutes les portées de l'animal.
-        weaned_sum = 0  # somme totale des animaux sevrés pour toutes les portées.
-        total_born_weight = 0       #  poids total des portées à la naissance.
-        total_weaned_weight = 0          #  poids total des portées au moment du sevrage.
-        preweaning_mortality = 0        #  Pourcentage de mortalité pré-sevrage
+    elif animal.gender == 'Female':
+        animal_efficiency_parameter = efficiency_parameter_female.objects.filter(gip=animal).first()
+        animal_service_record_female = service_record_female.objects.filter(gip=animal)
 
-        for i in animal_service_record_female:
-            born_sum+=i.born_total
-            weaned_sum+=i.total_weaned
-            total_born_weight+=i.litter_weight_birth
-            total_weaned_weight+=i.weaning_weight
-            if born_sum != 0:
-                preweaning_mortality = (born_sum - weaned_sum) * 100.0 / born_sum
-            else:
-                preweaning_mortality = 0 
-        #animal_lifetime_litter_character=lifetime_litter_character.objects.get(gip=animal)
-        context={
-        'tablename':'History Sheet',
-        'death':death,
-        'animal_id':animal,
-        'gen': animal,
-        'vaccinations':animal_health_parameter_vaccination,
-        'vetexams':animal_health_parameter_vetexam,
-        'disposal':animal_disposal_culling,
-        'nutritions':animal_nutrition_and_feeding,
-        'economic':animal_economics,
-        'services':animal_service_record_female,
-        'efficiency':animal_efficiency_parameter_female,
-        'born_sum':born_sum,
-        'weaned_sum':weaned_sum,
-        'total_born_weight':total_born_weight,
-        'total_weaned_weight':total_weaned_weight,
-        'preweaning_mortality':preweaning_mortality,
-        #'litter':animal_lifetime_litter_character
+        born_sum = sum(i.born_total for i in animal_service_record_female)
+        weaned_sum = sum(i.total_weaned for i in animal_service_record_female)
+        total_born_weight = sum(i.litter_weight_birth for i in animal_service_record_female)
+        total_weaned_weight = sum(i.weaning_weight for i in animal_service_record_female)
+
+        preweaning_mortality = (born_sum - weaned_sum) * 100.0 / born_sum if born_sum else 0
+
+        context = {
+            'tablename': 'History Sheet',
+            'death': animal_death,
+            'animal_id': animal,
+            'gen': animal,
+            'vaccinations': animal_health_parameter_vaccination,
+            'vetexams': animal_health_parameter_vetexam,
+            'disposal': animal_disposal_culling,
+            'nutritions': animal_nutrition_and_feeding,
+            # 'economic': animal_economics,
+            'services': animal_service_record_female,
+            'efficiency': animal_efficiency_parameter,
+            'born_sum': born_sum,
+            'weaned_sum': weaned_sum,
+            'total_born_weight': total_born_weight,
+            'total_weaned_weight': total_weaned_weight,
+            'preweaning_mortality': preweaning_mortality,
         }
-
-        return render(request, "historydatafemale.html", context)
+        return render(request, "data/historydatafemale.html", context)
 
 @login_required(login_url='loginuser')
 def allpigs(request):
@@ -1035,258 +1120,265 @@ def allpigs(request):
         'animals':animals,
         'tablename':'Tout les animaux de la Ferme',
     }
-    return render(request, "allpigs.html", context)
+    return render(request, "data/allpigs.html", context)
 
 
 
 @login_required(login_url='loginuser')
 def pigletborn(request):
-    if request.method=='POST':
-        form=datetodate(request.POST)
+    if request.method == 'POST':
+        form = datetodate(request.POST)
         if form.is_valid():
-            fromdate=form.cleaned_data['from_date']
-            todate=form.cleaned_data['to_date']
-            allborn=general_identification_and_parentage.objects.filter(dob__range=(fromdate,todate))
-            totalcount=0
-            femalecount=0
-            malecount=0
-            # maleweight = 0
-            # femaleweight = 0
-            for pig in allborn:
-                totalcount+=1
-                if pig.gender=='Male':
-                    malecount+=1
-                    # maleweight += pig.weight  # Si "weight" est un champ dans votre modèle
+            fromdate = form.cleaned_data['from_date']
+            todate = form.cleaned_data['to_date']
+            
+            # Filtrer par utilisateur connecté et par date de naissance
+            allborn = general_identification_and_parentage.objects.filter(
+                dob__range=(fromdate, todate),
+                user=request.user  # Assurez-vous que votre modèle a un champ "user"
+            )
 
-                elif pig.gender=='Female':
-                    femalecount+=1
-                    # femaleweight += pig.weight  # Idem
+            totalcount = allborn.count()
+            malecount = allborn.filter(gender='Male').count()
+            femalecount = allborn.filter(gender='Female').count()
 
-            context={
-                'tablename':'Nombre de porcelets nés',
-                'malecount':malecount,
-                'femalecount':femalecount,
-                'totalcount':totalcount,
-                # 'maleweight': maleweight,
-                # 'femaleweight': femaleweight,
-                'form':form
+
+            context = {
+                'tablename': 'Nombre de porcelets nés',
+                'malecount': malecount,
+                'femalecount': femalecount,
+                'totalcount': totalcount,
+                'form': form
             }
-            return render(request, "pigletborn.html",context)
+            return render(request, "data/pigletborn.html", context)
 
-    form=datetodate()
-    context={
-                'tablename':'Nombre de porcelets nés',
-                'malecount':'aucune entrée',
-                'femalecount':'aucune entrée',
-                'totalcount':'aucune entrée',
-                'form':form
-            }
-    return render(request, "pigletborn.html", context)
+    else:
+        form = datetodate()
+
+    return render(request, "data/pigletborn.html", {'form': form})
 
 
 @login_required(login_url='loginuser')
 def pigletweaned(request):
-    if request.method=='POST':
-        form=datetodate(request.POST)
+    if request.method == 'POST':
+        form = datetodate(request.POST)
         if form.is_valid():
-            fromdate=form.cleaned_data['from_date']
-            todate=form.cleaned_data['to_date']
-            allweanedmale=efficiency_parameter_male.objects.filter(dow__range=(fromdate,todate))
-            allweanedfemale=efficiency_parameter_female.objects.filter(dow__range=(fromdate,todate))
-            totalcount = 0
-            femalecount = 0
-            malecount = 0
-            maleweight = 0
-            femaleweight = 0
-            for pig in allweanedmale:
-                totalcount +=1
-                malecount +=1
-                maleweight += pig.weaning_weight
-            for pig in allweanedfemale:
-                femalecount += 1
-                femaleweight += pig.weaning_weight
-            context={
-                'tablename':'Porcelets sevrés',
-                'malecount':malecount,
-                'femalecount':femalecount,
-                'totalcount':totalcount,
-                'maleweight':maleweight,
-                'femaleweight':femaleweight,
-                'form':form
+            fromdate = form.cleaned_data['from_date']
+            todate = form.cleaned_data['to_date']
+
+            # Filtrer par utilisateur connecté et date de sevrage
+            allweanedmale = efficiency_parameter_male.objects.filter(
+                dow__range=(fromdate, todate),
+                user=request.user  # Filtrage par utilisateur
+            )
+            allweanedfemale = efficiency_parameter_female.objects.filter(
+                dow__range=(fromdate, todate),
+                user=request.user  # Filtrage par utilisateur
+            )
+
+            totalcount = allweanedmale.count() + allweanedfemale.count()
+            malecount = allweanedmale.count()
+            femalecount = allweanedfemale.count()
+            maleweight = sum(pig.weaning_weight for pig in allweanedmale)
+            femaleweight = sum(pig.weaning_weight for pig in allweanedfemale)
+
+            context = {
+                'tablename': 'Porcelets sevrés',
+                'malecount': malecount,
+                'femalecount': femalecount,
+                'totalcount': totalcount,
+                'maleweight': maleweight,
+                'femaleweight': femaleweight,
+                'form': form
             }
-            return render(request, "pigletweaned.html",context)
-    form=datetodate()
-    context={
-                'tablename':'Porcelets sevrés',
-                'malecount':'aucune entrée',
-                'femalecount':'aucune entrée',
-                'totalcount':'aucune entrée',
-                'maleweight':'aucune entrée',
-                'femaleweight':'aucune entrée',
-                'form':form
-            }
-    return render(request, "pigletweaned.html", context)
+            return render(request, "data/pigletweaned.html", context)
+
+    # Formulaire vide au chargement initial
+    form = datetodate()
+    context = {
+        'tablename': 'Porcelets sevrés',
+        'malecount': 'aucune entrée',
+        'femalecount': 'aucune entrée',
+        'totalcount': 'aucune entrée',
+        'maleweight': 'aucune entrée',
+        'femaleweight': 'aucune entrée',
+        'form': form
+    }
+    return render(request, "data/pigletweaned.html", context)
 
 
 
 @login_required(login_url='loginuser')
 def pigmortality(request):
-    if request.method=='POST':
-        form=datetodate(request.POST)
+    if request.method == 'POST':
+        form = datetodate(request.POST)
         if form.is_valid():
-            fromdate=form.cleaned_data['from_date']
-            todate=form.cleaned_data['to_date']
-            alldead=death.objects.filter(date_death__range=(fromdate,todate))
-            print(alldead)
-            preweaning=0
-            postweaning=0
-            for pig in alldead:
-                print(pig.gip.gender)
-                if pig.gip.gender=='Male':
-                    obj=efficiency_parameter_male.objects.get(gip=pig.gip)
-                    if obj.dow==None:
-                        preweaning+=1
-                    else:
-                        postweaning+=1
-                if pig.gip.gender=='Female':
-                    obj=efficiency_parameter_female.objects.get(gip=pig.gip)
-                    if obj.dow==None:
-                        preweaning+=1
-                    else:
-                        postweaning+=1
-            context={
-                'tablename':'Pig Mortality',
-                'form':form,
-                'postweaning':postweaning,
-                'preweaning':preweaning,
-            }
-            return render(request, "pigmortality.html",context)
-    form=datetodate()
-    context={
-                'tablename':'Pig Mortality',
-                'form':form,
-                'postweaning':None,
-                'preweaning':None,
-            }
-    return render(request, "pigmortality.html", context)
+            fromdate = form.cleaned_data['from_date']
+            todate = form.cleaned_data['to_date']
 
+            # Filtrer par utilisateur connecté et date de décès
+            alldead = death.objects.filter(
+                date_death__range=(fromdate, todate),
+                user=request.user  # Assurez-vous que le modèle death a un champ "user"
+            )
+
+            preweaning = 0
+            postweaning = 0
+
+            for pig in alldead:
+                if pig.gip.gender == 'Male':
+                    obj = efficiency_parameter_male.objects.get(gip=pig.gip)
+                    if obj.dow is None:
+                        preweaning += 1
+                    else:
+                        postweaning += 1
+
+                elif pig.gip.gender == 'Female':
+                    obj = efficiency_parameter_female.objects.get(gip=pig.gip)
+                    if obj.dow is None:
+                        preweaning += 1
+                    else:
+                        postweaning += 1
+
+            context = {
+                'tablename': 'Pig Mortality',
+                'form': form,
+                'postweaning': postweaning,
+                'preweaning': preweaning,
+            }
+            return render(request, "data/pigmortality.html", context)
+
+    # Formulaire vide au chargement initial
+    form = datetodate()
+    context = {
+        'tablename': 'Pig Mortality',
+        'form': form,
+        'postweaning': None,
+        'preweaning': None,
+    }
+    return render(request, "data/pigmortality.html", context)
+
+from django.db.models import Sum
 
 @login_required(login_url='loginuser')
 def revenue_received(request):
-    if request.method=='POST':
-        form=datetodate(request.POST)
+    if request.method == 'POST':
+        form = datetodate(request.POST)
         if form.is_valid():
-            fromdate=form.cleaned_data['from_date']
-            todate=form.cleaned_data['to_date']
-            revenues=disposal_culling.objects.filter(sale_date__range=(fromdate,todate))
-            total=0
-            for r in revenues:
-                total+=r.revenue
-            context={
-                'tablename':'Revenue Received',
-                'form':form,
-                'total':total
+            fromdate = form.cleaned_data['from_date']
+            todate = form.cleaned_data['to_date']
+
+            # Filtrer par utilisateur connecté et date de vente
+            revenues = disposal_culling.objects.filter(
+                sale_date__range=(fromdate, todate),
+                user=request.user  # Ajout du filtre utilisateur
+            )
+
+            # Calcul du total de revenue
+            total = revenues.aggregate(Sum('revenue'))['revenue__sum'] or 0
+
+            context = {
+                'tablename': 'Revenue Received',
+                'form': form,
+                'total': total
             }
-            return render(request, "revenuereceived.html",context)
-    form=datetodate()
-    context={
-                'tablename':'Revenue Received',
-                'form':form,
-                'total':None
-            }
-    return render(request, "revenuereceived.html", context)
+            return render(request, "data/revenuereceived.html", context)
+
+    # Formulaire vide au chargement initial
+    form = datetodate()
+    context = {
+        'tablename': 'Revenue Received',
+        'form': form,
+        'total': None
+    }
+    return render(request, "data/revenuereceived.html", context)
 
 @login_required(login_url='loginuser')
 def selectpigs(request):
-    if request.method=='POST':
-        form=selectpigsform(request.POST)
+    if request.method == 'POST':
+        form = selectpigsform(request.POST)
         if form.is_valid():
-            n=form.cleaned_data['task']
-            num=form.cleaned_data['amount']
-            male=[]
-            female=[]
-            if n=='1':
-                animals=general_identification_and_parentage.objects.filter(colitter_size_of_birth__lt=num)
-                len_maleanimals=0
-                len_femaleanimals=0
-                for i in animals:
-                    if i.gender=='Male':
-                        male.append(i.animal_id)
-                        len_maleanimals+=1
-                    else:
-                        female.append(i.animal_id)
-                        len_femaleanimals+=1
-                
-            elif n=='2':
-                animals=general_identification_and_parentage.objects.filter(colitter_size_of_birth__gt=num)
-                len_maleanimals=0
-                len_femaleanimals=0
-                for i in animals:
-                    if i.gender=='Male':
-                        male.append(i.animal_id)
-                        len_maleanimals+=1
-                    else:
-                        female.append(i.animal_id)
-                        len_femaleanimals+=1
-                
-            elif n=='3':
-                maleanimals=efficiency_parameter_male.objects.filter(litter_size_weaning__gte=num)
-                for i in maleanimals:
-                    male.append(i.gip)
-                femaleanimals=efficiency_parameter_female.objects.filter(litter_size_weaning__gte=num)
-                for i in femaleanimals:
-                    female.append(i.gip)
-                len_maleanimals=len(maleanimals)
-                len_femaleanimals=len(femaleanimals)
-                
-            elif n=='4':
-                maleanimals=efficiency_parameter_male.objects.filter(litter_size_weaning__exact=num)
-                for i in maleanimals:
-                    male.append(i.gip)
-                len_maleanimals=len(maleanimals)
-                femaleanimals=efficiency_parameter_female.objects.filter(litter_size_weaning__exact=num)
-                for i in femaleanimals:
-                    female.append(i.gip)
-                len_femaleanimals=len(femaleanimals)
-            
-            context={
-                'form':form,
+            n = form.cleaned_data['task']
+            num = form.cleaned_data['amount']
+            male = []
+            female = []
+
+            # Filtrage par utilisateur connecté
+            if n == '1':
+                animals = general_identification_and_parentage.objects.filter(
+                    colitter_size_of_birth__lt=num,
+                    user=request.user  # Ajout du filtre utilisateur
+                )
+            elif n == '2':
+                animals = general_identification_and_parentage.objects.filter(
+                    colitter_size_of_birth__gt=num,
+                    user=request.user
+                )
+            elif n == '3':
+                maleanimals = efficiency_parameter_male.objects.filter(
+                    litter_size_weaning__gte=num,
+                    user=request.user
+                )
+                femaleanimals = efficiency_parameter_female.objects.filter(
+                    litter_size_weaning__gte=num,
+                    user=request.user
+                )
+            elif n == '4':
+                maleanimals = efficiency_parameter_male.objects.filter(
+                    litter_size_weaning__exact=num,
+                    user=request.user
+                )
+                femaleanimals = efficiency_parameter_female.objects.filter(
+                    litter_size_weaning__exact=num,
+                    user=request.user
+                )
+
+            # Traitement des résultats
+            if n in ['1', '2']:
+                male = [i.animal_id for i in animals if i.gender == 'Male']
+                female = [i.animal_id for i in animals if i.gender != 'Male']
+            else:
+                male = [i.gip for i in maleanimals]
+                female = [i.gip for i in femaleanimals]
+
+            context = {
+                'form': form,
                 'male': male,
                 'female': female,
-                'malelen': len_maleanimals,
-                'femalelen': len_femaleanimals,
-                'tablename':'Select Pigs'
+                'malelen': len(male),
+                'femalelen': len(female),
+                'tablename': 'Select Pigs'
             }
-            
-            return render(request, "selectpigs.html",context)
-    form=selectpigsform()
-    return render(request, "selectpigs.html", {'form':form, 'tablename':'Select Pigs'})
 
+            return render(request, "data/selectpigs.html", context)
+
+    form = selectpigsform()
+    return render(request, "data/selectpigs.html", {'form': form, 'tablename': 'Select Pigs'})
 
 
 
 @login_required(login_url='loginuser')
 def disease(request):
-    alldeath=death.objects.all()
-    diseaseDict={}
+    # Filtrer les décès en fonction de l'utilisateur connecté
+    alldeath = death.objects.filter(user=request.user)
+
+    diseaseDict = {}
     for i in alldeath:
-        cause=i.cause_death
-        if cause in diseaseDict:
-            diseaseDict[cause]+=1
-        else:
-            diseaseDict[cause]=1
-    context={
-        'tablename':'Disease List',
-        'diseases':diseaseDict
+        cause = i.cause_death
+        diseaseDict[cause] = diseaseDict.get(cause, 0) + 1  # Utilisation de .get() pour simplifier
+
+    context = {
+        'tablename': 'Disease List',
+        'diseases': diseaseDict
     }
-    return render(request, "disease.html", context)
+    return render(request, "data/disease.html", context)
 
 
 def account(request):
-    return render(request, 'account.html')
+    return render(request, 'account/account.html')
 
 def help(request):
-    return render(request, 'help.html')
+    return render(request, 'others/help.html')
 
 
 
@@ -1295,7 +1387,7 @@ def help(request):
 
 from django.contrib.postgres.search import SearchVector, SearchQuery
 
-def pig_search(request):
+def searchdelete(request):
     query = None
     results = []
     search_form = SearchPig()
@@ -1315,7 +1407,7 @@ def pig_search(request):
             results = general_identification_and_parentage.objects.filter(animal_id=query)
             
 
-    return render(request, 'search.html', {
+    return render(request, 'others/searchdelete.html', {
         'search_form': search_form,
         'query': query,
         'results': results,
@@ -1324,7 +1416,7 @@ def pig_search(request):
 
 from django.contrib.postgres.search import SearchVector, SearchQuery
 
-def pig_searchall(request):
+def searchupdate(request):
     query = None
     results = []
     search_form = SearchPig()
@@ -1344,8 +1436,11 @@ def pig_searchall(request):
             results = general_identification_and_parentage.objects.filter(animal_id=query)
             
 
-    return render(request, 'searchall.html', {
+    return render(request, 'others/searchupdate.html', {
         'search_form': search_form,
         'query': query,
         'results': results,
     })
+
+def home(request):
+    return render(request, 'home.html')

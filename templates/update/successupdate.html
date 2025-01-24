@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row">
+<div class="container py-4">
+<h5>Click on this button to return to the update page and make any further changes if needed</h5>
+<div class="row justify-content-center py-2">
+    <form>
+            <button class="btn btn-success btn-lg" type="submit" formaction="/">Retour</button>
+    </form>
+        
+</div>
+
+</div>
+</div>
+
+{% endblock content %}

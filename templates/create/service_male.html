@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row">
+<div class="container py-4">
+{% comment %} <form autocomplete="off" method="POST">
+{% csrf_token %}
+  {{form|crispy}}
+  <button type="submit">Add</button>
+</form> {% endcomment %}
+
+<form method="POST">
+   {% csrf_token %}
+
+ {{ form.gip.as_hidden}}
+  <div class="form-row">
+      <div class="form-group col-md-12">
+        {{ form.sow_no|as_crispy_field }}
+      </div>
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-12">
+        {{ form.dos|as_crispy_field }}
+      </div>
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+      {{ form.dof|as_crispy_field}}
+        </div>
+  </div>
+  <div class="form-row">
+
+        <div class="form-group col-md-12">
+          {{ form.parity|as_crispy_field }}
+          
+        </div>
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.born_male|as_crispy_field }}
+          
+      </div> 
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.born_female|as_crispy_field }}
+          
+      </div> 
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.born_total.as_hidden }}
+          
+      </div> 
+  </div>
+  <div class="form-row">
+
+      <div class="form-group col-md-12">
+          {{ form.litter_weight_birth|as_crispy_field }}
+          
+      </div> 
+  </div>
+  <div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weaned_male|as_crispy_field }}
+          
+      </div>
+</div>
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weaned_female|as_crispy_field }}
+         
+      </div>
+</div>
+
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.total_weaned.as_hidden }}
+         
+      </div>
+</div>
+
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.weaning_weight|as_crispy_field }}
+         
+      </div>
+</div>
+<div class="form-row">
+      <div class="form-group col-md-12">
+          {{ form.still_birth_abnormality|as_crispy_field }}
+         
+      </div>
+</div>
+
+
+  <button class="btn btn-success btn-lg float-right" type="submit">Add</button>
+</form>
+
+
+  <div class="table-responsive">
+      <table class="table table-bordered table-striped ">
+
+
+          <thead id="theadthid">
+            <tr >
+            <th scope="col"> Serial Number</th>
+            <th scope="col"> Numéro d'identification </th>
+            <th scope="col"> SOW Number</th>
+            <th scope="col"> Date de service </th>
+            <th scope="col"> Date Of Farrowing</th>
+            <th scope="col"> Parity</th>
+            <th scope="col"> Number of male born</th>
+            <th scope="col"> Number of female born</th>
+            <th scope="col"> Total Number</th>
+            <th scope="col"> Litter Weight At Birth</th>
+            <th scope="col"> Number Of Weaned Male</th>
+            <th scope="col"> Number Of Weaned Female</th>
+            <th scope="col"> Number Of Total Weaned</th>
+            <th scope="col"> Weaning Weight</th>
+            <th scope="col"> Still Birth Or Abnormality</th>  
+            <th scope="col"> Delete</th> 
+              </tr>
+          </thead>
+
+          <tbody id="tbodydata">
+
+
+{% for service in services %}
+          <tr>
+            <th scope="row">{{ forloop.counter}}</th>
+            <td>{{ service.gip }}</td>
+            <td>{{ service.sow_no }}</td>
+            <td>{{ service.dos }}</td>
+            <td>{{ service.dof }}</td>
+            <td>{{ service.parity }}</td>
+            <td>{{ service.born_male }}</td>
+            <td>{{ service.born_female }}</td>
+            <td>{{ service.born_total }}</td>
+            <td>{{ service.litter_weight_birth }}</td>
+            <td>{{ service.weaned_male }}</td>
+            <td>{{ service.weaned_female }}</td>
+            <td>{{ service.total_weaned }}</td>
+            <td>{{ service.weaning_weight }}</td>
+            <td>{{ service.still_birth_abnormality }}</td>
+              
+            <td><form action="{% url 'deleteservice' gip service.pk %}" method="POST">
+                {% csrf_token %}
+                <input value='{{backbut}}' id='backbutton' name='backbutton' type='hidden'>
+                
+                <button class="btn btn-info form-control"type="submit">Delete</button>
+                </form>
+                </td>
+          </tr>
+{% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+<form action="{% url 'vaccination'  gip %}" method="get">
+  <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
+</form>
+
+
+
+{% endblock content%}

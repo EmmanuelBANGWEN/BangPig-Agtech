@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+
+    <div class="row">
+<div class="container py-4">
+<div class="container py-4">
+    <div class="row justify-content-center py-3">
+        <input type="text" name="num" id="num" class="form-control form-control-lg text-center shadow" placeholder="Entrer l'Indentifiant du Porc">
+    </div>
+
+    <!-- Bouton Histoire -->
+    <form id="gipform">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="button" id="gip">History Sheet</button>
+        </div>
+    </form>
+
+    <!-- Messages -->
+    <div class="row justify-content-center py-2">
+        {% for message in messages %}
+            <p class="feedback-message">{{ message }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- Autres boutons -->
+    <form id="ecof" action="/allpigs">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-secondary-custom shadow" type="submit">Mes Porcs</button>
+        </div>
+    </form>
+
+    <form id="epform" action="pigletborn">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="submit">Porcelets Nées</button>
+        </div>
+    </form>
+
+    <form id="qbbform" action="pigletweaned">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="submit">Porcelets Sevrés</button>
+        </div>
+    </form>
+
+    <form id="srlcform" action="pigmortality">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-danger-custom shadow" type="submit">Mortalités</button>
+        </div>
+    </form>
+
+    <form id="nfform" action="revenue">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-warning-custom shadow" type="submit">Revenue Received</button>
+        </div>
+    </form>
+
+    <form id="dcform" action="disease">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-danger-custom shadow" type="submit">Liste des Maladies</button>
+        </div>
+    </form>
+
+    <form id="ecoform" action="selectpigs">
+        <div class="row justify-content-center py-2">
+            <button class="btn btn-animated btn-lg btn-success-custom shadow" type="submit">Selectioner les Porcs</button>
+        </div>
+    </form>
+
+    <div class="text-center mt-4">
+        <form>
+            <button class="btn btn-animated btn-lg btn-secondary-custom shadow" type="submit" formaction="/">Retour</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Styles pour les boutons animés */
+    .btn-animated {
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s, transform 0.2s ease-in-out;
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+    }
+
+    /* Différentes couleurs de boutons */
+    .btn-success-custom { background-color: #43a047; }
+    .btn-secondary-custom { background-color: #455a64; }
+    .btn-danger-custom { background-color: #d32f2f; }
+    .btn-warning-custom { background-color: #f9a825; }
+
+    /* Effet de levée et onde */
+    .btn-animated:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-animated:active {
+        transform: scale(0.98);
+    }
+
+    .btn-animated::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        transform: scale(1);
+        opacity: 0;
+        transition: width 0.5s, height 0.5s, opacity 0.5s;
+    }
+
+    .btn-animated:active::after {
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Champ de texte stylisé */
+    #num {
+        max-width: 400px;
+        border: 2px solid #43a047;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    #num:focus {
+        border-color: #388e3c;
+        box-shadow: 0 0 10px rgba(56, 142, 60, 0.5);
+    }
+
+    /* Animation d'apparition pour les messages */
+    .feedback-message {
+        font-size: 1.1em;
+        color: #388e3c;
+        opacity: 0;
+        animation: fadeIn 0.8s ease forwards;
+    }
+
+    /* Keyframes pour l'apparition */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    // Gère le bouton "History Sheet" pour rediriger dynamiquement
+    document.getElementById("gip").addEventListener("click", function() {
+        const pigId = document.getElementById("num").value;
+        if (pigId) {
+            const form = document.getElementById("gipform");
+            form.action = `history/${pigId}`;
+            form.submit();
+        } else {
+            alert("Please enter a Pig ID.");
+        }
+    });
+</script>
+
+</div>
+</div>
+
+{% endblock content %}

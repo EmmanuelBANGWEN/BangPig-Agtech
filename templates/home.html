@@ -1,0 +1,173 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>BangPig - Agtech Innovation</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="{% static 'assets/img/kaiadmin/favicon.ico'%}"
+      type="image/x-icon"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Bootstrap CSS (optionnel pour les boutons stylisés) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            flatpickr(".flatpickr", {});
+        });
+    </script>
+    
+
+
+    <!-- Fonts and icons -->
+    <script src="{% static 'assets/js/plugin/webfont/webfont.min.js' %}"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["{% static ' assets/css/fonts.min.css' %}"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+
+
+
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/plugins.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'assets/css/kaiadmin.min.css' %}"/>
+
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+  </head>
+<body class="bangri-page">
+ 
+  <!-- Header -->
+  <header id="header" class="header d-flex align-items-center ">
+    <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+  <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+    <!-- Uncomment the line below if you also wish to use an image logo -->
+    <div class="logo">
+<h1>BangPig</h1>
+    </div>
+    <!-- <h1 class="sitename">AgriCulture</h1>  -->
+  </a>
+  <nav id="navmenu" class="navmenu">
+    <h1><a href="{% url 'index' %}">Home</a></h1>
+      <!-- <li><a href="{% url 'home' %}">Our Services</a></li> -->
+      
+      <!--         </div>
+    </li>
+    CSS pour le style -->
+    <style>
+        .img-profile {
+            width: 40px; /* Ajustez la taille selon vos besoins */
+            height: 40px;
+            margin-left: 8px; /* Espace entre le texte et l'image */
+        }
+    
+        .img-profile img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    
+        
+    </style>
+    </ul>
+    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+  </nav>
+</div>
+
+</header>
+  <!-- Main Section -->
+  <section class="custom-section text-center">
+    <div class="container">
+      <div class="row justify-content-center align-items-center">
+        <!-- Images -->
+        <div class="col-md-5">
+          <img src="{% static 'assets/img/pig.png' %}" alt="AgTech Illustration" class="img-fluid rounded-image">
+        </div>
+      </div>
+      <!-- Call to Action -->
+      <div class="mt-4">
+        <h1 class="fw-bold">Your Trusted Digital Farming Partner With <span class="text-danger"> BangPig</span></h1>
+        <p class="lead">Empowering modern Farming with data-driven insights and innovative technology solutions.</p>
+        <div class="mt-4">
+          <a href="{% url 'index' %}" class="btn btn-success btn-custom">Entrer</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bootstrap JS -->
+
+  <script>
+
+/**
+ * Mobile nav toggle
+ */
+const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
+
+function mobileNavToogle() {
+  document.querySelector('body').classList.toggle('mobile-nav-active');
+  mobileNavToggleBtn.classList.toggle('bi-list');
+  mobileNavToggleBtn.classList.toggle('bi-x');
+}
+mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
+
+/**
+ * Hide mobile nav on same-page/hash links
+ */
+document.querySelectorAll('#navmenu a').forEach(navmenu => {
+  navmenu.addEventListener('click', () => {
+    if (document.querySelector('.mobile-nav-active')) {
+      mobileNavToogle();
+    }
+  });
+
+});
+
+/**
+ * Toggle mobile nav dropdowns
+ */
+document.querySelectorAll('.navmenu .toggle-dropdown').forEach(navmenu => {
+  navmenu.addEventListener('click', function(e) {
+    e.preventDefault();
+    this.parentNode.classList.toggle('active');
+    this.parentNode.nextElementSibling.classList.toggle('dropdown-active');
+    e.stopImmediatePropagation();
+  });
+});
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

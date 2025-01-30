@@ -3,7 +3,6 @@ from django.forms import ModelForm
 from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-# from bootstrap_datepicker_plus import DatePickerInput
 
 class datetodate(forms.Form):
     from_date=forms.DateField(label='De', widget=forms.DateInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}))
@@ -16,7 +15,7 @@ class selectpigsform(forms.Form):
                 ( '3','Les porcs avec une taille de portée au sevrage supérieure ou égale à : '),
                 ('4','Les porcs avec une taille de portée au sevrage exactement égale à : '))
     task = forms.ChoiceField(choices=CHOICES, label='Rechercher')
-    amount=forms.CharField(label='amount', max_length='150')
+    amount=forms.CharField(label='amount', max_length='500')
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -47,7 +46,6 @@ class general_form(forms.ModelForm):
             'abnormalities': 'Genetic Abnormalities/Disorder',
         }
         widgets = {
-            # 'dob': DatePickerInput(format='%Y-%m-%d'),
             'dob': forms.DateInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
             
@@ -67,7 +65,6 @@ class disposal_form(forms.ModelForm):
             
         }
         widgets = {
-            # 'sale_date': DatePickerInput(format='%Y-%m-%d'),
             'sale_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
         }
@@ -92,7 +89,6 @@ class death_form(forms.ModelForm):
     def __init__(self, *args, user=None, specific_animal=None, **kwargs):
         super().__init__(*args, **kwargs)
         if specific_animal:
-            # Limiter le champ `gip` à l'animal spécifié uniquement
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
             self.fields['gip'].initial = specific_animal
             self.fields['gip'].widget.attrs['readonly'] = True  # Rendre le champ non modifiable
@@ -225,7 +221,7 @@ class vetexam_form(forms.ModelForm):
 class efficiency_form_female(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_female
-        exclude = ['user'] 
+        exclude = ['user','weaning_age'] 
         labels={
             'gip': 'Identification Number',
             'dow': 'Date Of Weaning',
@@ -264,7 +260,7 @@ class efficiency_form_female(forms.ModelForm):
 class efficiency_form_male(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_male
-        exclude = ['user'] 
+        exclude = ['user','weaning_age'] 
         labels={
             'gip': 'Identification Number',
             'dow': 'Date Of Weaning',
@@ -280,11 +276,7 @@ class efficiency_form_male(forms.ModelForm):
             'conform_at_eight': 'Conformation At Eight Months',
         }
         widgets = {
-            # 'dow': DatePickerInput(format='%Y-%m-%d'),
-            # 'dos': DatePickerInput(format='%Y-%m-%d'),
-            # 'doc': DatePickerInput(format='%Y-%m-%d'),
-            # 'dosm': DatePickerInput(format='%Y-%m-%d'),
-
+            
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'doc': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -344,6 +336,8 @@ class service_form_male(forms.ModelForm):
     class Meta:
         model=service_record_male
         fields='__all__'
+        exclude = ['born_total', 'total_weaned']        
+
         labels={
             'gip': 'Identification Number',
             'sow_no': 'SOW Number',
@@ -371,6 +365,8 @@ class service_form_female(forms.ModelForm):
     class Meta:
         model=service_record_female
         fields='__all__'
+        exclude = ['born_total', 'total_weaned']        
+
         labels={
             'gip': 'Identification Number',
             'boar_no':'Boar Number',
@@ -392,11 +388,7 @@ class service_form_female(forms.ModelForm):
             'date_of_abortion':'Date Of Abortion',
         }
         widgets = {
-            # 'dos': DatePickerInput(format='%Y-%m-%d'),
-            # 'dof': DatePickerInput(format='%Y-%m-%d'),
-            # 'dow': DatePickerInput(format='%Y-%m-%d'),
-            # 'date_of_abortion': DatePickerInput(format='%Y-%m-%d'),
-
+            
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dof': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -510,10 +502,6 @@ class death_update_form(forms.ModelForm):
         widgets = {
             'date_death': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
-            #'gip': forms.TextInput(attrs={'disabled':True}),
-            #'cause_death': forms.TextInput(attrs={'disabled':True}),
-            #'date_death': forms.TextInput(attrs={'disabled':True}),
-            #'postmortem_findings':forms.TextInput(attrs={'disabled':True}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -535,7 +523,7 @@ class nutrition_update_form(forms.ModelForm):
     class Meta:
         model=nutrition_and_feeding
         fields='__all__'
-        # exclude = ["gip"]
+        # exclude = ["user"]
         labels={
             'gip': 'Identification Number',
             'treatment': 'Treatment',
@@ -601,19 +589,12 @@ class vaccination_update_form(forms.ModelForm):
             'booster_dose': 'Booster Dose',
         }
         widgets = {
-            # 'first_dose': DatePickerInput(format='%Y-%m-%d'),
-            # 'booster': DatePickerInput(format='%Y-%m-%d'),
-            # 'repeat': DatePickerInput(format='%Y-%m-%d'),
-
+            
             'first_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'booster_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'repeat': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
-            #'gip': forms.TextInput(attrs={'disabled':True}),
-            #'disease': forms.TextInput(attrs={'disabled':True}),
-            #'make': forms.TextInput(attrs={'disabled':True}),
-            #'first_dose': forms.TextInput(attrs={'disabled':True}),
-            #'booster': forms.TextInput(attrs={'disabled':True}),
+            
         }
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -642,11 +623,6 @@ class vetexam_update_form(forms.ModelForm):
         widgets = {
             'date_of_treatment': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
-            #'gip': forms.TextInput(attrs={'disabled':True}),
-            #'reason': forms.TextInput(attrs={'disabled':True}),
-            #'date_of_treatment': forms.TextInput(attrs={'disabled':True}),
-            #'medication': forms.TextInput(attrs={'disabled':True}),
-            #'remarks': forms.TextInput(attrs={'disabled':True}),
         }
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -662,11 +638,14 @@ class vetexam_update_form(forms.ModelForm):
 
         
 
+
 class efficiency_update_form_female(forms.ModelForm):
     class Meta:
         model=efficiency_parameter_female
         fields='__all__'
-        # exclude = ['user', 'gip']        
+        # exclude = ['user', 'gip']      
+        exclude = ['user', 'animal_id', 'weaning_age'] 
+  
 
         labels={
             'gip': 'Identification Number',
@@ -682,26 +661,12 @@ class efficiency_update_form_female(forms.ModelForm):
             'conform_at_eight': 'Conformation At Eight Months',
         }
         widgets = {
-            # 'dow': DatePickerInput(format='%Y-%m-%d'),
-            # 'dos': DatePickerInput(format='%Y-%m-%d'),
-            # 'dosm': DatePickerInput(format='%Y-%m-%d'),
-
+            
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
-            #'gip': forms.TextInput(attrs={'disabled':True}),
-            #'dow': forms.TextInput(attrs={'disabled':True}),
-            #'litter_size_weaning':forms.TextInput(attrs={'disabled':True}),
-            #'weaning_age': forms.TextInput(attrs={'disabled':True}),
-            #'weaning_weight':forms.TextInput(attrs={'disabled':True}),
-            #'dos': forms.TextInput(attrs={'disabled':True}),
-            #'dosm': forms.TextInput(attrs={'disabled':True}),
-            #'sexual_maturity_weight': forms.TextInput(attrs={'disabled':True}),
-            #'weight_six': forms.TextInput(attrs={'disabled':True}),
-            #'weight_eight': forms.TextInput(attrs={'disabled':True}),
-            #'conform_at_eight': forms.TextInput(attrs={'disabled':True}),
-        }
+             }
 
 
 class efficiency_update_form_male(forms.ModelForm):
@@ -709,7 +674,7 @@ class efficiency_update_form_male(forms.ModelForm):
         model=efficiency_parameter_male
         fields = '__all__'
 
-        exclude = ['user', 'animal_id'] 
+        exclude = ['user', 'animal_id', 'weaning_age'] 
 
         labels={
             'gip': 'Identification Number',
@@ -727,30 +692,14 @@ class efficiency_update_form_male(forms.ModelForm):
             
         }
         widgets = {
-            # 'dow': DatePickerInput(format='%Y-%m-%d'),
-            # 'dos': DatePickerInput(format='%Y-%m-%d'),
-            # 'doc': DatePickerInput(format='%Y-%m-%d'),
-            # 'dosm': DatePickerInput(format='%Y-%m-%d'),
-
+           
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'doc': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'gip': forms.HiddenInput(),  # Cacher le champ 'gip'
 
-            # 'gip': forms.TextInput(attrs={'disabled':True}),
-            # 'dow': forms.TextInput(attrs={'disabled':True}),
-            # 'litter_size_weaning':forms.TextInput(attrs={'disabled':True}),
-            # 'weaning_age':forms.TextInput(attrs={'disabled':True}),
-            # 'weaning_weight':forms.TextInput(attrs={'disabled':True}),
-            # 'dos': forms.TextInput(attrs={'disabled':True}),
-            # 'doc': forms.TextInput(attrs={'disabled':True}),
-            # 'dosm': forms.TextInput(attrs={'disabled':True}),
-            # 'sexual_maturity_weight': forms.TextInput(attrs={'disabled':True}),
-            # 'weight_six': forms.TextInput(attrs={'disabled':True}),
-            # 'weight_eight': forms.TextInput(attrs={'disabled':True}),
-            # 'conform_at_eight': forms.TextInput(attrs={'disabled':True}),
-        }
+             }
 
     def __init__(self, *args, user=None, **kwargs):
         # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
@@ -789,15 +738,7 @@ class qualification_update_form(forms.ModelForm):
         }
         widgets = {
             'date_of_training': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
-
-            # 'gip': forms.TextInput(attrs={'disabled':True}),
-            # 'physical_fitness': forms.TextInput(attrs={'disabled':True}),
-            # 'date_of_training': forms.TextInput(attrs={'disabled':True}),
-            # 'period_of_training': forms.TextInput(attrs={'disabled':True}),
-            # 'training_score':forms.TextInput(attrs={'disabled':True}),
-            # 'seminal_characteristics': forms.TextInput(attrs={'disabled':True}),
-            # 'suitability': forms.TextInput(attrs={'disabled':True}),
-        }
+ }
 
 
     def __init__(self, *args, **kwargs):
@@ -817,7 +758,8 @@ class service_update_form_male(forms.ModelForm):
     class Meta:
         model=service_record_male
         fields='__all__'
-        # exclude = ['user']        
+        exclude = ['born_total', 'total_weaned']        
+       
 
         labels={
             'gip': 'Identification Number',
@@ -840,21 +782,7 @@ class service_update_form_male(forms.ModelForm):
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dof': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
-            # 'gip': forms.TextInput(attrs={'disabled':True}),
-            # 'sow_no': forms.TextInput(attrs={'disabled':True}),
-            # 'dos': forms.TextInput(attrs={'disabled':True}),
-            # 'dof': forms.TextInput(attrs={'disabled':True}),
-            # 'parity': forms.TextInput(attrs={'disabled':True}),
-            # 'born_male': forms.TextInput(attrs={'disabled':True}),
-            # 'born_female': forms.TextInput(attrs={'disabled':True}),
-            # 'born_total': forms.TextInput(attrs={'disabled':True}),
-            # 'litter_weight_birth': forms.TextInput(attrs={'disabled':True}),
-            # 'weaned_male': forms.TextInput(attrs={'disabled':True}),
-            # 'weaned_female': forms.TextInput(attrs={'disabled':True}),
-            # 'total_weaned': forms.TextInput(attrs={'disabled':True}),
-            # 'weaning_weight': forms.TextInput(attrs={'disabled':True}),
-            # 'still_birth_abnormality': forms.TextInput(attrs={'disabled':True}),
-        }
+                  }
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         specific_animal = kwargs.pop('specific_animal', None)
@@ -867,10 +795,22 @@ class service_update_form_male(forms.ModelForm):
             # Filtrer par utilisateur
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Remplacer les champs None ou vides par 0
+        numeric_fields = ['born_male', 'born_female', 'weaned_male', 'weaned_female', 'litter_weight_birth', 'weaning_weight']
+        for field in numeric_fields:
+            if cleaned_data.get(field) is None:
+                cleaned_data[field] = 0
+        return cleaned_data
 class service_update_form_female(forms.ModelForm):
     class Meta:
         model=service_record_female
         fields='__all__'
+        exclude = ['born_total', 'total_weaned']        
+
         labels={
             'gip': 'Identification Number',
             'boar_no':'Boar Number',
@@ -899,25 +839,7 @@ class service_update_form_female(forms.ModelForm):
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'date_of_abortion': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
-            # 'gip': forms.TextInput(attrs={'disabled':True}),
-            # 'boar_no':forms.TextInput(attrs={'disabled':True}),
-            # 'dos': forms.TextInput(attrs={'disabled':True}),
-            # 'nos': forms.TextInput(attrs={'disabled':True}),
-            # 'dof': forms.TextInput(attrs={'disabled':True}),
-            # 'dow': forms.TextInput(attrs={'disabled':True}),
-            # 'interfarrowing_interval':forms.TextInput(attrs={'disabled':True}),
-            # 'parity': forms.TextInput(attrs={'disabled':True}),
-            # 'born_male': forms.TextInput(attrs={'disabled':True}),
-            # 'born_female': forms.TextInput(attrs={'disabled':True}),
-            # 'born_total': forms.TextInput(attrs={'disabled':True}),
-            # 'litter_weight_birth': forms.TextInput(attrs={'disabled':True}),
-            # 'weaned_male': forms.TextInput(attrs={'disabled':True}),
-            # 'weaned_female': forms.TextInput(attrs={'disabled':True}),
-            # 'total_weaned': forms.TextInput(attrs={'disabled':True}),
-            # 'weaning_weight': forms.TextInput(attrs={'disabled':True}),
-            # 'still_birth_abnormality': forms.TextInput(attrs={'disabled':True}),
-            # 'date_of_abortion':forms.TextInput(attrs={'disabled':True}),
-        }
+                   }
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         specific_animal = kwargs.pop('specific_animal', None)
@@ -930,6 +852,14 @@ class service_update_form_female(forms.ModelForm):
             # Filtrer par utilisateur
             self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        # Remplacer les champs None ou vides par 0
+        numeric_fields = ['born_male', 'born_female', 'weaned_male', 'weaned_female', 'litter_weight_birth', 'weaning_weight']
+        for field in numeric_fields:
+            if cleaned_data.get(field) is None:
+                cleaned_data[field] = 0
+        return cleaned_data
 
 
 class SearchPig(forms.Form):

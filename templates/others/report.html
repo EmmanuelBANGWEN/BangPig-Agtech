@@ -9,23 +9,21 @@
     <div class="row">
 <div class="container py-4">
 <div class="container py-4">
-    <div class="row justify-content-center py-3">
+    <!-- <div class="row justify-content-center py-3">
         <input type="text" name="num" id="num" class="form-control form-control-lg text-center shadow" placeholder="Entrer l'Indentifiant du Porc">
     </div>
 
-    <!-- Bouton Histoire -->
     <form id="gipform">
         <div class="row justify-content-center py-2">
             <button class="btn btn-animated btn-lg btn-success-custom shadow" type="button" id="gip">History Sheet</button>
         </div>
     </form>
 
-    <!-- Messages -->
     <div class="row justify-content-center py-2">
         {% for message in messages %}
             <p class="feedback-message">{{ message }}</p>
         {% endfor %}
-    </div>
+    </div> -->
 
     <!-- Autres boutons -->
     <form id="ecof" action="/allpigs">
@@ -54,7 +52,7 @@
 
     <form id="nfform" action="revenue">
         <div class="row justify-content-center py-2">
-            <button class="btn btn-animated btn-lg btn-warning-custom shadow" type="submit">Revenue Received</button>
+            <button class="btn btn-animated btn-lg btn-warning-custom shadow" type="submit">Revenus générés</button>
         </div>
     </form>
 
@@ -72,7 +70,7 @@
 
     <div class="text-center mt-4">
         <form>
-            <button class="btn btn-animated btn-lg btn-secondary-custom shadow" type="submit" formaction="/">Retour</button>
+            <button class="btn btn-animated btn-lg btn-secondary-custom shadow" type="submit" formaction="/home">Retour</button>
         </form>
     </div>
 </div>
@@ -161,7 +159,7 @@
     }
 </style>
 
-<script>
+<!-- <script>
     // Gère le bouton "History Sheet" pour rediriger dynamiquement
     document.getElementById("gip").addEventListener("click", function() {
         const pigId = document.getElementById("num").value;
@@ -173,7 +171,7 @@
             alert("Please enter a Pig ID.");
         }
     });
-</script>
+</script> -->
 
 </div>
 </div>

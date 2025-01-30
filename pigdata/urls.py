@@ -55,7 +55,7 @@ urlpatterns=[
 
 
 
-    path('deletepigs', views.deletepigs, name='deletepigs'),
+    path('deletepigs/', views.deletepigs, name='deletepigs'),
     path('delete/service/<str:animal_id>/<int:pk>', views.delete_service, name='deleteservice'),
     path('delete/vaccination/<str:animal_id>/<int:pk>', views.delete_vaccination, name='deletevaccination'),
     path('delete/vetexam/<str:animal_id>/<int:pk>', views.delete_vetexam, name='deletevetexam'),
@@ -66,6 +66,9 @@ urlpatterns=[
 
     path('search/', views.searchdelete, name='searchdelete'),
     path('searchall/', views.searchupdate, name='searchupdate'),
+
+    path('documentation/', views.documentation, name='documentation'),
+
 
 
 ]

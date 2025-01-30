@@ -6,10 +6,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
+from datetime import date, timedelta
+from django.contrib import messages
+from django.http import HttpResponse
+from django.db import IntegrityError
+from datetime import datetime
+from django.db.models import Sum
+from django.contrib.postgres.search import SearchVector, SearchQuery
 
-# Create your views here.
 
-# for login
+
 #
 #
 #-----------------------------------------------------------------------------------------------------------------------------------
@@ -72,7 +78,7 @@ def dataentry(request):  #entrer les donnees
 
 def report(request):  
     return render(request, "others/report.html", context={'tablename':'Mes Enregistrements'})
-#-------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -232,7 +238,6 @@ def index(request):
     total_males = general_identification_and_parentage.objects.filter(user=request.user, gender='Male').count()
     
     # Nombre de porcelets (hypothèse : âge < 6 mois)
-    from datetime import date, timedelta
     six_months_ago = date.today() - timedelta(days=6*30)
     total_piglets = general_identification_and_parentage.objects.filter(user=request.user, dob__gte=six_months_ago).count()
     
@@ -561,26 +566,24 @@ def create_disposal(request, animal_id):
 def successupdate(request):
     return render(request,"update/successupdate.html", context={'tablename':'Update Successful'})
 
-
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib import messages
-from django.http import HttpResponse
-
-# Update view with gender-specific templates
 @login_required(login_url='loginuser')
 def update(request):
     animal_id = request.POST.get('animal_id') or request.GET.get('animal_id')
     
-    # Utilisation de get_object_or_404 pour gérer les erreurs
+    # Récupérer l'animal ou None si non trouvé
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
 
-    
+    if not animal:
+        messages.error(request, "Aucun animal trouvé avec cet ID.")
+        return render(request, "action/dataentry.html", {'tablename': 'Mise à Jour des Enregistrements'})
+
     context = {
         'tablename': 'Mise à Jour des Enregistrements',
         'animal_id': animal_id,
         'gender': animal.gender
     }
     
+
     # Rendu selon le sexe de l'animal
     if animal.gender == 'Female':
         return render(request, "update/updatefemale.html", context)
@@ -588,8 +591,6 @@ def update(request):
         return render(request, "update/updatemale.html", context)
 
 # Update general information
-from django.db import IntegrityError
-from django.shortcuts import get_object_or_404
 
 @login_required(login_url='loginuser')
 def update_general(request, animal_id):
@@ -613,8 +614,6 @@ def update_general(request, animal_id):
             animal.color_and_marking = request.POST.get('color_and_marking', animal.color_and_marking)
             animal.abnormalities = request.POST.get('abnormalities', animal.abnormalities)
 
-
-            
             animal.save()  # Sauvegarde des modifications
             messages.success(request, "Mise à jour réussie.")
         except IntegrityError as e:
@@ -644,6 +643,7 @@ def update_disposal(request, animal_id):
     if request.method == 'POST':
         form = disposal_update_form(request.POST, instance=disposal_instance, specific_animal=animal)
         if form.is_valid():
+            
             disposal_instance = form.save(commit=False)
             disposal_instance.user = request.user  # Associer l'utilisateur connecté
             disposal_instance.save()
@@ -651,6 +651,7 @@ def update_disposal(request, animal_id):
             return redirect('successupdate')  # Rediriger après la mise à jour
         else:
             print("Form Errors:", form.errors)  # Pour le débogage
+    form = disposal_update_form(instance=disposal_instance, specific_animal=animal)
 
     context = {
         'form': form,
@@ -661,32 +662,37 @@ def update_disposal(request, animal_id):
 # Update nutrition information
 @login_required(login_url='loginuser')
 def update_nutrition(request, animal_id):
-    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    # animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+    animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
+
     nutritions = nutrition_and_feeding.objects.filter(gip=animal)
     
     form = nutrition_update_form(initial={'gip': animal}, user=request.user, specific_animal=animal)
     
     if request.method == 'POST':
         form = nutrition_update_form(request.POST, user=request.user, specific_animal=animal)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.user = request.user  # Associer l'utilisateur connecté
-            obj.save()
-            return redirect('update_nutrition', animal_id=animal_id)
-    
+        try:
+
+            if form.is_valid():
+                obj = form.save(commit=False)
+                obj.user = request.user  # Associer l'utilisateur connecté
+                obj.save()
+                # return redirect('update_nutrition', animal_id=animal_id)
+        # nutrition = nutrition_and_feeding.objects.filter(gip=animal)
+        except IntegrityError as e:
+            messages.error(request, f"Erreur d'intégrité : {e}")
+      
+    form = nutrition_update_form(initial={'gip': animal}, user=request.user, specific_animal=animal)
+
     context = {
         'tablename': 'Update Nutrition',
         'form': form,
+        # 'nutrition':nutrition,
         'nutritions': nutritions,
         'backbut': request.build_absolute_uri(),
         'gip': animal_id
     }
     return render(request, "update/nutrition_update_template.html", context)
-
-
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse
-from django.contrib import messages
 
 # # Update economics information
 # @login_required(login_url='loginuser')
@@ -723,10 +729,22 @@ def update_efficiency(request, animal_id):
 
     gender = animal.gender
 
-    # Fonction pour calculer l'âge en jours
     def calculate_age(dob, dow):
-        return (dow - dob).days
-    
+        # Convertir dob et dow en objets datetime.date s'ils sont des chaînes
+        if isinstance(dob, str):
+            dob = datetime.strptime(dob, '%Y-%m-%d').date()
+        if isinstance(dow, str):
+            dow = datetime.strptime(dow, '%Y-%m-%d').date()
+        
+        # Calculer l'âge en jours
+        wa = (dow - dob).days
+        # print(wa)
+        if not dob or not dow:
+            return 0  # ou une autre valeur par défaut
+
+        return wa
+
+
     if gender == 'Male':
         # Récupérer ou créer l'instance pour les mâles
         animal_efficiency, created = efficiency_parameter_male.objects.get_or_create(gip=animal)
@@ -734,12 +752,95 @@ def update_efficiency(request, animal_id):
         
         if request.method == 'POST':
             form = efficiency_update_form_male(request.POST, instance=animal_efficiency)
-            if form.is_valid():
-                instance = form.save(commit=False)
-                instance.weaning_age = calculate_age(instance.gip.dob, instance.dow)
-                instance.user = request.user  # Assigner l'utilisateur connecté
-                instance.save()
-                return redirect('successupdate')
+            # if form.is_valid():
+
+            try:
+                
+                    if not animal_efficiency.weaning_weight:                
+                        animal_efficiency.weaning_weight = request.POST.get('weaning_weight', 0)  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.weaning_weight = request.POST.get('weaning_weight', animal_efficiency.weaning_weight)
+
+
+                    if not animal_efficiency.litter_size_weaning:                
+                        animal_efficiency.litter_size_weaning = request.POST.get('litter_size_weaning', 0)  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.litter_size_weaning = request.POST.get('litter_size_weaning', animal_efficiency.litter_size_weaning)
+
+
+                    if not animal_efficiency.sexual_maturity_weight:                
+                        animal_efficiency.sexual_maturity_weight = request.POST.get('sexual_maturity_weight', 0)  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.sexual_maturity_weight = request.POST.get('sexual_maturity_weight', animal_efficiency.sexual_maturity_weight)
+
+
+                    if not animal_efficiency.sexual_maturity_weight:                
+                        animal_efficiency.weight_six = request.POST.get('weight_six', 0)  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.weight_six = request.POST.get('weight_six', animal_efficiency.weight_six)
+
+
+
+                    if not animal_efficiency.sexual_maturity_weight:                
+                        animal_efficiency.weight_eight = request.POST.get('weight_eight', 0)  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.weight_eight = request.POST.get('weight_eight', animal_efficiency.weight_eight)
+
+
+
+                    if not animal_efficiency.sexual_maturity_weight:                
+                        animal_efficiency.conform_at_eight = request.POST.get('conform_at_eight', str(animal_efficiency.conform_at_eight))  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.conform_at_eight = request.POST.get('conform_at_eight', animal_efficiency.conform_at_eight)
+
+
+                    if not animal_efficiency.dow:                
+                        animal_efficiency.dow = request.POST.get('dow', None)  # Valeur par défaut 0 si vide
+                    else:
+                        animal_efficiency.dow = request.POST.get('dow', animal_efficiency.dow)
+
+
+                    dos = request.POST.get('dos', str(animal_efficiency.dos))
+                    if dos:
+                        try:
+                            dos = datetime.strptime(dos, '%Y-%m-%d').date()
+                        except ValueError:
+                            dos = None
+                    animal_efficiency.dos = dos if dos else None
+
+
+                    doc = request.POST.get('doc', str(animal_efficiency.doc))
+                    if doc:
+                        try:
+                            doc = datetime.strptime(doc, '%Y-%m-%d').date()
+                        except ValueError:
+                            doc = None
+                    animal_efficiency.doc = doc if doc else None
+
+                    dosm = request.POST.get('dosm', str(animal_efficiency.dosm))
+                    if dosm:
+                        try:
+                            dosm = datetime.strptime(dosm, '%Y-%m-%d').date()
+                        except ValueError:
+                            dosm = None
+                    animal_efficiency.dosm = dosm if dosm else None
+
+
+
+                    dob = animal_efficiency.gip.dob if animal_efficiency.gip else None
+                    dow = animal_efficiency.dow
+
+                    # Si les deux valeurs sont présentes, on calcule l'âge, sinon on laisse l'âge comme None
+                    animal_efficiency.weaning_age = calculate_age(dob, dow) if dob and dow else None
+
+
+                    animal_efficiency.save()
+                    messages.success(request, "Mise à jour réussie.")
+
+                    # return redirect('successupdate')
+            except IntegrityError as e:
+                messages.error(request, f"Erreur d'intégrité : {e}")
+        
         form = efficiency_update_form_male(instance=animal_efficiency)
 
         context = {
@@ -749,23 +850,102 @@ def update_efficiency(request, animal_id):
 
             'tablename': 'Paramètre Efficacité'
         }
+
         return render(request, "update/update_efficiency_male.html", context)
     
     elif gender == 'Female':
-        # Récupérer ou créer l'instance pour les femelles
+        
+        # Récupérer ou créer l'instance pour les mâles
         animal_efficiency, created = efficiency_parameter_female.objects.get_or_create(gip=animal)
         form = efficiency_update_form_female(instance=animal_efficiency)
         
         if request.method == 'POST':
             form = efficiency_update_form_female(request.POST, instance=animal_efficiency)
-            if form.is_valid():
-                instance = form.save(commit=False)
-                instance.weaning_age = calculate_age(instance.gip.dob, instance.dow)
-                instance.user = request.user  # Assigner l'utilisateur connecté
-                instance.save()
-                return redirect('successupdate')
-        form = efficiency_update_form_male(instance=animal_efficiency)
-    
+            # if form.is_valid():
+
+            
+            try:
+
+                
+                if not animal_efficiency.weaning_weight:                
+                    animal_efficiency.weaning_weight = request.POST.get('weaning_weight', 0)  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.weaning_weight = request.POST.get('weaning_weight', animal_efficiency.weaning_weight)
+
+
+                if not animal_efficiency.litter_size_weaning:                
+                    animal_efficiency.litter_size_weaning = request.POST.get('litter_size_weaning', 0)  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.litter_size_weaning = request.POST.get('litter_size_weaning', animal_efficiency.litter_size_weaning)
+
+
+                if not animal_efficiency.sexual_maturity_weight:                
+                    animal_efficiency.sexual_maturity_weight = request.POST.get('sexual_maturity_weight', 0)  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.sexual_maturity_weight = request.POST.get('sexual_maturity_weight', animal_efficiency.sexual_maturity_weight)
+
+
+                if not animal_efficiency.sexual_maturity_weight:                
+                    animal_efficiency.weight_six = request.POST.get('weight_six', 0)  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.weight_six = request.POST.get('weight_six', animal_efficiency.weight_six)
+
+
+
+                if not animal_efficiency.sexual_maturity_weight:                
+                    animal_efficiency.weight_eight = request.POST.get('weight_eight', 0)  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.weight_eight = request.POST.get('weight_eight', animal_efficiency.weight_eight)
+
+
+
+                if not animal_efficiency.sexual_maturity_weight:                
+                    animal_efficiency.conform_at_eight = request.POST.get('conform_at_eight', str(animal_efficiency.conform_at_eight))  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.conform_at_eight = request.POST.get('conform_at_eight', animal_efficiency.conform_at_eight)
+
+                if not animal_efficiency.dow:                
+                    animal_efficiency.dow = request.POST.get('dow', None)  # Valeur par défaut 0 si vide
+                else:
+                    animal_efficiency.dow = request.POST.get('dow', animal_efficiency.dow)
+
+                # Répéter le même processus pour les autres champs de date
+                dos = request.POST.get('dos', str(animal_efficiency.dos))
+                if dos:
+                    try:
+                        dos = datetime.strptime(dos, '%Y-%m-%d').date()
+                    except ValueError:
+                        dos = None
+                animal_efficiency.dos = dos if dos else None
+
+
+
+                dosm = request.POST.get('dosm', str(animal_efficiency.dosm))
+                if dosm:
+                    try:
+                        dosm = datetime.strptime(dosm, '%Y-%m-%d').date()
+                    except ValueError:
+                        dosm = None
+                animal_efficiency.dosm = dosm if dosm else None
+
+
+
+                dob = animal_efficiency.gip.dob if animal_efficiency.gip else None
+                dow = animal_efficiency.dow
+
+                # Si les deux valeurs sont présentes, on calcule l'âge, sinon on laisse l'âge comme None
+                animal_efficiency.weaning_age = calculate_age(dob, dow) if dob and dow else None
+
+
+                animal_efficiency.save()
+                messages.success(request, "Mise à jour réussie.")
+
+                    # return redirect('successupdate')
+            except IntegrityError as e:
+                messages.error(request, f"Erreur d'intégrité : {e}")
+        
+        form = efficiency_update_form_female(instance=animal_efficiency)
+
         context = {
             'form': form,
             'animal_efficiency':animal_efficiency,
@@ -773,13 +953,10 @@ def update_efficiency(request, animal_id):
 
             'tablename': 'Paramètre Efficacité'
         }
-        
+
+
         return render(request, "update/update_efficiency_female.html", context)
 
-
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib import messages
-from django.http import HttpResponse
 
 
 # Update qualification as a breeding boar
@@ -794,10 +971,28 @@ def update_qualification(request, animal_id):
         form = qualification_update_form(request.POST)
         try:
 
-            qualification_instance.gip = request.POST.get('gip', qualification_instance.gip)
+            # qualification_instance.gip = request.POST.get('gip', qualification_instance.gip)
             qualification_instance.physical_fitness = request.POST.get('physical_fitness', qualification_instance.physical_fitness)
-            qualification_instance.date_of_training = request.POST.get('date_of_training', qualification_instance.date_of_training)
-            qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
+            
+
+
+            date_of_training = request.POST.get('date_of_training', str(qualification_instance.date_of_training))
+            if date_of_training:
+                try:
+                    date_of_training = datetime.strptime(date_of_training, '%Y-%m-%d').date()
+                except ValueError:
+                    date_of_training = None
+            qualification_instance.date_of_training = date_of_training if date_of_training else None
+            
+            # qualification_instance.date_of_training = request.POST.get('date_of_training', qualification_instance.date_of_training)
+            
+
+            if not qualification_instance.period_of_training:                
+                qualification_instance.period_of_training = request.POST.get('period_of_training', 0)  # Valeur par défaut 0 si vide
+            else:
+                qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
+
+            # qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
             qualification_instance.training_score = request.POST.get('training_score', qualification_instance.training_score)
             qualification_instance.seminal_characteristics = request.POST.get('seminal_characteristics', qualification_instance.seminal_characteristics)
             qualification_instance.suitability = request.POST.get('suitability', qualification_instance.suitability)
@@ -838,14 +1033,26 @@ def update_death(request, animal_id):
             if form.is_valid():
                 # Sauvegarder l'instance du formulaire
                 death_instance = form.save(commit=False)
-                death_instance.user = request.user  # Associer l'utilisateur connecté
+                # death_instance.user = request.user  # Associer l'utilisateur connecté
                 death_instance.cause_death = request.POST.get('cause_death', death_instance.cause_death)
-                death_instance.date_death = request.POST.get('date_death', death_instance.date_death)
+                # death_instance.date_death = request.POST.get('date_death', death_instance.date_death)
+            
+
+
+                date_death = request.POST.get('date_death', str(death_instance.date_death))
+                if date_death:
+                    try:
+                        date_death = datetime.strptime(date_death, '%Y-%m-%d').date()
+                    except ValueError:
+                        date_death = None
+                death_instance.date_death = date_death if date_death else None
+
+                
                 death_instance.postmortem_findings = request.POST.get('postmortem_findings', death_instance.postmortem_findings)
 
                 death_instance.save()
                 messages.success(request, "Mise à jour réussie.")
-                return redirect('successupdate')  # Rediriger après la mise à jour réussie
+                # return redirect('successupdate')  # Rediriger après la mise à jour réussie
         except IntegrityError as e:
             messages.error(request, f"Erreur d'intégrité : {e}")
 
@@ -866,12 +1073,6 @@ def update_death(request, animal_id):
 
 
 
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-
-# Update service record
-@login_required(login_url='loginuser')
 # Update service record
 @login_required(login_url='loginuser')
 def update_service(request, animal_id):
@@ -883,14 +1084,17 @@ def update_service(request, animal_id):
     gender = animal.gender
 
     # Déterminer le modèle et le formulaire en fonction du genre de l'animal
-    if gender == 'Male':
+    if gender == 'Female':
+        service_model = service_record_female
+        # service_form = service_update_form_female
+        service_form = service_update_form_female
+        template = "update/service_update_female.html"
+
+    elif gender == 'Male':
         service_model = service_record_male
         service_form = service_update_form_male
         template = "update/service_update_male.html"
-    elif gender == 'Female':
-        service_model = service_record_female
-        service_form = service_update_form_female
-        template = "update/service_update_female.html"
+
     else:
         return HttpResponse("Invalid gender", status=400)
 
@@ -911,6 +1115,7 @@ def update_service(request, animal_id):
             instance.user = request.user
             instance.save()
             return redirect('update_service', animal_id=animal_id)
+    form = service_form(user=request.user, specific_animal=animal)
 
     context = {
         'form': form,
@@ -922,9 +1127,6 @@ def update_service(request, animal_id):
     return render(request, template, context)
 
 
-
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
 
 # Fonction générique pour mettre à jour les paramètres de santé
 def update_health_parameter(request, animal_id, model_class, form_class, template_name, tablename):
@@ -948,6 +1150,8 @@ def update_health_parameter(request, animal_id, model_class, form_class, templat
     
     vet_exams = model_class.objects.filter(gip=animal)
     vaccinations = model_class.objects.filter(gip=animal)
+    form = form_class(initial={'gip': animal}, user=request.user, specific_animal=animal)
+
     context = {
         'form': form,
         'health_parameters': health_parameters,
@@ -986,39 +1190,6 @@ def update_vetexam(request, animal_id):
         "update/vetexam_update_template.html", 
         "Veterinary Exam"
     )
-
-
-# @login_required(login_url='loginuser')
-# def update_service(request, animal_id):
-#     obj=general_identification_and_parentage.objects.get(animal_id=animal_id)
-#     gender=obj.gender
-#     if gender=='Male':
-#         animal=service_record_male.objects.get(gip=obj)
-#         form=service_update_form_male(instance=animal)
-#         if request.method=='POST':
-#             form=service_update_form_male(request.POST, instance=animal)
-#             if form.is_valid():
-#                 form.save()
-#                 return redirect('successupdate')
-#         context={
-#             'form':form,
-#             'tablename': 'Enregistrement des Services et Caractères des Portées'
-#         }
-
-#         return render(request,"formtemplate.html",context)
-#     elif gender=='Female':
-#         animal=service_record_female.objects.get(gip=obj)
-#         form=service_update_form_female(instance=animal)
-#         if request.method=='POST':
-#             form=service_update_form_female(request.POST, instance=animal)
-#             if form.is_valid():
-#                 form.save()
-#                 return redirect('successupdate')
-#         context={
-#             'form':form,
-#             'tablename': 'Enregistrement des Services et Caractères des Portées'
-#         }
-
 #-----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1040,10 +1211,6 @@ def update_vetexam(request, animal_id):
 
 
 
-
-from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 
 @login_required(login_url='loginuser')
 def history(request, animal_id):
@@ -1258,7 +1425,6 @@ def pigmortality(request):
     }
     return render(request, "data/pigmortality.html", context)
 
-from django.db.models import Sum
 
 @login_required(login_url='loginuser')
 def revenue_received(request):
@@ -1278,7 +1444,7 @@ def revenue_received(request):
             total = revenues.aggregate(Sum('revenue'))['revenue__sum'] or 0
 
             context = {
-                'tablename': 'Revenue Received',
+                'tablename': 'Revenus générés',
                 'form': form,
                 'total': total
             }
@@ -1287,7 +1453,7 @@ def revenue_received(request):
     # Formulaire vide au chargement initial
     form = datetodate()
     context = {
-        'tablename': 'Revenue Received',
+        'tablename': 'Revenus générés',
         'form': form,
         'total': None
     }
@@ -1333,6 +1499,7 @@ def selectpigs(request):
                     user=request.user
                 )
 
+            
             # Traitement des résultats
             if n in ['1', '2']:
                 male = [i.animal_id for i in animals if i.gender == 'Male']
@@ -1385,7 +1552,6 @@ def help(request):
 
 
 
-from django.contrib.postgres.search import SearchVector, SearchQuery
 
 def searchdelete(request):
     query = None
@@ -1414,7 +1580,6 @@ def searchdelete(request):
     })
 
 
-from django.contrib.postgres.search import SearchVector, SearchQuery
 
 def searchupdate(request):
     query = None
@@ -1444,3 +1609,7 @@ def searchupdate(request):
 
 def home(request):
     return render(request, 'home.html')
+
+
+def documentation(request):
+    return render(request, 'others/documentation.html')

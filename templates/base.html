@@ -11,7 +11,7 @@
     />
     <link
       rel="icon"
-      href="{% static 'assets/img/kaiadmin/favicon.ico' %}"
+      href="{% static 'assets/img/loggg.png'%}"
       type="image/x-icon"
     />
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -44,7 +44,7 @@
             "Font Awesome 5 Brands",
             "simple-line-icons",
           ],
-          urls: ["{% static ' assets/css/fonts.min.css' %}"],
+          urls: ["{% static 'assets/css/fonts.min.css' %}"],
         },
         active: function () {
           sessionStorage.fonts = true;
@@ -222,6 +222,12 @@
                   <p>Aide</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a  href="{% url 'documentation' %}">
+                    <i class="fas fa-question-circle"></i>
+                  <p>Documentation</p>
+                </a>
+              </li>
               
             </ul>
           </div>
@@ -378,8 +384,8 @@
         
             <!-- Copyright Section -->
             <div class="copyright">
-              2024, made with <i class="fa fa-heart heart text-danger"></i> by
-              <a target="_blank" href="https://www.linkedin.com/in/emmanuel-bangwen-75091117b/">Emmanuel Bangwen</a>
+              2025, made with <i class="fa fa-heart heart text-danger"></i> by
+              <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a>
             </div>
         
             <!-- Distribution Section -->

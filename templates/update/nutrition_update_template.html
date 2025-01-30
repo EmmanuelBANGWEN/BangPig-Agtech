@@ -19,6 +19,10 @@
         <div class="col-md-10">
             <form action="" method="POST" class="shadow p-4 rounded bg-light">
                 {% csrf_token %}
+                {% for message in messages %}
+                    <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+
                 <h4 class="mb-4">Ajouter une Donnée Nutritionnelle</h4>
                 {{ form|crispy }}
                 <div class="d-flex justify-content-end">

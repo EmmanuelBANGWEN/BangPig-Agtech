@@ -263,55 +263,87 @@
             <!-- End Logo Header -->
           </div>
           <!-- Navbar Header -->
-          <nav
-            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
-          >
-            <div class="container-fluid">
-              <nav
-                class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
-              >
-                
-              </nav>
+          <!-- Navbar Header -->
+<nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom fixed-top">
+  <div class="container-fluid">
+      <div class="d-flex align-items-center">
+          <!-- Logo -->
+          <a href="/" class="navbar-brand">
+              <img src="{% static 'assets/img/bangri_logo.png' %}" alt="navbar brand" height="40" />
+          </a>
+          <!-- Toggle Button for Mobile -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+              <i class="gg-menu-right"></i>
+          </button>
+      </div>
 
-
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+              {% if request.user.is_authenticated %}
+              <li class="nav-item d-flex align-items-center">
                   
-                    
-                    
-                  </a>
-                  <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        {% if request.user.is_authenticated %}
-                        <span class="profile-username">
+                  <span class="profile-username">
+                      <span class="op-7">Hi,</span>
+                      <span class="fw-bold">{{ request.user }}</span>
+                  </span>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'index' %}">Accueil</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'logoutuser' %}">Déconnexion</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'index' %}">Accueil</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'loginuser' %}">Connexion</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{% url 'registeruser' %}">Inscription</a>
+              </li>
+              {% endif %}
+          </ul>
+      </div>
+  </div>
+</nav>
 
-                        <li class="nav-item">
-                            <span class="op-7">Hi,</span> 
-                            <span class="fw-bold"></span>{{ request.user }}</span>
-                        </li>
-                      </span>
+<!-- Ajout de styles pour améliorer la lisibilité sur mobile -->
+<style>
+  .navbar {
+      background-color: rgba(255, 255, 255, 0.9); /* Léger fond blanc */
+      height: auto; /* Hauteur dynamique */
+      padding: 10px 15px;
+      z-index: 1050; /* S'assurer que la navbar est au-dessus */
+  }
+  
+  .navbar .profile-username {
+      font-size: 1rem;
+      color: #333; /* Couleur du texte */
+  }
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logoutuser' %}">Déconnexion</a>
-                        </li>
-                        {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Accueil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'loginuser' %}">Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'registeruser' %}">Inscription</a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
-                  
-              </ul>
-            </div>
-          </nav>
+  .navbar-toggler {
+      border: none;
+      background: none;
+  }
+
+  .avatar-sm img {
+      width: 35px;
+      height: 35px;
+  }
+
+  @media (max-width: 768px) {
+      .navbar .profile-username {
+          font-size: 0.9rem; /* Réduit la taille du texte pour mobile */
+      }
+      .avatar-sm img {
+          width: 30px;
+          height: 30px;
+      }
+  }
+</style>
+
           <!-- End Navbar -->
         </div>
 
@@ -319,6 +351,7 @@
 <style>
   
   .navbar {
+    
   height: 10px; /* Réduit la hauteur de la barre */
   padding: 5px 15px; /* Réduit les espacements internes */
 }
@@ -440,6 +473,90 @@
       </script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <link rel="stylesheet" href="{% static 'assets/css/demo.css' %}"/>
+      <!--   Core JS Files   -->
+    <script src="{% static 'assets/js/core/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
+
+    <!-- Chart JS -->
+    <script src="{% static 'assets/js/plugin/chart.js/chart.min.js' %}"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="{% static 'assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
+
+    <!-- Chart Circle -->
+    <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
+
+    <!-- Datatables -->
+    <script src="{% static 'assets/js/plugin/datatables/datatables.min.js' %}"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="{% static 'assets/js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/js/plugin/jsvectormap/world.js' %}"></script>
+
+    <!-- Sweet Alert -->
+    <script src="{% static 'assets/js/plugin/sweetalert/sweetalert.min.js' %}"></script>
+
+    <!-- Kaiadmin JS -->
+    <script src="{% static 'assets/js/kaiadmin.min.js' %}"></script>
+
+    <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+    <script src="{% static 'assets/js/setting-demo.js' %}"></script>
+    <script src="{% static 'assets/js/demo.js' %}"></script>
+    <script>
+      $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#177dff",
+        fillColor: "rgba(23, 125, 255, 0.14)",
+      });
+
+      $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#f3545d",
+        fillColor: "rgba(243, 84, 93, .14)",
+      });
+
+      $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#ffa534",
+        fillColor: "rgba(255, 165, 52, .14)",
+      });
+    </script>
     </body>
   </html>
   

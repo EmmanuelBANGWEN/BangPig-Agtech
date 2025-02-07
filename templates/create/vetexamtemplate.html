@@ -13,7 +13,9 @@
 <form action="" method="POST">
 {% csrf_token %}
   {{form|crispy}}
-  <button class="btn btn-success btn-lg float-right" type="submit">Add</button>
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-success btn-lg">Ajouter</button>
+</div>
 </form>
 
 
@@ -55,7 +57,16 @@
           </tbody>
       </table>
   </div>
-<form action="{% url 'deathview'  gip %}" method="get">
+<!-- <form action="{% url 'deathview'  gip %}" method="get">
   <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
-</form>
+</form> -->
+
+
+
+<div class="d-flex justify-content-between mt-4">
+  <button class="btn btn-secondary btn-lg" type="submit" formaction="/dataentry/">Retour</button>
+  <form action="{% url 'deathview'  gip %}" method="get">
+    <button class="btn btn-success btn-lg" type="submit">Suivant</button>
+  </form>
+</div>
 {% endblock content%}

@@ -7,18 +7,17 @@
 <div class="container py-5">
 
     <div class="row mb-4">
-        
-<head>
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Bootstrap CSS (optionnel pour les boutons stylisés) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-</head>
+        <head>
+            <!-- Flatpickr CSS -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+            <!-- Bootstrap CSS (optionnel pour les boutons stylisés) -->
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+        </head>
 
-<body>
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-</body>
+        <body>
+            <!-- Flatpickr JS -->
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        </body>
 
         <div class="col text-center">
             <h2 class="display-5">Statistiques des Porcelets</h2>
@@ -45,7 +44,6 @@
                 <div class="card-body">
                     <h5 class="card-title">Porcelets Mâles</h5>
                     <p class="mb-1"><strong>Nombre de porcelets nés :</strong> {{ malecount }}</p>
-                    <!-- <p><strong>Poids total :</strong> {{ maleweight }} kg</p> -->
                 </div>
             </div>
         </div>
@@ -54,11 +52,38 @@
                 <div class="card-body">
                     <h5 class="card-title">Porcelets Femelles</h5>
                     <p class="mb-1"><strong>Nombre de porcelets nés :</strong> {{ femalecount }}</p>
-                    <!-- <p><strong>Poids total :</strong> {{ femaleweight }} kg</p> -->
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Ajout du graphique interactif -->
+    {% if graph_json %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Nombre de porcelets nés par jour</h5>
+                    <div id="graph-container">
+                        {{ graph_json|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Répartition des porcelets par genre</h5>
+                    <div id="graph-container">
+                        {{ graph_json2|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="row justify-content-center">
         <div class="col-md-4 text-center">
@@ -71,10 +96,6 @@
 </div>
 
 <!-- Flatpickr Activation Script -->
-
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         flatpickr(".flatpickr", {});

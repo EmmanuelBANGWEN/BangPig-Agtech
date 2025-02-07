@@ -4,68 +4,53 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <!-- En-tête de la page -->
-            <div class="text-center mb-4">
-                <h2 class="display-6">Inscription</h2>
-                <p class="text-muted">Créez un compte pour accéder à toutes nos fonctionnalités</p>
-            </div>
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
+    <div class="card shadow-lg" style="width: 100%; max-width: 500px; border-radius: 10px;">
+        <div class="card-body p-4">
+            <h3 class="card-title text-center mb-4" style="font-weight: bold; color: #343a40;">Inscription</h3>
+            <p class="text-muted">Créez un compte pour accéder à toutes nos fonctionnalités</p>
 
-            <!-- Formulaire d'inscription -->
-            <div class="card shadow-sm p-4">
-                <form autocomplete="off" method="POST">
-                    {% csrf_token %}
+            <form autocomplete="off" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
                     {{ form|crispy }}
-                    <button class="btn btn-success btn-lg w-100" type="submit">S'inscrire</button>
-                </form>
-            </div>
-
-            <!-- Lien vers la page de connexion -->
-            <div class="text-center mt-3">
-                <p class="mb-0">Vous avez déjà un compte ? <a href="{% url 'loginuser' %}" class="text-success fw-bold">Connectez-vous ici</a>.</p>
-            </div>
+                </div>
+                <button class="btn btn-success btn-lg w-100" type="Login">S'inscrire</button>
+                {% for message in messages %}
+                    <p class="text-danger mt-3 text-center">{{ message }}</p>
+                {% endfor %}
+            </form>
+            <p class="text-center mt-3">
+                Vous avez déjà un compte ? <a href="{% url 'loginuser' %}" class="text-success fw-bold">Connectez-vous ici</a>.</p>
         </div>
     </div>
 </div>
 
 <style>
-    /* Conteneur principal */
-    .container {
-        max-width: 600px;
-        margin: auto;
+    body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        color: #343a40;
     }
 
-    /* Style du formulaire */
     .card {
-        border: none;
-        border-radius: 8px;
         background-color: #f8f9fa;
+        border: none;
     }
 
-    /* Bouton d'inscription */
     .btn-success {
         background-color: #43a047;
         border: none;
-        transition: background-color 0.3s ease;
+        transition: background-color 0.3s, transform 0.2s;
     }
+
     .btn-success:hover {
         background-color: #388e3c;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
-    /* Lien de connexion */
-    a {
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-
-    /* Texte en-tête */
-    h2 {
-        color: #388e3c;
-        font-weight: bold;
+    .btn-success:active {
+        transform: scale(0.98);
     }
 </style>
 

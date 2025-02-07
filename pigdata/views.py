@@ -44,17 +44,40 @@ def logoutuser(request):
     logout(request)  # Déconnexion de l'utilisateur
     return redirect('loginuser')  # Redirection vers la page de connexion
 
+# def registeruser(request):
+#     if request.user.is_authenticated:
+#        return redirect('index')  # Redirection si l'utilisateur est déjà connecté
+#     form = CreateUserForm()  # Création d'un formulaire d'inscription
+#     if request.method == 'POST':
+#         form = CreateUserForm(request.POST)  # Récupération des données soumises
+#         if form.is_valid():
+#             form.save()  # Enregistrement du nouvel utilisateur
+#             return redirect('loginuser')  # Redirection vers la page de connexion
+#     context = {'form': form, 'tablename': 'Register'}
+#     return render(request, "account/register.html", context)
+
+
+
+from django.contrib.auth import authenticate, login
+
+
 def registeruser(request):
-    if request.user.is_authenticated:
-       return redirect('index')  # Redirection si l'utilisateur est déjà connecté
-    form = CreateUserForm()  # Création d'un formulaire d'inscription
     if request.method == 'POST':
-        form = CreateUserForm(request.POST)  # Récupération des données soumises
+        form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()  # Enregistrement du nouvel utilisateur
-            return redirect('loginuser')  # Redirection vers la page de connexion
-    context = {'form': form, 'tablename': 'Register'}
-    return render(request, "account/register.html", context)
+            new_user = form.save(commit=False)
+            new_user.set_password(form.cleaned_data['password1'])
+            new_user.save()
+            login(request, new_user)
+            return redirect('loginuser')
+        else:
+            return render(request, 'account/register.html', {'form': form })
+    else:
+        form = CreateUserForm()
+        return render(request, 'account/register.html', {'form':form})
+
+
+ 
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 
@@ -371,8 +394,7 @@ def create_qualification(request, animal_id):
 @login_required(login_url='loginuser')
 def create_service(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
-
-    
+        
     # Déterminer le modèle et le formulaire en fonction du genre
     if animal.gender == 'Male':
         service_model = service_record_male
@@ -390,7 +412,7 @@ def create_service(request, animal_id):
         form = service_form(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)
-            
+             
             # Calcul des totaux
             instance.born_total = instance.born_female + instance.born_male
             instance.total_weaned = instance.weaned_female + instance.weaned_male
@@ -438,8 +460,9 @@ def vaccination(request, animal_id):
         'backbut': request.build_absolute_uri(),
         'tablename': 'Vaccinations'
     }
-
     return render(request, "create/vaccinationtemplate.html", context)
+
+
 @login_required(login_url='loginuser')
 def vetexam(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -613,9 +636,9 @@ def update_general(request, animal_id):
             animal.colitter_size_of_birth = request.POST.get('colitter_size_of_birth', animal.colitter_size_of_birth)
             animal.color_and_marking = request.POST.get('color_and_marking', animal.color_and_marking)
             animal.abnormalities = request.POST.get('abnormalities', animal.abnormalities)
-
+ 
             animal.save()  # Sauvegarde des modifications
-            messages.success(request, "Mise à jour réussie.")
+            messages.success(request, "Ne jamais laisser le champ  *Taille de la portée à la naissance*  vide !!!")
         except IntegrityError as e:
             messages.error(request, f"Erreur d'intégrité : {e}")
     
@@ -650,12 +673,12 @@ def update_disposal(request, animal_id):
             messages.success(request, "Mise à jour réussie.")
             return redirect('successupdate')  # Rediriger après la mise à jour
         else:
-            print("Form Errors:", form.errors)  # Pour le débogage
+            messages.error(request, 'username or password is incorrect')
     form = disposal_update_form(instance=disposal_instance, specific_animal=animal)
 
     context = {
         'form': form,
-        'tablename': 'Disposal',
+        'tablename': 'Revenus',
     }
     return render(request, "update/updatedisposal.html", context)
 
@@ -755,7 +778,7 @@ def update_efficiency(request, animal_id):
             # if form.is_valid():
 
             try:
-                
+
                     if not animal_efficiency.weaning_weight:                
                         animal_efficiency.weaning_weight = request.POST.get('weaning_weight', 0)  # Valeur par défaut 0 si vide
                     else:
@@ -969,36 +992,37 @@ def update_qualification(request, animal_id):
     
     if request.method == 'POST':
         form = qualification_update_form(request.POST)
+        messages.warning(request, "Ne jamais laisser le champ  *Periode d'entrainement*  vide !!!")
+
         try:
+            if form.is_valid():
 
-            # qualification_instance.gip = request.POST.get('gip', qualification_instance.gip)
-            qualification_instance.physical_fitness = request.POST.get('physical_fitness', qualification_instance.physical_fitness)
-            
+                # qualification_instance.gip = request.POST.get('gip', qualification_instance.gip)
+                qualification_instance.physical_fitness = request.POST.get('physical_fitness', qualification_instance.physical_fitness)
+                
+                date_of_training = request.POST.get('date_of_training', str(qualification_instance.date_of_training))
+                if date_of_training:
+                    try:
+                        date_of_training = datetime.strptime(date_of_training, '%Y-%m-%d').date()
+                    except ValueError:
+                        date_of_training = None
+                qualification_instance.date_of_training = date_of_training if date_of_training else None
+                
+                # qualification_instance.date_of_training = request.POST.get('date_of_training', qualification_instance.date_of_training)
+                
 
+                if not qualification_instance.period_of_training:                
+                    qualification_instance.period_of_training = request.POST.get('period_of_training', 0)  # Valeur par défaut 0 si vide
+                else:
+                    qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
 
-            date_of_training = request.POST.get('date_of_training', str(qualification_instance.date_of_training))
-            if date_of_training:
-                try:
-                    date_of_training = datetime.strptime(date_of_training, '%Y-%m-%d').date()
-                except ValueError:
-                    date_of_training = None
-            qualification_instance.date_of_training = date_of_training if date_of_training else None
-            
-            # qualification_instance.date_of_training = request.POST.get('date_of_training', qualification_instance.date_of_training)
-            
-
-            if not qualification_instance.period_of_training:                
-                qualification_instance.period_of_training = request.POST.get('period_of_training', 0)  # Valeur par défaut 0 si vide
-            else:
-                qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
-
-            # qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
-            qualification_instance.training_score = request.POST.get('training_score', qualification_instance.training_score)
-            qualification_instance.seminal_characteristics = request.POST.get('seminal_characteristics', qualification_instance.seminal_characteristics)
-            qualification_instance.suitability = request.POST.get('suitability', qualification_instance.suitability)
-            
-            qualification_instance.save()  # Sauvegarde des modifications
-            messages.success(request, "Mise à jour réussie.")
+                # qualification_instance.period_of_training = request.POST.get('period_of_training', qualification_instance.period_of_training)
+                qualification_instance.training_score = request.POST.get('training_score', qualification_instance.training_score)
+                qualification_instance.seminal_characteristics = request.POST.get('seminal_characteristics', qualification_instance.seminal_characteristics)
+                qualification_instance.suitability = request.POST.get('suitability', qualification_instance.suitability)
+                
+                qualification_instance.save()  # Sauvegarde des modifications
+                messages.success(request, "Mise à jour réussie.")
         except IntegrityError as e:
             messages.error(request, f"Erreur d'intégrité : {e}")
     
@@ -1283,6 +1307,7 @@ def allpigs(request):
     # animals=general_identification_and_parentage.objects.all()
     animals = general_identification_and_parentage.objects.filter(user=request.user)
 
+
     context={
         'animals':animals,
         'tablename':'Tout les animaux de la Ferme',
@@ -1291,42 +1316,93 @@ def allpigs(request):
 
 
 
+import plotly.express as px
+import plotly.io as pio
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import general_identification_and_parentage
+from .forms import datetodate
+import plotly.express as px
+import plotly.io as pio
+import pandas as pd
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import general_identification_and_parentage
+from .forms import datetodate
+
 @login_required(login_url='loginuser')
 def pigletborn(request):
+    graph_json = None
     if request.method == 'POST':
         form = datetodate(request.POST)
         if form.is_valid():
             fromdate = form.cleaned_data['from_date']
             todate = form.cleaned_data['to_date']
-            
-            # Filtrer par utilisateur connecté et par date de naissance
+
+            # Filtrer les données en fonction des dates et de l'utilisateur
             allborn = general_identification_and_parentage.objects.filter(
                 dob__range=(fromdate, todate),
-                user=request.user  # Assurez-vous que votre modèle a un champ "user"
+                user=request.user
             )
 
+            # Compter le nombre total de porcelets nés
             totalcount = allborn.count()
             malecount = allborn.filter(gender='Male').count()
             femalecount = allborn.filter(gender='Female').count()
 
+            # Convertir les données en DataFrame Pandas
+            df = pd.DataFrame.from_records(allborn.values('dob', 'gender'))
+            df['dob'] = pd.to_datetime(df['dob'])  # Convertir en format datetime
+
+            # Compter le nombre de naissances par jour
+            birth_count = df.groupby('dob').size().reset_index(name='Nombre de porcelets')
+
+            # Créer un graphique interactif avec Plotly
+            fig = px.line(
+                birth_count, 
+                x='dob', 
+                y='Nombre de porcelets', 
+                color_discrete_sequence=['green', 'red'],
+                title="Nombre de porcelets nés par jour",
+                labels={'dob': 'Date', 'Nombre de porcelets': 'Nombre de porcelets nés'},
+                markers=True,
+
+            )
+
+            # Ajouter un histogramme pour la répartition des genres
+            fig2 = px.bar(
+                x=['Mâles', 'Femelles'], 
+                y=[malecount, femalecount], 
+                title="Répartition des porcelets nés par genre",
+                labels={'x': 'Genre', 'y': 'Nombre'},
+                color=['Mâles', 'Femelles'], 
+                color_discrete_sequence=['green', 'red']
+            )
+
+            # Convertir les graphiques en HTML
+            graph_json = pio.to_html(fig, full_html=False)
+            graph_json2 = pio.to_html(fig2, full_html=False)
 
             context = {
                 'tablename': 'Nombre de porcelets nés',
                 'malecount': malecount,
                 'femalecount': femalecount,
                 'totalcount': totalcount,
-                'form': form
+                'form': form,
+                'graph_json': graph_json,  # Courbe des naissances
+                'graph_json2': graph_json2  # Histogramme des genres
             }
             return render(request, "data/pigletborn.html", context)
 
     else:
         form = datetodate()
 
-    return render(request, "data/pigletborn.html", {'form': form})
+    return render(request, "data/pigletborn.html", {'form': form, 'graph_json': graph_json})
 
 
 @login_required(login_url='loginuser')
 def pigletweaned(request):
+    graph_json = None
     if request.method == 'POST':
         form = datetodate(request.POST)
         if form.is_valid():
@@ -1346,17 +1422,60 @@ def pigletweaned(request):
             totalcount = allweanedmale.count() + allweanedfemale.count()
             malecount = allweanedmale.count()
             femalecount = allweanedfemale.count()
-            maleweight = sum(pig.weaning_weight for pig in allweanedmale)
-            femaleweight = sum(pig.weaning_weight for pig in allweanedfemale)
+
+            # maleweight = sum(pig.weaning_weight for pig in allweanedmale)
+            # femaleweight = sum(pig.weaning_weight for pig in allweanedfemale)
+            df = pd.DataFrame.from_records(allweanedmale.values('dow'))
+            df2 = pd.DataFrame.from_records(allweanedfemale.values('dow'))
+            df['dow'] = pd.to_datetime(df['dow'])  # Convertir en format datetime
+            df2['dow'] = pd.to_datetime(df['dow'])  # Convertir en format datetime
+            weaned_count = df.groupby('dow').size().reset_index(name='Nombre de porcelets')
+            weaned_count2 = df2.groupby('dow').size().reset_index(name='Nombre de porcelets')
+            
+                        # Ajouter une colonne 'Genre' pour différencier les groupes
+            weaned_count['Genre'] = 'Mâles'
+            weaned_count2['Genre'] = 'Femelles'
+
+            # Fusionner les deux DataFrames
+            df_final = pd.concat([weaned_count, weaned_count2])
+
+            # Créer le graphique avec une ligne pour chaque genre
+            fig = px.line(
+                df_final, 
+                x='dow', 
+                y='Nombre de porcelets', 
+                color='Genre',  # Séparer les données par couleur
+                color_discrete_sequence=['green', 'red'],
+                title="Nombre de porcelets sevrés par jour",
+                labels={'dow': 'Date', 'Nombre de porcelets': 'Nombre de porcelets sevrés'},
+                markers=True
+            )
+        
+
+
+            fig2 = px.bar(
+                x=['Mâles', 'Femelles'], 
+                y=[malecount, femalecount], 
+                title="Répartition des porcelets nés par genre",
+                labels={'x': 'Genre', 'y': 'Nombre'},
+                color=['Mâles', 'Femelles'], 
+                color_discrete_sequence=['green', 'red']
+            )
+
+            graph_json = pio.to_html(fig, full_html=False)
+            graph_json2 = pio.to_html(fig2, full_html=False)
 
             context = {
                 'tablename': 'Porcelets sevrés',
                 'malecount': malecount,
                 'femalecount': femalecount,
                 'totalcount': totalcount,
-                'maleweight': maleweight,
-                'femaleweight': femaleweight,
-                'form': form
+                # 'maleweight': maleweight,
+                # 'femaleweight': femaleweight,
+                'form': form,
+                'graph_json': graph_json,
+                'graph_json2': graph_json2,
+                
             }
             return render(request, "data/pigletweaned.html", context)
 
@@ -1374,9 +1493,9 @@ def pigletweaned(request):
     return render(request, "data/pigletweaned.html", context)
 
 
-
 @login_required(login_url='loginuser')
 def pigmortality(request):
+    graph_json = None
     if request.method == 'POST':
         form = datetodate(request.POST)
         if form.is_valid():
@@ -1386,32 +1505,57 @@ def pigmortality(request):
             # Filtrer par utilisateur connecté et date de décès
             alldead = death.objects.filter(
                 date_death__range=(fromdate, todate),
-                user=request.user  # Assurez-vous que le modèle death a un champ "user"
+                user=request.user
             )
 
             preweaning = 0
             postweaning = 0
 
             for pig in alldead:
-                if pig.gip.gender == 'Male':
-                    obj = efficiency_parameter_male.objects.get(gip=pig.gip)
-                    if obj.dow is None:
-                        preweaning += 1
+                try:
+                    if pig.gip.gender == 'Male':
+                        obj, created = efficiency_parameter_male.objects.get_or_create(gip=pig.gip)
                     else:
-                        postweaning += 1
+                        obj, created = efficiency_parameter_female.objects.get_or_create(gip=pig.gip)
 
-                elif pig.gip.gender == 'Female':
-                    obj = efficiency_parameter_female.objects.get(gip=pig.gip)
                     if obj.dow is None:
                         preweaning += 1
                     else:
                         postweaning += 1
+                except efficiency_parameter_male.DoesNotExist:
+                    continue
+                except efficiency_parameter_female.DoesNotExist:
+                    continue
+
+            # Vérifie que `alldead` contient bien des données
+            if alldead.exists():
+                df = pd.DataFrame.from_records(alldead.values('date_death'))
+                df['date_death'] = pd.to_datetime(df['date_death'])
+
+                # Comptage des décès par jour
+                death_count = df.groupby('date_death').size().reset_index(name='Nombre de décès')
+
+                # Création du graphique interactif
+                fig = px.line(
+                    death_count, 
+                    x='date_death', 
+                    y='Nombre de décès', 
+                    title="Nombre de décès de porcelets par jour",
+                    labels={'date_death': 'Date', 'Nombre de décès': 'Nombre de décès'},
+                    markers=True,
+                    color_discrete_sequence=['red'],
+                )
+
+                graph_json = pio.to_html(fig, full_html=False)
+            else:
+                graph_json = None
 
             context = {
                 'tablename': 'Pig Mortality',
                 'form': form,
                 'postweaning': postweaning,
                 'preweaning': preweaning,
+                'graph_json': graph_json,
             }
             return render(request, "data/pigmortality.html", context)
 
@@ -1425,28 +1569,63 @@ def pigmortality(request):
     }
     return render(request, "data/pigmortality.html", context)
 
-
 @login_required(login_url='loginuser')
 def revenue_received(request):
+    graph_json = None
+    graph_json2 = None
     if request.method == 'POST':
         form = datetodate(request.POST)
         if form.is_valid():
             fromdate = form.cleaned_data['from_date']
             todate = form.cleaned_data['to_date']
 
-            # Filtrer par utilisateur connecté et date de vente
+            # Filtrer les ventes par utilisateur et par date
             revenues = disposal_culling.objects.filter(
                 sale_date__range=(fromdate, todate),
-                user=request.user  # Ajout du filtre utilisateur
+                user=request.user
             )
 
-            # Calcul du total de revenue
+            # Calcul du total des revenus
             total = revenues.aggregate(Sum('revenue'))['revenue__sum'] or 0
+
+            # Convertir les données en DataFrame Pandas
+            df = pd.DataFrame.from_records(revenues.values('sale_date'))
+            df['sale_date'] = pd.to_datetime(df['sale_date'])
+
+            # Graphique 1 : Nombre de ventes par jour
+            sales_count = df.groupby('sale_date').size().reset_index(name='Nombre de ventes')
+            fig = px.line(
+                sales_count,
+                x='sale_date',
+                y='Nombre de ventes',
+                color_discrete_sequence=['green'],
+                title="Nombre de ventes par jour",
+                labels={'sale_date': 'Date', 'Nombre de ventes': 'Nombre de ventes'},
+                markers=True,
+            )
+            graph_json = pio.to_html(fig, full_html=False)
+
+            # Graphique 2 : Montant total des ventes par jour
+            df2 = pd.DataFrame.from_records(revenues.values('sale_date', 'revenue'))
+            df2['sale_date'] = pd.to_datetime(df2['sale_date'])
+            revenue_sum = df2.groupby('sale_date')['revenue'].sum().reset_index()
+            fig2 = px.line(
+                revenue_sum,
+                x='sale_date',
+                y='revenue',
+                color_discrete_sequence=['blue'],
+                title="Revenus générés par jour",
+                labels={'sale_date': 'Date', 'revenue': 'Revenu total (€)'},
+                markers=True,
+            )
+            graph_json2 = pio.to_html(fig2, full_html=False)
 
             context = {
                 'tablename': 'Revenus générés',
                 'form': form,
-                'total': total
+                'total': total,
+                'graph_json': graph_json,  # Nombre de ventes
+                'graph_json2': graph_json2,  # Montant des ventes
             }
             return render(request, "data/revenuereceived.html", context)
 
@@ -1455,7 +1634,9 @@ def revenue_received(request):
     context = {
         'tablename': 'Revenus générés',
         'form': form,
-        'total': None
+        'total': None,
+        'graph_json': None,
+        'graph_json2': None,
     }
     return render(request, "data/revenuereceived.html", context)
 

@@ -13,8 +13,9 @@
 {% comment %} <form autocomplete="off" method="POST">
 {% csrf_token %}
   {{form|crispy}}
-  <button type="submit">Add</button>
-</form> {% endcomment %}
+  <div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-success btn-lg">Ajouter</button>
+</div></form> {% endcomment %}
 
 <form method="POST">
    {% csrf_token %}
@@ -105,8 +106,9 @@
 </div>
 
 
-  <button class="btn btn-success btn-lg float-right" type="submit">Add</button>
-</form>
+<div class="d-flex justify-content-end">
+    <button type="submit" class="btn btn-success btn-lg">Ajouter</button>
+</div></form>
 
 
   <div class="table-responsive">
@@ -168,9 +170,16 @@
       </table>
   </div>
 
-<form action="{% url 'vaccination'  gip %}" method="get">
-  <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
-</form>
+<!-- <form action="{% url 'vaccination'  gip %}" method="get">
+    <button class="btn btn-success btn-lg" type="submit">Suivant</button>
+</form> -->
+
+<div class="d-flex justify-content-between mt-4">
+    <button class="btn btn-secondary btn-lg" type="submit" formaction="/dataentry/">Retour</button>
+    <form action="{% url 'vaccination'  gip %}" method="get">
+        <button class="btn btn-success btn-lg" type="submit">Suivant</button>
+    </form>
+</div>
 
 
 

@@ -32,7 +32,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Porcelets Mâles</h5>
                     <p class="mb-1"><strong>Nombre de porcelets sevrés :</strong> {{ malecount }}</p>
-                    <p><strong>Poids total :</strong> {{ maleweight }} kg</p>
+                    <!-- <p><strong>Poids total :</strong> {{ maleweight }} kg</p> -->
                 </div>
             </div>
         </div>
@@ -41,11 +41,40 @@
                 <div class="card-body">
                     <h5 class="card-title">Porcelets Femelles</h5>
                     <p class="mb-1"><strong>Nombre de porcelets sevrés :</strong> {{ femalecount }}</p>
-                    <p><strong>Poids total :</strong> {{ femaleweight }} kg</p>
+                    <!-- <p><strong>Poids total :</strong> {{ femaleweight }} kg</p> -->
                 </div>
             </div>
         </div>
     </div>
+
+    {% if graph_json %}
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Nombre de porcelets sevrés par jour</h5>
+                    <div id="graph-container">
+                        {{ graph_json|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Répartition des porcelets par genre</h5>
+                    <div id="graph-container">
+                        {{ graph_json2|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% endif %}
+
 
     <div class="row justify-content-center">
         <div class="col-md-4 text-center">

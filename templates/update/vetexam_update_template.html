@@ -17,17 +17,18 @@
         <div class="col-md-10">
             <form action="" method="POST" class="shadow p-4 rounded bg-light">
                 {% csrf_token %}
-                <div class="mb-3">
+                <h4 class="mb-4">Ajouter une Donnée Véterinaire</h4>
                     {{ form|crispy }}
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success btn-lg">Ajouter</button>
                 </div>
-                <button class="btn btn-primary btn-lg float-right" type="submit">Ajouter</button>
-            </form>
+           </form>
         </div>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="table-responsive">
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-12">
+            <div class="table-responsive shadow rounded">
                 <table class="table table-bordered table-striped">
                     <thead class="thead-dark">
                         <tr>
@@ -51,7 +52,7 @@
                                 <form action="{% url 'deletevetexam' gip vet_exam.pk %}" method="POST">
                                     {% csrf_token %}
                                     <input value='{{backbut}}' id='backbutton' name='backbutton' type='hidden'>
-                                    <button class="btn btn-danger form-control" type="submit">Supprimer</button>
+                                    <button class="btn btn-danger btn-sm" type="submit">Supprimer</button>
                                 </form>
                             </td>
                         </tr>
@@ -62,12 +63,11 @@
         </div>
     </div>
 
-    <div class="row justify-content-end">
-        <div class="col-md-4">
-            <form action="{% url 'successupdate' %}" method="get">
-                <button class="btn btn-success btn-lg float-right" type="submit">Modifier</button>
-            </form>
-        </div>
+    <div class="d-flex justify-content-between">
+        <form action="{% url 'successupdate' %}" method="get">
+            <button class="btn btn-success btn-lg" type="submit">Modifier</button>
+        </form>
+        <button class="btn btn-secondary btn-lg" type="button" onclick="history.back()">Annuler</button>
     </div>
 
 </div>

@@ -35,7 +35,7 @@
                 <div class="list-group-item d-flex justify-content-between align-items-center">
 
                     <!-- Lien vers l'historique de l'animal, stylisé comme un bouton -->
-                    <a href="{% url 'history' i.animal_id %}">
+                    <a href="{% url 'history' i.animal_id %}" class="animal-link">
                          {{ i.animal_id }}
                     </a>
                     <!-- Formulaire de mise à jour pour chaque animal -->
@@ -48,6 +48,7 @@
 
                 {% endfor %}
             </div>
+
 
             <!-- Bouton retour -->
             <div class="mt-4">

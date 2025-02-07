@@ -75,7 +75,8 @@
 <form id="dcform" method="post" action="{% url 'update_disposal' animal_id=animal_id %}">
     {% csrf_token %}
     <div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="submit">Disposition/Abattage</button>
+        <button class="btn btn-success btn-lg" type="submit">Vente/Revenu</button>
+
     </div>
 </form>
 <!-- 
@@ -86,10 +87,11 @@
     </div>
 </form> -->
 
-<form>
-    <button class="btn btn-secondary btn-lg" type="submit" formaction="/dataentry/">Return</button>
+<div class="d-flex justify-content-center py-2">
+    <button class="btn btn-secondary btn-lg" type="button" onclick="history.back()">Retour</button>
+</div>
 
-    </form>
+
 
 
 

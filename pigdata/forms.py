@@ -16,13 +16,51 @@ class selectpigsform(forms.Form):
                 ('4','Les porcs avec une taille de portée au sevrage exactement égale à : '))
     task = forms.ChoiceField(choices=CHOICES, label='Rechercher')
     amount=forms.CharField(label='amount', max_length='500')
-
-class CreateUserForm(UserCreationForm):
-    class Meta:
-        model=User
-        fields=['username','email', 'password1', 'password2']
-        labels={'username': 'Username'}
+ 
+# class CreateUserForm(UserCreationForm):
+#     class Meta:
+#         model=User
+#         fields=['username','email', 'password1', 'password2']
+#         labels={'username': 'Username'}
         
+
+
+class CreateUserForm(forms.ModelForm):
+    username = forms.CharField(label="username", 
+                               max_length=200, 
+                               help_text='', 
+                               required=True, 
+                               widget=forms.TextInput(attrs={"type":"text", "id":"Username","class":"form-control",  "placeholder":"Username"}) )
+    
+   
+
+    email = forms.EmailField(label="Email", 
+                             max_length=200, min_length=5,
+                             help_text='', 
+                             required=True, 
+                            widget=forms.TextInput(attrs={"type":"text", "id":"emailAddress", "class":"form-control",  "placeholder":"Email Address"}) )
+    
+
+    password1 = forms.CharField(label="Password", 
+                               max_length=200, min_length=8,
+                               help_text='', 
+                               required=True, 
+                               widget=forms.TextInput(attrs={"type":"text", "id":"password", "class":"form-control",  "placeholder":"Password"}) )
+    
+
+    password2 = forms.CharField(label="Repeat Password", 
+                                     max_length=200, min_length=8,
+                                     help_text='', 
+                                     required=True, 
+                                     widget=forms.TextInput(attrs={"type":"text", "id":"repeatpassword", "class":"form-control",  "placeholder":"Repeat Password"}) )
+    class Meta:
+        model = User
+        fields=['username','email', 'password1', 'password2']
+
+
+
+
+
 
 class loginuserform(forms.Form):
     username=forms.CharField(label='Username', max_length=150)
@@ -361,6 +399,15 @@ class service_form_male(forms.ModelForm):
 
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        # Remplacer les champs None ou vides par 0
+        numeric_fields = ['born_male', 'born_female', 'weaned_male', 'weaned_female', 'litter_weight_birth', 'weaning_weight']
+        for field in numeric_fields:
+            if cleaned_data.get(field) is None:
+                cleaned_data[field] = 0
+        return cleaned_data
+
 class service_form_female(forms.ModelForm):
     class Meta:
         model=service_record_female
@@ -396,6 +443,15 @@ class service_form_female(forms.ModelForm):
 
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        # Remplacer les champs None ou vides par 0
+        numeric_fields = ['born_male', 'born_female', 'weaned_male', 'weaned_female', 'litter_weight_birth', 'weaning_weight']
+        for field in numeric_fields:
+            if cleaned_data.get(field) is None:
+                cleaned_data[field] = 0
+        return cleaned_data
+
 
 
 
@@ -425,7 +481,7 @@ class general_update_form(forms.ModelForm):
             'sire_no': 'SIRE Number',
             'grand_dam': 'Great DAM',
             'grand_sire': 'Grand SIRE',
-            'colitter_size_of_birth': 'Colitter Size Of Birth',
+            'colitter_size_of_birth': 'Taille de la portée à la naissance',
             'color_and_marking': 'Colors And Markings',
             'abnormalities': 'Genetic Abnormalities/Disorder',
         }
@@ -440,7 +496,7 @@ class general_update_form(forms.ModelForm):
         # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
         initial = kwargs.get('initial', {})
         specific_animal = initial.get('gip', None)
-
+ 
         super().__init__(*args, **kwargs)
         if specific_animal:
             # Restreindre le champ `gip` à l'animal spécifique
@@ -719,7 +775,7 @@ class efficiency_update_form_male(forms.ModelForm):
 
     
 
-
+  
 class qualification_update_form(forms.ModelForm):
     class Meta:
         model=qualification_boar
@@ -731,7 +787,7 @@ class qualification_update_form(forms.ModelForm):
             'gip': 'Identification Number',
             'physical_fitness': 'Physical Fitness',
             'date_of_training': 'Date Of Onset Of Training',
-            'period_of_training': 'Period Of Training',
+            'period_of_training': "Periode d'entrainement",
             'training_score': 'Training Score',
             'seminal_characteristics': 'Evaluation Based On Seminal Characteristics',
             'suitability': 'Suitability For Insemination',

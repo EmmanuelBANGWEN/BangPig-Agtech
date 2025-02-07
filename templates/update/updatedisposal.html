@@ -18,9 +18,13 @@
             <form method="POST" class="shadow p-4 rounded bg-light">
                 {% csrf_token %}
                 <h4 class="mb-4">Modifier les Données</h4>
-                {{ form|crispy }}
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-success btn-lg">Enregistrer les modifications</button>
+                <div class="mb-4">
+                    {{ form|crispy }}
+                </div>                
+                <!-- Boutons de navigation -->
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-success btn-lg" type="submit">Modifier</button>
+                    <button class="btn btn-secondary btn-lg" type="button" onclick="history.back()">Annuler</button>
                 </div>
             </form>
         </div>

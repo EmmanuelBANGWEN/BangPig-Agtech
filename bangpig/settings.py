@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS=['bangpig.onrender.com', '127.0.0.1', 'localhost', 'bangpig.com', 'bangpig.com/', 'https://www.bangpig.com/', 'https://www.bangpig.com', 'www.bangpig.com/']
 
 
 # Application definition

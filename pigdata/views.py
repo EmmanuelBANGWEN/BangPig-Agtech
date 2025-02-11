@@ -13,6 +13,9 @@ from django.db import IntegrityError
 from datetime import datetime
 from django.db.models import Sum
 from django.contrib.postgres.search import SearchVector, SearchQuery
+from django.core.mail import send_mail, EmailMessage
+from django.conf import settings
+
 
 
 
@@ -1726,7 +1729,42 @@ def account(request):
     return render(request, 'account/account.html')
 
 def help(request):
-    return render(request, 'others/help.html')
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Récupération des données
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            number = form.cleaned_data['number']
+            message = form.cleaned_data['message']
+
+            # Enregistrement en base de données
+            Contact.objects.create(
+                name=name,
+                email=email,
+                number=number,
+                message=message
+            )
+
+            # Envoi de l'email
+            send_mail(
+                subject=f"Nouveau message de {name}",
+                message=f"De : {name}\nNuméro : {number}\n Email: ({email}\n message venant du formulaire de la page de help\n\n Source: site web bangpig.com\nMessage: ({message})",
+                from_email=email,
+                recipient_list=[settings.EMAIL_HOST_USER],
+                fail_silently=False,
+            )
+
+
+            messages.success(request, "Votre message a été envoyé avec succès !")
+            return redirect('help')  # Redirection pour éviter les resoumissions
+    else:
+        form = ContactForm()
+
+    return render(request, 'others/help.html', {'form': form})
+
+    # return render(request, 'others/help.html')
 
 
 

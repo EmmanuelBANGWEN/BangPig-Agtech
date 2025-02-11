@@ -91,19 +91,19 @@ WSGI_APPLICATION = 'bangpig.wsgi.application'
 # }
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'bangpig',
-        'USER':'trebmal',
-        'PASSWORD':'manulove',
-        'HOST':'localhost',
-        'PORT':'4444',
-        'OPTIONS': {
-            'options': '-c timezone=UTC',
-        },
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME':'bangpig',
+#         'USER':'trebmal',
+#         'PASSWORD':'manulove',
+#         'HOST':'localhost',
+#         'PORT':'4444',
+#         'OPTIONS': {
+#             'options': '-c timezone=UTC',
+#         },
+#     }
+# }
 
 
 # Password validation

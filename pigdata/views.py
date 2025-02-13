@@ -1065,7 +1065,6 @@ def update_death(request, animal_id):
                 # death_instance.date_death = request.POST.get('date_death', death_instance.date_death)
             
 
-
                 date_death = request.POST.get('date_death', str(death_instance.date_death))
                 if date_death:
                     try:
@@ -1368,7 +1367,7 @@ def pigletborn(request):
                 color_discrete_sequence=['green', 'red'],
                 title="Nombre de porcelets nés par jour",
                 labels={'dob': 'Date', 'Nombre de porcelets': 'Nombre de porcelets nés'},
-                # markers=True,
+                markers=True,
 
             )
 
@@ -1604,7 +1603,7 @@ def revenue_received(request):
                 color_discrete_sequence=['green'],
                 title="Nombre de ventes par jour",
                 labels={'sale_date': 'Date', 'Nombre de ventes': 'Nombre de ventes'},
-                # markers=True,
+                markers=True,
             )
             graph_json = pio.to_html(fig, full_html=False)
 
@@ -1619,7 +1618,7 @@ def revenue_received(request):
                 color_discrete_sequence=['blue'],
                 title="Revenus générés par jour",
                 labels={'sale_date': 'Date', 'revenue': 'Revenu total (€)'},
-                # markers=True,
+                markers=True,
             )
             graph_json2 = pio.to_html(fig2, full_html=False)
 

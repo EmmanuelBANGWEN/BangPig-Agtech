@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>BangPig - Agtech Innovation</title>
+    <title>BangPig - Your Trusted Digital Pig Farming Partner</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -106,39 +106,35 @@
                   aria-expanded="false"
                 >
                   <i class="fas fa-home"></i>
-                  <p >{{ request.user }} Data</p>
-                  <span class="caret"></span>
+                  <p >{{ request.user }} Farm</p>
+                  <span class=""></span>
                 </a>
-                <div class="collapse" id="dashboard">
+                <!-- <div class="collapse" id="dashboard">
                   <ul class="nav nav-collapse ">
                     <li>
                       <a >
-                        <!-- <span class="sub-item">Dashboard 1</span> -->
                           <p class="card-category">Total</p>
                           <h4 class="card-title">{{ total_animals }}</h4>
                       </a>
                     </li>
                     <li>
                       <a >
-                        <!-- <span class="sub-item">Dashboard 1</span> -->
                           <p class="card-category">Femelles</p>
                           <h4 class="card-title">{{ total_females }}</h4>
                       </a>
                     </li><li>
                       <a >
-                        <!-- <span class="sub-item">Dashboard 1</span> -->
                           <p class="card-category">Male</p>
                           <h4 class="card-title">{{ total_males }}</h4>
                       </a>
                     </li><li>
                       <a >
-                        <!-- <span class="sub-item">Dashboard 1</span> -->
                           <p class="card-category">Porcelets</p>
                           <h4 class="card-title">{{ total_piglets }}</h4>
                       </a>
                     </li>
                   </ul>
-                </div>
+                </div> -->
                 
 
               </li>
@@ -400,29 +396,35 @@
         <footer class="footer">
           <div class="container-fluid d-flex justify-content-between">
             <!-- Navigation Section -->
-            <nav class="pull-left">
+            <!-- <nav class="pull-left">
               <ul class="nav">
-                <li class="nav-item">
-                  <a target="_blank" class="nav-link" href="https://www.linkedin.com/company/bangri-agtech/">
-                    BangPig
-                  </a>
-                </li>
+               
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'help' %}">Help</a>
                 </li>
               </ul>
-            </nav>
-        
-            <!-- Copyright Section -->
-            <div class="copyright">
-              2025, made with <i class="fa fa-heart heart text-danger"></i> by
-              <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a>
+            </nav> -->
+
+            <div>
+              
+              <a target="_blank" href="{% url 'help' %}">Help</a>
             </div>
         
+            <!-- Copyright Section -->
+            <!-- <div class="copyright">
+              © 2025 made by
+              <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a>
+            </div> -->
+        <style>
+          .name {
+            color: rgb(29, 21, 140);
+            
+          }
+        </style>
             <!-- Distribution Section -->
             <div>
               Distributed by
-              <a target="_blank" href="https://www.linkedin.com/company/bangri-agtech/">Bangri-Agtech</a>.
+              <a target="_blank" href="https://www.linkedin.com/company/bangri-agtech/">Bangri</a>
             </div>
           </div>
         </footer>

@@ -8,6 +8,7 @@
 {% block content %}
 <div class="container py-5">
 
+
     <div class="row mb-4">
         <div class="col text-center">
             <h2 class="display-5">Gestion des Services</h2>
@@ -33,9 +34,11 @@
     </div>
 
 
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-12">
+            <div class="table-responsive shadow rounded">
 
-    <div class="table-responsive shadow rounded">
-        <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped">
 
 
         <thead class="thead-dark">
@@ -60,7 +63,7 @@
               </tr>
           </thead>
 
-          <tbody id="tbodydata">
+          <tbody>
 
 
 {% for service in services %}
@@ -83,7 +86,8 @@
             <td>{{ service.still_birth_abnormality }}</td>
 
             
-            <td><form action="{% url 'deleteservice' gip service.pk %}" method="POST">
+            <td>
+                <form action="{% url 'deleteservice' gip service.pk %}" method="POST">
                 {% csrf_token %}
                 <input value='{{backbut}}' id='backbutton' name='backbutton' type='hidden'>
                 
@@ -94,12 +98,16 @@
 {% endfor %}
           </tbody>
       </table>
+    </div>
+</div>
+</div>
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between mt-4">
     <form action="{% url 'successupdate' %}" method="get">
         <button class="btn btn-success btn-lg" type="submit">Modifier</button>
     </form>
-    <button class="btn btn-secondary btn-lg" type="button" onclick="history.back()">Annuler</button>
+    <button class="btn btn-secondary btn-lg" type="submit" onclick="history.back()">Annuler</button>
+</div>
 </div>
 
 

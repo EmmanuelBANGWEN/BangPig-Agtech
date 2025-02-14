@@ -1303,16 +1303,14 @@ def history(request, animal_id):
             'preweaning_mortality': preweaning_mortality,
         }
         return render(request, "data/historydatafemale.html", context)
-
 @login_required(login_url='loginuser')
 def allpigs(request):
-    # animals=general_identification_and_parentage.objects.all()
-    animals = general_identification_and_parentage.objects.filter(user=request.user)
+    # Tri des animaux par ordre alphabétique en fonction du champ 'name'
+    animals = general_identification_and_parentage.objects.filter(user=request.user).order_by('animal_id')
 
-
-    context={
-        'animals':animals,
-        'tablename':'Tout les animaux de la Ferme',
+    context = {
+        'animals': animals,
+        'tablename': 'Tous les animaux de la Ferme',
     }
     return render(request, "data/allpigs.html", context)
 
@@ -1367,7 +1365,7 @@ def pigletborn(request):
                 color_discrete_sequence=['green', 'red'],
                 title="Nombre de porcelets nés par jour",
                 labels={'dob': 'Date', 'Nombre de porcelets': 'Nombre de porcelets nés'},
-                markers=True,
+                # markers=True,
 
             )
 
@@ -1450,7 +1448,7 @@ def pigletweaned(request):
                 color_discrete_sequence=['green', 'red'],
                 title="Nombre de porcelets sevrés par jour",
                 labels={'dow': 'Date', 'Nombre de porcelets': 'Nombre de porcelets sevrés'},
-                markers=True
+                # markers=True
             )
         
 
@@ -1544,7 +1542,7 @@ def pigmortality(request):
                     y='Nombre de décès', 
                     title="Nombre de décès de porcelets par jour",
                     labels={'date_death': 'Date', 'Nombre de décès': 'Nombre de décès'},
-                    markers=True,
+                    # markers=True,
                     color_discrete_sequence=['red'],
                 )
 
@@ -1603,7 +1601,7 @@ def revenue_received(request):
                 color_discrete_sequence=['green'],
                 title="Nombre de ventes par jour",
                 labels={'sale_date': 'Date', 'Nombre de ventes': 'Nombre de ventes'},
-                markers=True,
+                # markers=True,
             )
             graph_json = pio.to_html(fig, full_html=False)
 
@@ -1618,7 +1616,7 @@ def revenue_received(request):
                 color_discrete_sequence=['blue'],
                 title="Revenus générés par jour",
                 labels={'sale_date': 'Date', 'revenue': 'Revenu total (€)'},
-                markers=True,
+                # markers=True,
             )
             graph_json2 = pio.to_html(fig2, full_html=False)
 

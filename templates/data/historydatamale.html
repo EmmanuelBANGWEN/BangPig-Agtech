@@ -32,25 +32,25 @@
                 <tr>
                     <td>{{ gen.animal_id }}</td>
              
-                    <td>{{ gen.dob }}</td>
+                    <td>{{ gen.dob|default:"vide" }}</td>
               
-                    <td>{{ gen.gender }}</td>
+                    <td>{{ gen.gender|default:"vide" }}</td>
               
-                    <td>{{ gen.breed }}</td>
+                    <td>{{ gen.breed|default:"vide" }}</td>
              
-                    <td>{{ gen.dam_no }}</td>
+                    <td>{{ gen.dam_no|default:"vide" }}</td>
               
-                    <td>{{ gen.sire_no }}</td>
+                    <td>{{ gen.sire_no|default:"vide" }}</td>
                 
-                    <td>{{ gen.grand_dam }}</td>
+                    <td>{{ gen.grand_dam|default:"vide" }}</td>
                 
-                    <td>{{ gen.grand_sire }}</td>
+                    <td>{{ gen.grand_sire|default:"vide" }}</td>
                
-                    <td>{{ gen.colitter_size_of_birth }}</td>
+                    <td>{{ gen.colitter_size_of_birth|default:"vide" }}</td>
               
-                    <td>{{ gen.color_and_marking }}</td>
+                    <td>{{ gen.color_and_marking|default:"vide" }}</td>
              
-                    <td>{{ gen.abnormalities }}</td>
+                    <td>{{ gen.abnormalities|default:"vide" }}</td>
                 </tr>
             </tbody>
         </table>
@@ -83,18 +83,18 @@
       <tbody id="tbodydata">
           <tr>
   
-              <td>{{ efficiency.dow|default_if_none:"N/A"}}</td>
-              <td>{{efficiency.litter_size_weaning}} </td>
-              <td>{{ efficiency.weaning_age }}</td>
-              <td>{{ efficiency.weaning_weight }}</td>
+              <td>{{ efficiency.dow|default:"vide"}}</td>
+              <td>{{efficiency.litter_size_weaning|default:"vide"}} </td>
+              <td>{{ efficiency.weaning_age|default:"vide" }}</td>
+              <td>{{ efficiency.weaning_weight|default:"vide" }}</td>
 
-              <td>{{ efficiency.dos }}</td>
-              <td>{{ efficiency.doc }}</td>
-              <td>{{ efficiency.dosm }}</td>
-              <td>{{ efficiency.sexual_maturity_weight }}</td>
-              <td>{{ efficiency.weight_six }}</td>
-              <td>{{ efficiency.weight_eight }}</td>
-              <td>{{ efficiency.conform_at_eight }}</td>
+              <td>{{ efficiency.dos|default:"vide" }}</td>
+              <td>{{ efficiency.doc|default:"vide" }}</td>
+              <td>{{ efficiency.dosm|default:"vide" }}</td>
+              <td>{{ efficiency.sexual_maturity_weight|default:"vide" }}</td>
+              <td>{{ efficiency.weight_six|default:"vide" }}</td>
+              <td>{{ efficiency.weight_eight|default:"vide" }}</td>
+              <td>{{ efficiency.conform_at_eight|default:"vide" }}</td>
 
   
   
@@ -127,12 +127,12 @@
       <tbody id="tbodydata">
           <tr>
   
-              <td>{{ qualification.physical_fitness }}</td>
-              <td>{{ qualification.date_of_training }}</td>
-              <td>{{ qualification.period_of_training }}</td>
-              <td>{{ qualification.training_score }}</td>
-              <td>{{ qualification.seminal_characteristics }}</td>
-              <td>{{ qualification.suitability }}</td>
+              <td>{{ qualification.physical_fitness|default:"vide" }}</td>
+              <td>{{ qualification.date_of_training|default:"vide" }}</td>
+              <td>{{ qualification.period_of_training|default:"vide" }}</td>
+              <td>{{ qualification.training_score|default:"vide" }}</td>
+              <td>{{ qualification.seminal_characteristics|default:"vide" }}</td>
+              <td>{{ qualification.suitability|default:"vide" }}</td>
               
   
   
@@ -179,19 +179,19 @@
           <tr>
             <th scope="row">{{ forloop.counter}}</th>
             <td>{{ service.gip }}</td>
-            <td>{{ service.sow_no }}</td>
-            <td>{{ service.dos }}</td>
-            <td>{{ service.dof }}</td>
-            <td>{{ service.parity }}</td>
-            <td>{{ service.born_male }}</td>
-            <td>{{ service.born_female }}</td>
-            <td>{{ service.born_total }}</td>
-            <td>{{ service.litter_weight_birth }}</td>
-            <td>{{ service.weaned_male }}</td>
-            <td>{{ service.weaned_female }}</td>
-            <td>{{ service.total_weaned }}</td>
-            <td>{{ service.weaning_weight }}</td>
-            <td>{{ service.still_birth_abnormality }}</td>
+            <td>{{ service.sow_no|default:"vide" }}</td>
+            <td>{{ service.dos|default:"vide" }}</td>
+            <td>{{ service.dof|default:"vide" }}</td>
+            <td>{{ service.parity|default:"vide" }}</td>
+            <td>{{ service.born_male|default:"vide" }}</td>
+            <td>{{ service.born_female|default:"vide" }}</td>
+            <td>{{ service.born_total|default:"vide" }}</td>
+            <td>{{ service.litter_weight_birth|default:"vide" }}</td>
+            <td>{{ service.weaned_male|default:"vide" }}</td>
+            <td>{{ service.weaned_female|default:"vide" }}</td>
+            <td>{{ service.total_weaned|default:"vide" }}</td>
+            <td>{{ service.weaning_weight|default:"vide" }}</td>
+            <td>{{ service.still_birth_abnormality|default:"vide" }}</td>
           </tr>
 {% endfor %}
           </tbody>
@@ -223,11 +223,11 @@
 {% for vaccine in vaccinations %}
           <tr>
             <th scope="row">{{ forloop.counter}}</th>
-            <td>{{ vaccine.disease }}</td>
-            <td>{{ vaccine.make }}</td>
-            <td>{{ vaccine.first_dose }}</td>
-            <td>{{ vaccine.booster_dose }}</td>
-            <td>{{ vaccine.repeat }}</td>
+            <td>{{ vaccine.disease|default:"vide" }}</td>
+            <td>{{ vaccine.make|default:"vide" }}</td>
+            <td>{{ vaccine.first_dose|default:"vide" }}</td>
+            <td>{{ vaccine.booster_dose|default:"vide" }}</td>
+            <td>{{ vaccine.repeat|default:"vide" }}</td>
 
             
           </tr>
@@ -258,10 +258,10 @@
 {% for vet_exam in vetexams %}
           <tr>
             <th scope="row">{{ forloop.counter}}</th>
-            <td>{{ vet_exam.reason }}</td>
-            <td>{{ vet_exam.date_of_treatment }}</td>
-            <td>{{ vet_exam.medication }}</td>
-            <td>{{ vet_exam.remarks }}</td>
+            <td>{{ vet_exam.reason|default:"vide" }}</td>
+            <td>{{ vet_exam.date_of_treatment|default:"vide" }}</td>
+            <td>{{ vet_exam.medication|default:"vide" }}</td>
+            <td>{{ vet_exam.remarks|default:"vide" }}</td>
 
             
           </tr>
@@ -285,11 +285,11 @@
         </thead>
         <tbody id="tbodydata">
             <tr>
-                <td>{{ death.cause_death }}</td>
+                <td>{{ death.cause_death|default:"vide" }}</td>
             
-                <td>{{ death.date_death }}</td>
+                <td>{{ death.date_death|default:"vide" }}</td>
             
-                <td>{{ death.postmortem_findings }}</td>
+                <td>{{ death.postmortem_findings|default:"vide" }}</td>
             </tr>
         </tbody>
     </table>
@@ -317,11 +317,11 @@
 {% for nutrition in nutritions %}
           <tr>
             <th scope="row">{{ forloop.counter}}</th>
-            <td>{{ nutrition.treatment }}</td>
-            <td>{{ nutrition.make }}</td>
-            <td>{{ nutrition.start_date }}</td>
-            <td>{{ nutrition.end_date }}</td>
-            <td>{{ nutrition.remarks }}</td>
+            <td>{{ nutrition.treatment|default:"vide" }}</td>
+            <td>{{ nutrition.make|default:"vide" }}</td>
+            <td>{{ nutrition.start_date|default:"vide" }}</td>
+            <td>{{ nutrition.end_date|default:"vide" }}</td>
+            <td>{{ nutrition.remarks|default:"vide" }}</td>
           </tr>
 {% endfor %}
           </tbody>
@@ -346,10 +346,10 @@
       <tbody id="tbodydata">
           <tr>
   
-              <td>{{ disposal.reason }}</td>
-              <td>{{ disposal.sale_date }}</td>
-              <td>{{ disposal.weight_sale }}</td>
-              <td>{{ disposal.revenue }}</td>
+              <td>{{ disposal.reason|default:"vide" }}</td>
+              <td>{{ disposal.sale_date|default:"vide" }}</td>
+              <td>{{ disposal.weight_sale|default:"vide" }}</td>
+              <td>{{ disposal.revenue|default:"vide" }}</td>
   
   
             </tr>

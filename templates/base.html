@@ -146,6 +146,8 @@
                 </span>
                 <h4 class="text-section">Action</h4>
               </li>
+              {% if request.user.is_authenticated %}
+
               <li class="nav-item">
                 <a  href="{% url 'create_general' %}">
                   <i class="fas fa-layer-group"></i>
@@ -233,7 +235,94 @@
                   <p>Abonnement</p>
                 </a>
               </li> -->
+              {% else %}
+
+
+              <li class="nav-item">
+                <a  href="{% url 'loginuser' %}">
+                  <i class="fas fa-layer-group"></i>
+                  <p>Ajouter</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'loginuser' %}">
+                    <i class="fas fa-trash"></i>
+                  <p>Supprimer</p>
+                  <span class="" ></span>
+                </a>
+                
+              </li>
+              <!-- <li class="nav-item">
+                
+                <form action="/update/" method="POST">
+                  {% csrf_token %}
+                  <div class="row justify-content-center py-2">
+                     
+                <input type="text" name="animal_id" id="animal_id" class="form-control form-control-sm" placeholder="Entrer L'Indentifiant du Porc à modifier"
+                style="width: 290px; max-width: 97%;"
+                >
+
+                    <i class="fas fa-pen-square"></i>
+                    <button class="btn btn-animated " type="submit">Modifier Ce Porc</button>
+                    <span class=""></span>
+              </div>
+            </form> -->
+        
+
+
+              <!-- Messages de retour -->
+              <!-- <div class="feedback-messages mt-4 text-center">
+                  {% for message in messages %}
+                      <p class="feedback-message">{{ message }}</p>
+                  {% endfor %}
+              </div> -->
+
+
+
+                
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'loginuser' %}">
+                    <i class="fas fa-table"></i>
+                  <p>Mes Animaux</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'loginuser' %}">
+                    <i class="fas fa-plus"></i>
+                  <p>Plus</p>
+                  <span class=""></span>
+                </a>
+                
+              </li>
               
+              <li class="nav-item">
+                <a  href="{% url 'loginuser' %}">
+                    <i class="fas fa-user"></i>
+                  <p>Mon Compte</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'help' %}">
+                    <i class="fas fa-question-circle"></i>
+                  <p>Aide</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a  href="{% url 'documentation' %}">
+                    <i class="fas fa-question-circle"></i>
+                  <p>Documentation</p>
+                </a>
+              </li>
+              
+
+
+              {% endif %}
+
 
 
             </ul>
@@ -300,7 +389,7 @@
               </li>
               {% else %}
               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'index' %}">Accueil</a>
+                  <!-- <a class="nav-link" href="{% url 'index' %}">Accueil</a> -->
               </li>
               <li class="nav-item">
                   <a class="nav-link" href="{% url 'loginuser' %}">Connexion</a>

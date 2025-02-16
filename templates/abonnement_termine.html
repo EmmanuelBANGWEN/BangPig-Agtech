@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- En-tête du profil -->
+            <div class="text-center mb-4">
+                <h1 class="text-danger">Expiré</h1>
+            </div>
+
+            <!-- Affichage des informations de l'utilisateur -->
+            <div class="card shadow-sm p-4 text-center">
+                <h5 class="mb-4">Salut <strong>{{ user.username }}</strong>,</h5>
+                <p class="mb-3">Nous sommes navrés de vous annoncer que votre abonnement a expiré le <strong>{{ subscription.expires_at }}</strong>.</p>
+                <p class="mb-3">Pour vous réabonner, veuillez générer un code d'abonnement dans la page <a href="{% url 'account' %}" class="btn btn-outline-primary btn-sm">Mon compte</a> puis nous contacter via :</p>
+                
+                <!-- Boutons de contact -->
+                <div class="d-flex justify-content-center gap-3 mb-3">
+                    <a href="https://wa.me/237655372703" target="_blank" class="btn btn-success d-flex align-items-center">
+                        <i class="bi bi-whatsapp me-2"></i> WhatsApp
+                    </a>
+                    <a href="mailto:bikoyemmanuel531@gmail.com" class="btn btn-danger d-flex align-items-center">
+                        <i class="bi bi-envelope me-2"></i> E-mail
+                    </a>
+                </div>
+                
+                <p class="mb-3">Ou remplissez le formulaire de la page <a href="{% url 'help' %}" class="btn btn-outline-secondary btn-sm">Aide</a>.</p>
+                <h5 class="mt-4"><strong>Merci pour votre engagement à Bangpig</strong></h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Style général */
+    .card {
+        border-radius: 10px;
+        background-color: #f8f9fa;
+    }
+    /* Amélioration des boutons */
+    .btn {
+        font-weight: bold;
+        border-radius: 25px;
+    }
+    .btn-outline-primary:hover {
+        background-color: #1e88e5;
+        color: #fff;
+    }
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: #fff;
+    }
+</style>
+{% endblock content %}

@@ -103,7 +103,9 @@ def subscription_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
         subscription, created = Subscription.objects.get_or_create(user=request.user)
         if not subscription.is_valid():
-            return HttpResponseForbidden("Votre abonnement a expiré. Veuillez entrer un nouveau code.")
+            # return HttpResponseForbidden("Votre abonnement a expiré. Veuillez entrer un nouveau code.")
+            return render(request, "abonnement_termine.html", {'subscription':subscription} )
+
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
@@ -316,6 +318,8 @@ from django.db.models import Count
 from collections import defaultdict
 import pandas as pd
 
+# @subscription_required
+@login_required(login_url='loginuser')
 def index(request):
     # Vérifier si des données existent pour éviter l'erreur
     population_sexe = list(general_identification_and_parentage.objects.filter(user=request.user).values('gender').annotate(total=Count('id')))
@@ -1458,7 +1462,7 @@ def history(request, animal_id):
         }
         return render(request, "data/historydatafemale.html", context)
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def allpigs(request):
     # Tri des animaux par ordre alphabétique en fonction du champ 'name'

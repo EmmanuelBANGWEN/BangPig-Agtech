@@ -96,12 +96,23 @@ def registeruser(request):
 
 
 
+from django.http import HttpResponseForbidden
+
+def subscription_required(view_func):
+    """ Vérifie si l'utilisateur a un abonnement actif """
+    def _wrapped_view(request, *args, **kwargs):
+        subscription, created = Subscription.objects.get_or_create(user=request.user)
+        if not subscription.is_valid():
+            return HttpResponseForbidden("Votre abonnement a expiré. Veuillez entrer un nouveau code.")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
 
 #---------------------------------------------------------------------------------------------------------------------------------------
-
+@subscription_required
 def dataentry(request):  #entrer les donnees
     return render(request, "action/dataentry.html", context={'tablename':'Que Voulez-Vous faire ?'})
-
+@subscription_required
 def report(request):  
     return render(request, "others/report.html", context={'tablename':'Mes Enregistrements'})
 
@@ -119,6 +130,8 @@ def report(request):
 
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def delete(request, animal_id):
     try:
@@ -130,6 +143,8 @@ def delete(request, animal_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def deletepigs(request):              #Affiche une page où les animaux dun user sont listés et permettent de choisir ceux à supprimer.
     animals=general_identification_and_parentage.objects.filter(user=request.user)
@@ -139,6 +154,8 @@ def deletepigs(request):              #Affiche une page où les animaux dun user
     }
     return render(request, "action/deletepigs.html", context)
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def delete_service(request, animal_id, pk):  # Supprime un service en fonction du genre de l'animal.
     if request.method == 'POST':
@@ -159,6 +176,8 @@ def delete_service(request, animal_id, pk):  # Supprime un service en fonction d
         # Redirection sécurisée
         return redirect(backbutton if backbutton else 'default_page')  # Remplace 'default_page' par l'URL de ton choix
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def delete_vaccination(request, animal_id, pk):
     if request.method == 'POST':
@@ -171,6 +190,8 @@ def delete_vaccination(request, animal_id, pk):
             vacc.delete()  # Suppression de la vaccination
         
         return redirect(backbutton)
+
+@subscription_required
 @login_required(login_url='loginuser')
 def delete_vetexam(request, animal_id, pk):
     if request.method == 'POST':
@@ -187,6 +208,8 @@ def delete_vetexam(request, animal_id, pk):
         
         # Redirection sécurisée
         return redirect(backbutton if backbutton else 'default_page')  # Remplace 'default_page' par une URL par défaut
+
+@subscription_required
 @login_required(login_url='loginuser')
 def delete_nutrition(request, animal_id, pk):
     if request.method == 'POST':
@@ -248,12 +271,81 @@ def delete_nutrition(request, animal_id, pk):
 
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
+
+@subscription_required
 @login_required(login_url='loginuser')
 def dbsuccess(request):    #dbsuccess : Renvoie un template dbsuccess.html avec un contexte indiquant que l'opération a été un succès.
     return render(request, "action/dbsuccess.html", context={'tablename':'Success'})
 
-@login_required(login_url='loginuser')
+# 
+# @subscription_required
+# @login_required(login_url='loginuser')
+# def index(request):
+#     # Total des animaux enregistrés
+#     total_animals = general_identification_and_parentage.objects.filter(user=request.user).count()
+    
+#     # Nombre de femelles
+#     total_females = general_identification_and_parentage.objects.filter(user=request.user, gender='Female').count()
+    
+#     # Nombre de mâles
+#     total_males = general_identification_and_parentage.objects.filter(user=request.user, gender='Male').count()
+    
+#     # Nombre de porcelets (hypothèse : âge < 6 mois)
+#     six_months_ago = date.today() - timedelta(days=6*30)
+#     total_piglets = general_identification_and_parentage.objects.filter(user=request.user, dob__gte=six_months_ago).count()
+    
+#     context = {
+#         'total_animals': total_animals,
+#         'total_females': total_females,
+#         'total_males': total_males,
+#         'total_piglets': total_piglets,
+#     }
+#     return render(request, "index.html", context)
+
+
+import plotly.express as px
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Count, Sum
+from datetime import datetime
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import general_identification_and_parentage, health_parameter_vaccination
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+
 def index(request):
+    # 1. Suivi de la Population
+    population_sexe = general_identification_and_parentage.objects.filter(user=request.user).values('gender').annotate(total=Count('id'))
+    fig_population = px.bar(
+        population_sexe, x='gender', y='total', title="Répartition des animaux par sexe"
+    )
+    
+    population_mois = general_identification_and_parentage.objects.filter(user=request.user).extra(
+        {'mois': "strftime('%%Y-%%m', dob)"}  # SQLite (si PostgreSQL, utiliser 'to_char(dob, 'YYYY-MM')')
+    ).values('mois').annotate(total=Count('id'))
+    fig_evolution_population = px.line(
+        population_mois, x='mois', y='total', title="Évolution du nombre d'animaux enregistrés"
+    )
+    
+    # 2. Santé et Vaccination
+    vaccins = health_parameter_vaccination.objects.filter(user=request.user).values('disease').annotate(total=Count('id'))
+    fig_vaccins = px.pie(
+        vaccins, names='disease', values='total', title="Répartition des vaccins par maladie"
+    )
+    
+    vaccinations = health_parameter_vaccination.objects.filter(user=request.user).values('disease', 'first_dose', 'booster_dose')
+    fig_vaccination_doses = go.Figure()
+    for v in vaccinations:
+        fig_vaccination_doses.add_trace(go.Bar(
+            x=[v['disease']], y=[1], name='Première dose'
+        ))
+        if v['booster_dose']:
+            fig_vaccination_doses.add_trace(go.Bar(
+                x=[v['disease']], y=[1], name='Booster dose'
+            ))
+
+    # 3. Ajoutez des graphiques supplémentaires pour les autres analyses si nécessaire
     # Total des animaux enregistrés
     total_animals = general_identification_and_parentage.objects.filter(user=request.user).count()
     
@@ -268,23 +360,27 @@ def index(request):
     total_piglets = general_identification_and_parentage.objects.filter(user=request.user, dob__gte=six_months_ago).count()
     
     context = {
+        
         'total_animals': total_animals,
         'total_females': total_females,
         'total_males': total_males,
         'total_piglets': total_piglets,
+        'fig_population': fig_population.to_html(),
+        'fig_evolution_population': fig_evolution_population.to_html(),
+        'fig_vaccins': fig_vaccins.to_html(),
+        'fig_vaccination_doses': fig_vaccination_doses.to_html(),
     }
-    return render(request, "index.html", context)
+
+    return render(request, 'index.html', context)
 
 
 
 
 
 
-
-
-
-
+@subscription_required
 @login_required(login_url='loginuser')
+
 def create_general(request):
     form=general_form()  # Création d'un formulaire vierge pour la création d'un animal
     if request.method=='POST':
@@ -310,6 +406,8 @@ def create_general(request):
 #Elle vérifie d'abord si l'animal existe déjà dans la base de données en utilisant l'identifiant animal_id. Si ce n'est pas le cas, elle sauvegarde les données.
 #En cas de succès, l'utilisateur est redirigé vers create_efficiency pour saisir des paramètres d'efficacité.
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def create_efficiency(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -365,6 +463,8 @@ def create_efficiency(request, animal_id):
 
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def create_qualification(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -394,6 +494,8 @@ def create_qualification(request, animal_id):
 # Gère la création des qualifications pour les mâles. Les femelles passent directement à la création des services.
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def create_service(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -441,6 +543,8 @@ def create_service(request, animal_id):
 
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def vaccination(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -466,6 +570,8 @@ def vaccination(request, animal_id):
     return render(request, "create/vaccinationtemplate.html", context)
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def vetexam(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -489,6 +595,8 @@ def vetexam(request, animal_id):
     }
 
     return render(request, "create/vetexamtemplate.html", context)
+
+@subscription_required
 @login_required(login_url='loginuser')
 def create_nutrition(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -512,6 +620,8 @@ def create_nutrition(request, animal_id):
     }
 
     return render(request, "create/nutrition_template.html", context)
+
+@subscription_required
 @login_required(login_url='loginuser')
 def deathview(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -531,6 +641,8 @@ def deathview(request, animal_id):
     }
 
     return render(request, "create/create_death.html", context)
+
+@subscription_required
 @login_required(login_url='loginuser')
 def create_disposal(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -553,7 +665,9 @@ def create_disposal(request, animal_id):
 
 
 
-# @login_required(login_url='loginuser')
+# 
+@subscription_required
+@login_required(login_url='loginuser')
 # def create_economics(request, animal_id):
 #     # Utilisation de get_object_or_404 pour récupérer l'animal ou renvoyer une erreur 404 si l'animal n'existe pas
 #     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -588,10 +702,14 @@ def create_disposal(request, animal_id):
 
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def successupdate(request):
     return render(request,"update/successupdate.html", context={'tablename':'Update Successful'})
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update(request):
     animal_id = request.POST.get('animal_id') or request.GET.get('animal_id')
@@ -618,6 +736,8 @@ def update(request):
 
 # Update general information
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_general(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -652,6 +772,8 @@ def update_general(request, animal_id):
     }
     return render(request, "update/generalupdate.html", context)
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_disposal(request, animal_id):
     # Vérifier si l'animal existe et appartient à l'utilisateur
@@ -686,6 +808,8 @@ def update_disposal(request, animal_id):
     return render(request, "update/updatedisposal.html", context)
 
 # Update nutrition information
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_nutrition(request, animal_id):
     # animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -721,7 +845,9 @@ def update_nutrition(request, animal_id):
     return render(request, "update/nutrition_update_template.html", context)
 
 # # Update economics information
-# @login_required(login_url='loginuser')
+# 
+@subscription_required
+@login_required(login_url='loginuser')
 # def update_economics(request, animal_id):
 #     # Utilisation de get_object_or_404 pour une gestion d'erreur plus propre
 #     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -749,6 +875,8 @@ def update_nutrition(request, animal_id):
 
 
 # Update efficiency information for male and female animals
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_efficiency(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -986,6 +1114,8 @@ def update_efficiency(request, animal_id):
 
 
 # Update qualification as a breeding boar
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_qualification(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -1042,6 +1172,8 @@ def update_qualification(request, animal_id):
     return render(request, "update/qualifications_update.html", context)
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_death(request, animal_id):
     # Vérifier si l'animal existe et appartient à l'utilisateur connecté
@@ -1100,6 +1232,8 @@ def update_death(request, animal_id):
 
 
 # Update service record
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_service(request, animal_id):
     # Récupérer l'animal correspondant à l'utilisateur et à l'ID
@@ -1192,6 +1326,8 @@ def update_health_parameter(request, animal_id, model_class, form_class, templat
     return render(request, template_name, context)
 
 # Vue pour mettre à jour la vaccination
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_vaccination(request, animal_id):
     return update_health_parameter(
@@ -1206,6 +1342,8 @@ def update_vaccination(request, animal_id):
     )
 
 # Vue pour mettre à jour l'examen vétérinaire
+
+@subscription_required
 @login_required(login_url='loginuser')
 def update_vetexam(request, animal_id):
     return update_health_parameter(
@@ -1238,6 +1376,8 @@ def update_vetexam(request, animal_id):
 
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def history(request, animal_id):
     # Récupérer l'animal de l'utilisateur actuel
@@ -1303,6 +1443,8 @@ def history(request, animal_id):
             'preweaning_mortality': preweaning_mortality,
         }
         return render(request, "data/historydatafemale.html", context)
+
+@subscription_required
 @login_required(login_url='loginuser')
 def allpigs(request):
     # Tri des animaux par ordre alphabétique en fonction du champ 'name'
@@ -1330,6 +1472,8 @@ from django.contrib.auth.decorators import login_required
 from .models import general_identification_and_parentage
 from .forms import datetodate
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def pigletborn(request):
     graph_json = None
@@ -1400,6 +1544,8 @@ def pigletborn(request):
     return render(request, "data/pigletborn.html", {'form': form, 'graph_json': graph_json})
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def pigletweaned(request):
     graph_json = None
@@ -1493,6 +1639,8 @@ def pigletweaned(request):
     return render(request, "data/pigletweaned.html", context)
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def pigmortality(request):
     graph_json = None
@@ -1569,6 +1717,8 @@ def pigmortality(request):
     }
     return render(request, "data/pigmortality.html", context)
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def revenue_received(request):
     graph_json = None
@@ -1640,6 +1790,8 @@ def revenue_received(request):
     }
     return render(request, "data/revenuereceived.html", context)
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def selectpigs(request):
     if request.method == 'POST':
@@ -1705,6 +1857,8 @@ def selectpigs(request):
 
 
 
+
+@subscription_required
 @login_required(login_url='loginuser')
 def disease(request):
     # Filtrer les décès en fonction de l'utilisateur connecté
@@ -1723,7 +1877,31 @@ def disease(request):
 
 
 def account(request):
-    return render(request, 'account/account.html')
+
+    subscription, created = Subscription.objects.get_or_create(user=request.user)     # Vérifie si le code est toujours valide et l'affiche
+
+    """ Permet à l'utilisateur de saisir un code fourni par l'admin """
+
+    if request.method == "POST":
+        code = request.POST.get("code")
+
+        try:
+            subscription = Subscription.objects.get(code=code)
+            if subscription.expires_at > now():  # Vérifie que le code n'a pas expiré
+                request.user.subscription.code = code
+                request.user.subscription.expires_at = subscription.expires_at
+                request.user.subscription.save()
+                messages.success(request, "Abonnement activé avec succès !")
+                return redirect('account')
+            else:
+                messages.error(request, "Ce code a expiré.")
+        except Subscription.DoesNotExist:
+            messages.error(request, "Code invalide.")
+    
+    # return render(request, 'enter_subscription_code.html')
+
+
+    return render(request, 'account/account.html', {'subscription': subscription})
 
 def help(request):
 
@@ -1829,3 +2007,59 @@ def home(request):
 
 def documentation(request):
     return render(request, 'others/documentation.html')
+
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Subscription
+
+@login_required
+def generate_subscription_code(request):
+    """ Permet à l'admin de générer un code pour un utilisateur """
+    # if not request.user.is_staff:  # Seuls les admins peuvent générer des codes
+    #     messages.error(request, "Vous n'avez pas l'autorisation de générer un code.")
+    #     return redirect('account')
+
+    subscription, created = Subscription.objects.get_or_create(user=request.user)
+    subscription.generate_new_code()  # Génère un code mais ne l'active pas
+    messages.success(request, "Code généré ! Un admin doit maintenant l'activer.")
+    
+    return redirect('account')  # Redirige vers la page de l'utilisateur
+
+
+@login_required
+def subscription_status(request):
+    """ Vérifie si le code est toujours valide et l'affiche """
+    subscription, created = Subscription.objects.get_or_create(user=request.user)
+    # return render(request, 'subscription_status.html', {'subscription': subscription})
+
+    return render(request, 'account/account.html', {'subscription': subscription})
+
+
+from django.contrib import messages
+@login_required
+def enter_subscription_code(request):
+    """ Permet à l'utilisateur de saisir un code fourni par l'admin """
+    if request.method == "POST":
+        code = request.POST.get("code")
+        try:
+            subscription = Subscription.objects.get(code=code)
+            if subscription.is_valid():  # Vérifie que le code est activé et valide
+                request.user.subscription.code = code
+                request.user.subscription.expires_at = subscription.expires_at
+                request.user.subscription.save()
+                messages.success(request, "Abonnement activé avec succès !")
+                return redirect('account')
+            elif not subscription.is_active:
+                messages.error(request, "Ce code n'a pas encore été activé.")
+            else:
+                messages.error(request, "Ce code a expiré.")
+        except Subscription.DoesNotExist:
+            messages.error(request, "Code invalide.")
+
+    return render(request, 'account/account.html')
+
+

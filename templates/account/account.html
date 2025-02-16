@@ -4,6 +4,10 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
+            <!-- {% for message in messages %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endfor %} -->
+
             <!-- En-tête du profil -->
             <div class="text-center mb-4">
                 <h2 class="display-6">Mon Profil</h2>
@@ -15,12 +19,44 @@
                 <h5>Nom d'utilisateur: <strong>{{ user.username }}</strong></h5>
                 <h5>Email: <strong>{{ user.email }}</strong></h5>
             
-                <h5>Mot de pass: <strong>{{ user.password }}</strong></h5>
+                <!-- <h5>Mot de pass: <strong>{{ user.password }}</strong></h5> -->
             </div>
 
-            <!-- Lien pour éditer le profil -->
+
+
             <div class="text-center mt-3">
+
+                <h2>Statut de l'abonnement</h2>
+                {% if subscription.is_valid %}
+                    <p>Votre abonnement est actif jusqu'au {{ subscription.expires_at }}</p>
+                {% else %}
+                    <p>Votre abonnement a expiré.</p>
+                    <!-- <a href="{% url 'enter_subscription_code' %}">Saisir un nouveau code</a> -->
+                    <button>
+                        <a href="{% url 'generate_subscription_code' %}">generate_subscription_code un nouveau code</a>
+
+                    </button>
+                {% endif %}
+            </div>            
+            
+            
+            {% if subscription.is_valid %}
+            {% else %}
+
+            <div class="text-center mt-3">
+                <h2>Entrer un code d'abonnement</h2>
+                <form method="post">
+                {% csrf_token %}
+                {% for message in messages %}
+                <div class="alert alert-info">{{ message }}</div>
+                {% endfor %}
+                    <input type="text" name="code" placeholder="Entrez le code" required>
+                    <button type="submit">Valider</button>
+                </form>
             </div>
+            {% endif %}
+
+
         </div>
     </div>
 </div>

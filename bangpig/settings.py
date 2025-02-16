@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS=['bangpig.onrender.com', '127.0.0.1', 'localhost', 'bangpig.com', 'bangpig.com/', 'https://www.bangpig.com/', 'https://www.bangpig.com', 'www.bangpig.com/']
 
@@ -128,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-eu'
 
 TIME_ZONE = 'UTC'
 

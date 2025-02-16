@@ -1,0 +1,11 @@
+<h2>Statut de l'abonnement</h2>
+{% if subscription.is_valid %}
+    <p>Votre abonnement est actif jusqu'au {{ subscription.expires_at }}</p>
+{% else %}
+    <p>Votre abonnement a expiré.</p>
+    <a href="{% url 'enter_subscription_code' %}">Saisir un nouveau code</a>
+    <button>
+        <a href="{% url 'generate_subscription_code' %}">generate_subscription_code un nouveau code</a>
+
+    </button>
+{% endif %}

@@ -70,5 +70,8 @@ urlpatterns=[
     path('documentation/', views.documentation, name='documentation'),
 
 
+    path('entercode/', views.enter_subscription_code, name='enter_subscription_code'),
+    path('statut/', views.subscription_status, name='subscription_status'),
+    path('generate/', views.generate_subscription_code, name='generate_subscription_code'),
 
 ]

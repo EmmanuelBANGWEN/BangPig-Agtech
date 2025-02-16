@@ -1,0 +1,6 @@
+<h2>Entrer un code d'abonnement</h2>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" name="code" placeholder="Entrez le code" required>
+    <button type="submit">Valider</button>
+</form>

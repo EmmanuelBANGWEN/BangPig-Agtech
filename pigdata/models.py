@@ -175,3 +175,36 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"Message de {self.name} - {self.email}"
+
+
+
+
+import uuid
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils.timezone import now, timedelta
+
+class Subscription(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=12, unique=True, blank=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+    is_active = models.BooleanField(default=False)  # Ajout du champ de validation
+
+    def generate_new_code(self):
+        """ Génère un code unique sans l'activer immédiatement """
+        self.code = uuid.uuid4().hex[:12].upper()
+        self.expires_at = now() + timedelta(days=30)
+        self.is_active = False  # Le code doit être activé manuellement
+        self.save()
+
+    def activate(self):
+        """ Active l'abonnement une fois validé par l'admin """
+        self.is_active = True
+        self.save()
+
+    def is_valid(self):
+        """ Vérifie si le code est valide et activé """
+        return self.is_active and self.expires_at and self.expires_at > now()
+
+    def __str__(self):
+        return f"{self.user.username} - Expire le {self.expires_at} - Actif: {self.is_active}"

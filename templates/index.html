@@ -37,9 +37,90 @@
             </div>
         </div>
     </div>
-
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Tableau de Bord</h1>
+        <div class="row">
+            <!-- Carte pour le total des animaux -->
+            <div class="col-md-3 mb-4">
+                <div class="card border-0 shadow-lg hover-shadow-lg">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">Total des animaux</h5>
+                        <p class="card-text display-4">{{ total_animals }}</p>
+                    </div>
+                </div>
+            </div>
     
-
+            <!-- Carte pour le total des femelles -->
+            <div class="col-md-3 mb-4">
+                <div class="card border-0 shadow-lg hover-shadow-lg">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">Total des femelles</h5>
+                        <p class="card-text display-4">{{ total_females }}</p>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Carte pour le total des mâles -->
+            <div class="col-md-3 mb-4">
+                <div class="card border-0 shadow-lg hover-shadow-lg">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">Total des mâles</h5>
+                        <p class="card-text display-4">{{ total_males }}</p>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Carte pour le total des porcelets -->
+            <div class="col-md-3 mb-4">
+                <div class="card border-0 shadow-lg hover-shadow-lg">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success">Total des porcelets</h5>
+                        <p class="card-text display-4">{{ total_piglets }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Graphiques -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Répartition des animaux par sexe</h5>
+                        {{ fig_population|safe }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Évolution du nombre d'animaux enregistrés</h5>
+                        {{ fig_evolution_population|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Répartition des vaccins par maladie</h5>
+                        {{ fig_vaccins|safe }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Doses de vaccination</h5>
+                        {{ fig_vaccination_doses|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </div>
 
 <!-- Lien vers le CSS Bootstrap -->

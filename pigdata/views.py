@@ -313,29 +313,50 @@ from django.contrib.auth.decorators import login_required
 from .models import general_identification_and_parentage, health_parameter_vaccination
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from collections import defaultdict
+import pandas as pd
 
 def index(request):
-    # 1. Suivi de la Population
-    population_sexe = general_identification_and_parentage.objects.filter(user=request.user).values('gender').annotate(total=Count('id'))
+    # Vérifier si des données existent pour éviter l'erreur
+    population_sexe = list(general_identification_and_parentage.objects.filter(user=request.user).values('gender').annotate(total=Count('id')))
+    
+    if not population_sexe:  # Si aucun animal n'est enregistré
+        population_sexe = [{'gender': 'Male', 'total': 0}, {'gender': 'Female', 'total': 0}]
+
     fig_population = px.bar(
         population_sexe, x='gender', y='total', title="Répartition des animaux par sexe"
     )
-    
-    population_mois = general_identification_and_parentage.objects.filter(user=request.user).extra(
-        {'mois': "strftime('%%Y-%%m', dob)"}  # SQLite (si PostgreSQL, utiliser 'to_char(dob, 'YYYY-MM')')
-    ).values('mois').annotate(total=Count('id'))
+
+    # Vérification pour population_mois
+    population_mois = list(general_identification_and_parentage.objects.filter(user=request.user).extra(
+        {'mois': "strftime('%%Y-%%m', dob)"}  # SQLite
+    ).values('mois').annotate(total=Count('id')))
+
+    if not population_mois:
+        population_mois = [{'mois': '0000-00', 'total': 0}]  # Valeur par défaut
+
     fig_evolution_population = px.line(
         population_mois, x='mois', y='total', title="Évolution du nombre d'animaux enregistrés"
     )
-    
-    # 2. Santé et Vaccination
-    vaccins = health_parameter_vaccination.objects.filter(user=request.user).values('disease').annotate(total=Count('id'))
+
+    # Vérification pour vaccins
+    vaccins = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease').annotate(total=Count('id')))
+    if not vaccins:
+        vaccins = [{'disease': 'Aucun', 'total': 0}]
+
     fig_vaccins = px.pie(
         vaccins, names='disease', values='total', title="Répartition des vaccins par maladie"
     )
+
+    # Vérification pour vaccinations
+    vaccinations = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease', 'first_dose', 'booster_dose'))
     
-    vaccinations = health_parameter_vaccination.objects.filter(user=request.user).values('disease', 'first_dose', 'booster_dose')
     fig_vaccination_doses = go.Figure()
+    if not vaccinations:
+        fig_vaccination_doses.add_trace(go.Bar(
+            x=['Aucun'], y=[0], name='Première dose'
+        ))
+    
     for v in vaccinations:
         fig_vaccination_doses.add_trace(go.Bar(
             x=[v['disease']], y=[1], name='Première dose'
@@ -345,22 +366,15 @@ def index(request):
                 x=[v['disease']], y=[1], name='Booster dose'
             ))
 
-    # 3. Ajoutez des graphiques supplémentaires pour les autres analyses si nécessaire
-    # Total des animaux enregistrés
+    # Vérification pour total_animals
     total_animals = general_identification_and_parentage.objects.filter(user=request.user).count()
-    
-    # Nombre de femelles
     total_females = general_identification_and_parentage.objects.filter(user=request.user, gender='Female').count()
-    
-    # Nombre de mâles
     total_males = general_identification_and_parentage.objects.filter(user=request.user, gender='Male').count()
     
-    # Nombre de porcelets (hypothèse : âge < 6 mois)
     six_months_ago = date.today() - timedelta(days=6*30)
     total_piglets = general_identification_and_parentage.objects.filter(user=request.user, dob__gte=six_months_ago).count()
-    
+
     context = {
-        
         'total_animals': total_animals,
         'total_females': total_females,
         'total_males': total_males,

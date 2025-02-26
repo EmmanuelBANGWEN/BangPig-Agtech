@@ -68,6 +68,7 @@ urlpatterns=[
     path('searchall/', views.searchupdate, name='searchupdate'),
 
     path('documentation/', views.documentation, name='documentation'),
+    path('tarifs/', views.tarifs, name='tarifs'),
 
 
     path('entercode/', views.enter_subscription_code, name='enter_subscription_code'),

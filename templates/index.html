@@ -6,18 +6,18 @@
 {% block content %}
 <div class="container py-5">
 
-    <h1 class="text-center text-success mb-4">Bienvenue sur BangPig, la solution digitale pour votre élevage !</h1>
+    <h1 class="text-center text mb-4">Bienvenue sur BangPig, la solution digitale pour votre élevage !</h1>
 
     <div class="row">
         <!-- Carte pour le formulaire de saisie de données -->
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-lg hover-shadow-lg">
                 <div class="card-body text-center">
-                    <i class="fas fa-edit fa-3x text-success mb-3"></i>
-                    <h5 class="card-title text-success">Gestion Complète</h5>
+                    <i class="fas fa-edit fa-3x text mb-3"></i>
+                    <h5 class="card-title text">Gestion Complète</h5>
                     <p class="card-text">Ajoutez, modifiez ou supprimez facilement les informations de votre élevage.</p>
                     <form action="/dataentry" method="GET" aria-label="Formulaire de saisie de données">
-                        <button class="btn btn-success btn-lg" type="submit">Gérer les données</button>
+                        <button class="btn btn-lg" type="submit">Gérer les données</button>
                     </form>
                 </div>
             </div>
@@ -27,11 +27,11 @@
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-lg hover-shadow-lg">
                 <div class="card-body text-center">
-                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
-                    <h5 class="card-title text-success">Consulter les Données</h5>
+                    <i class="fas fa-chart-line fa-3x text mb-3"></i>
+                    <h5 class="card-title text">Consulter les Données</h5>
                     <p class="card-text">Accédez et analysez vos données de manière simple et organisée.</p>
                     <form action="/report" method="GET" aria-label="Formulaire de génération de rapports">
-                        <button class="btn btn-success btn-lg" type="submit">Voir les données</button>
+                        <button class="btn  btn-lg" type="submit">Voir les données</button>
                     </form>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             <div class="col-md-3 mb-4">
                 <div class="card border-0 shadow-lg hover-shadow-lg">
                     <div class="card-body text-center">
-                        <h5 class="card-title text-success">Total des animaux</h5>
+                        <h6 class="card-title text">Total des animaux</h6>
                         <p class="card-text display-4">{{ total_animals }}</p>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
             <div class="col-md-3 mb-4">
                 <div class="card border-0 shadow-lg hover-shadow-lg">
                     <div class="card-body text-center">
-                        <h5 class="card-title text-success">Total des femelles</h5>
+                        <h5 class="card-title text">Total des femelles</h5>
                         <p class="card-text display-4">{{ total_females }}</p>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
             <div class="col-md-3 mb-4">
                 <div class="card border-0 shadow-lg hover-shadow-lg">
                     <div class="card-body text-center">
-                        <h5 class="card-title text-success">Total des mâles</h5>
+                        <h5 class="card-title text">Total des mâles</h5>
                         <p class="card-text display-4">{{ total_males }}</p>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
             <div class="col-md-3 mb-4">
                 <div class="card border-0 shadow-lg hover-shadow-lg">
                     <div class="card-body text-center">
-                        <h5 class="card-title text-success">Total des porcelets</h5>
+                        <h5 class="card-title text">Total des porcelets</h5>
                         <p class="card-text display-4">{{ total_piglets }}</p>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Répartition des animaux par sexe</h5>
+                        <p class="card-title text-center">Répartition des animaux par sexe</p>
                         {{ fig_population|safe }}
                     </div>
                 </div>
@@ -94,7 +94,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Évolution du nombre d'animaux enregistrés</h5>
+                        <p class="card-title text-center">Évolution du nombre d'animaux enregistrés par mois</p>
                         {{ fig_evolution_population|safe }}
                     </div>
                 </div>
@@ -105,7 +105,8 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Répartition des vaccins par maladie</h5>
+                        
+                        <p class="card-title text-center">Répartition des vaccins par maladie</p>
                         {{ fig_vaccins|safe }}
                     </div>
                 </div>
@@ -113,7 +114,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Doses de vaccination</h5>
+                        <p class="card-title text-center">Doses de vaccination</p>
                         {{ fig_vaccination_doses|safe }}
                     </div>
                 </div>
@@ -162,7 +163,7 @@ h1 {
 button {
     font-size: 1.1em;
     padding: 12px 20px;
-    background: linear-gradient(120deg, #50966f, #0a743c);
+    background: linear-gradient(120deg, #d6d2d2, #f9f6f6);
     border: none;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

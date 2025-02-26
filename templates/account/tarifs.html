@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Tarifs d'Abonnement - Offre Exceptionnelle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .pricing-card {
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .pricing-card:hover {
+            transform: scale(1.05);
+        }
+        .old-price {
+            text-decoration: line-through;
+            color: red;
+            font-size: 1.2rem;
+        }
+        .new-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        .btn-subscribe {
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+        }
+        .btn-subscribe:hover {
+            background-color: #218838;
+        }
+        .highlight {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .testimonials {
+            background-color: #f8f9fa;
+            padding: 40px 0;
+            margin-top: 30px;
+            text-align: center;
+        }
+        .testimonial {
+            font-style: italic;
+            color: #555;
+        }
+        .exclusive-card {
+            background-color: #ffcc00;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .exclusive-card p {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<header class="bg-dark py-3 shadow">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="{% url 'home' %}" class="text-white text-decoration-none fs-3 fw-bold">BangPig</a>
+        <nav>
+            <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm">Accueil</a>
+            <a href="{% url 'account' %}" class="btn btn-outline-light btn-sm">Mon compte</a>
+        </nav>
+    </div>
+</header>
+
+<body>
+<div class="container my-5">
+    <h2 class="text-center mb-4">Offre Exceptionnelle d'Abonnement - Réduction de 50%</h2>
+    <p class="text-center lead">Les prix sont en baisse, c'est le moment idéal pour rejoindre notre communauté d'éleveurs et bénéficier d'un abonnement à prix réduit. Cette offre est exclusive et limitée, ne la manquez pas !</p>
+
+    <!-- Carte d'Exclusivité -->
+    <div class="exclusive-card">
+        <p>🎉 Offre Spéciale - Économisez jusqu'à <span class="highlight">50%</span> sur nos abonnements mensuels et annuels !</p>
+        <p>Cette réduction exceptionnelle ne durera pas longtemps, rejoignez-nous dès aujourd'hui pour profiter de l'offre !</p>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <!-- Abonnement Mensuel -->
+        <div class="col-md-4">
+            <div class="pricing-card shadow">
+                <h4>Abonnement Mensuel</h4>
+                <p class="old-price">10 000 FCFA</p>
+                <p class="new-price">5 000 FCFA / mois</p>
+                <p>Accès complet à la gestion de l'élevage et à tous nos outils professionnels. Économisez <span class="highlight">50%</span> immédiatement.</p>
+                <button class="btn btn-subscribe">S'abonner maintenant</button>
+            </div>
+        </div>
+
+        <!-- Abonnement Annuel -->
+        <div class="col-md-4">
+            <div class="pricing-card shadow">
+                <h4>Abonnement Annuel</h4>
+                <p class="old-price">100 000 FCFA</p>
+                <p class="new-price">50 000 FCFA / an</p>
+                <p>Économisez <span class="highlight">70%</span>et obtenez un mois gratuit !</p>
+                <p class="text-success"><strong>Bonus Exclusif :</strong> 1 mois offert pour tout abonnement annuel.</p>
+                <button class="btn btn-subscribe">S'abonner maintenant</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Témoignages Clients -->
+    <div class="testimonials">
+        <h3 class="text-center">Ce Que Disent Nos Clients</h3>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <p class="testimonial">"L'abonnement mensuel m'a permis de gérer mon élevage de manière plus efficace. Les outils sont faciles à utiliser et l'économique est incroyable !" - Marie, Éleveuse de porcs</p>
+            </div>
+            <div class="col-md-6">
+                <p class="testimonial">"J'ai opté pour l'abonnement annuel, et je suis ravi de la réduction de prix. En plus, j'ai eu un mois gratuit, ce qui est un vrai bonus !" - Paul, Éleveur de porcs</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <h4 class="highlight">Ne laissez pas passer cette offre limitée. Rejoignez-nous maintenant et économisez !</h4>
+    </div>
+</div>
+
+<footer class="mt-5 text-center">
+    <p>&copy; 2025 BangPig - La solution digitale pour votre élevage.</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

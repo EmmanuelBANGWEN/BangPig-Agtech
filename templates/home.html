@@ -7,6 +7,13 @@
     <title>BangPig - Your Trusted Digital Pig Farming Partner</title>
     <link rel="icon" href="{% static 'assets/img/icon.png'%}" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
+    <!-- Bootstrap Icons (si ce n'est pas déjà inclus) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <!-- AOS (Animate On Scroll) -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
+
     <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}" />
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <style>
@@ -18,22 +25,22 @@
       .hero {
         animation: fadeIn 1.5s ease-in-out;
       }
-      @keyframes fadeIn {
+      /* @keyframes fadeIn {
         from { opacity: 0; transform: translateY(-20px); }
         to { opacity: 1; transform: translateY(0); }
-      }
-      .hero-img:hover {
+      } */
+      /* .hero-img:hover {
         transform: scale(1.1) rotate(3deg);
         transition: transform 0.5s ease-in-out;
-      }
+      } */
       .btn-animated {
         animation: pulse 1.5s infinite;
       }
-      @keyframes pulse {
+      /* @keyframes pulse {
         0% { transform: scale(1); }
         50% { transform: scale(1.1); }
         100% { transform: scale(1); }
-      }
+      } */
       .info-section i {
         font-size: 2rem;
         color: #198754;
@@ -47,7 +54,45 @@
         opacity: 1;
         transform: translateY(0);
       }
+
+
+
+      @keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.hero-img {
+  animation: bounce 1s infinite ease-in-out;
+}
+
     </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+  gsap.to(".hero-img", { 
+    y: -10, 
+    duration: 0.6, 
+    repeat: -1, 
+    yoyo: true, 
+    ease: "power1.inOut"
+  });
+</script>
+
+<script>
+  gsap.to(".hero-img", { 
+    x: 20, 
+    duration: 1.5, 
+    repeat: -1, 
+    yoyo: true, 
+    ease: "power1.inOut"
+  });
+</script>
+
   </head>
   <body class="bangri-page bg-light">
     <header class="bg-dark py-3 shadow">
@@ -70,7 +115,7 @@
       <div class="container">
         <div class="row justify-content-center align-items-center">
           <div class="col-md-5">
-            <img src="{% static 'assets/img/pig.png' %}" alt="AgTech Illustration" class="img-fluid rounded shadow-lg hero-img" />
+            <img src="{% static 'assets/img/pig.png' %}" alt="AgTech Illustration" class="img-fluid hero-img" />
           </div>
         </div>
         <div class="mt-4">
@@ -84,17 +129,17 @@
     <section class="info-section text-center py-5 bg-white">
       <div class="container">
         <div class="row">
-          <div class="col-md-4 scroll-animation">
+          <div class="col-md-4 ">
             <i class="bi bi-bar-chart"></i>
             <h4>Data Analytics</h4>
             <p>Monitor and analyze farm data for better decision-making.</p>
           </div>
-          <div class="col-md-4 scroll-animation">
+          <div class="col-md-4 ">
             <i class="bi bi-cloud-check"></i>
             <h4>Cloud-Based</h4>
             <p>Access your farm data from anywhere, anytime.</p>
           </div>
-          <div class="col-md-4 scroll-animation">
+          <div class="col-md-4 ">
             <i class="bi bi-robot"></i>
             <h4>AI Integration</h4>
             <p>Leverage AI-powered insights for smart farming.</p>
@@ -103,10 +148,96 @@
       </div>
     </section>
 
+
+    <section class="info-section text-center py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="fw-bold mb-5" data-aos="fade-down">À propos</h1>
+          </div>
+        </div>
     
-    <footer class="bg-dark text-white text-center py-3">
-      <p>&copy; 2025 BangPig. All rights reserved.</p>
-    </footer>
+        <div class="row g-5">
+          <!-- Fonctionnalités Clés -->
+          <div class="col-md-6 offset-md-6 d-flex align-items-center" data-aos="fade-up">
+            <div class="me-3">
+              <i class="bi bi-tools fs-1 text-primary animate__animated animate__bounce"></i>
+            </div>
+            <div class="card h-100 shadow-lg border-0 flex-grow-1 hover-zoom">
+              <div class="card-body">
+                <h5 class="card-title fw-bold">Fonctionnalités Clés</h5>
+                <ul class="list-unstyled text-start">
+                  <li><strong>Gestion des animaux :</strong> suivi des porcs (race, âge, historique).</li>
+                  <li><strong>Suivi sanitaire :</strong> vaccins, traitements, maladies.</li>
+                  <li><strong>Gestion de la reproduction :</strong> cycles de gestation et mise-bas.</li>
+                  <li><strong>Alimentation et nutrition :</strong> suivi des rations alimentaires.</li>
+                  <li><strong>Gestion financière :</strong> suivi des coûts et ventes.</li>
+                  <li><strong>Tableaux de bord et alertes :</strong> notifications et indicateurs clés.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Avantages -->
+          <div class="col-md-6 d-flex align-items-center" data-aos="fade-up">
+            <div class="me-3">
+              <i class="bi bi-star-fill fs-1 text-warning animate__animated animate__bounce"></i>
+            </div>
+            <div class="card h-100 shadow-lg border-0 flex-grow-1 hover-zoom">
+              <div class="card-body">
+                <h5 class="card-title fw-bold">Avantages</h5>
+                <ul class="list-unstyled text-start">
+                  <li>Optimisation de la gestion.</li>
+                  <li>Suivi en temps réel.</li>
+                  <li>Interface intuitive.</li>
+                  <li>Accès depuis tous les appareils.</li>
+                  <li>Innovation en AgTech.</li>
+                  <li>Respect du bien-être animal.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Performance & Innovation -->
+          <div class="col-md-6 offset-md-6 d-flex align-items-center" data-aos="fade-up">
+            <div class="me-3">
+              <i class="bi bi-graph-up fs-1 text-success animate__animated animate__bounce"></i>
+            </div>
+            <div class="card h-100 shadow-lg border-0 flex-grow-1 hover-zoom">
+              <div class="card-body">
+                <h5 class="card-title fw-bold">Performance & Innovation</h5>
+                <ul class="list-unstyled text-start">
+                  <li>Amélioration continue des fonctionnalités.</li>
+                  <li>Précision accrue grâce aux analyses.</li>
+                  <li>Automatisation des tâches répétitives.</li>
+                  <li>Réduction des pertes et optimisation des coûts.</li>
+                  <li>Accompagnement et support aux éleveurs.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000, // Durée des animations
+        once: true, // Animation déclenchée une seule fois
+      });
+    </script>
+    
+
+
+    <footer class="mt-5 text-center">
+      <p>&copy; 2025 BangPig - La solution digitale pour votre élevage <p> Made by
+        <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a></p></p>
+      <!-- <div class="copyright">
+          © 2025 made by
+          <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a>
+        </div> -->
+  </footer>
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {

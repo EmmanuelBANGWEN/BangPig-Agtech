@@ -328,20 +328,19 @@ def index(request):
         population_sexe = [{'gender': 'Male', 'total': 0}, {'gender': 'Female', 'total': 0}]
 
     fig_population = px.bar(
-        population_sexe, x='gender', y='total', title="Répartition des animaux par sexe"
+        population_sexe, x='gender', y='total'
     )
 
     # Vérification pour population_mois
     population_mois = list(general_identification_and_parentage.objects.filter(user=request.user).extra(
-        {'mois': "strftime('%%Y-%%m', dob)"}  # SQLite
+        {'mois': "strftime('%%Y-%%m', dob)"}  # SQLite uniquement
     ).values('mois').annotate(total=Count('id')))
 
     if not population_mois:
         population_mois = [{'mois': '0000-00', 'total': 0}]  # Valeur par défaut
 
     fig_evolution_population = px.line(
-        population_mois, x='mois', y='total', title="Évolution du nombre d'animaux enregistrés"
-    )
+        population_mois, x='mois', y='total')
 
     # Vérification pour vaccins
     vaccins = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease').annotate(total=Count('id')))
@@ -349,8 +348,7 @@ def index(request):
         vaccins = [{'disease': 'Aucun', 'total': 0}]
 
     fig_vaccins = px.pie(
-        vaccins, names='disease', values='total', title="Répartition des vaccins par maladie"
-    )
+        vaccins, names='disease', values='total')
 
     # Vérification pour vaccinations
     vaccinations = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease', 'first_dose', 'booster_dose'))
@@ -2025,6 +2023,10 @@ def home(request):
 
 def documentation(request):
     return render(request, 'others/documentation.html')
+
+
+def tarifs(request):
+    return render(request, 'account/tarifs.html')
 
 
 

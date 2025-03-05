@@ -6,15 +6,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from django.contrib import messages
 from django.http import HttpResponse
 from django.db import IntegrityError
-from datetime import datetime
-from django.db.models import Sum
 from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
+import plotly.express as px
+import plotly.graph_objects as go
+from django.db.models import Count, Sum
+from collections import defaultdict
+import pandas as pd
+import plotly.io as pio
 
 
 
@@ -305,25 +309,48 @@ def dbsuccess(request):    #dbsuccess : Renvoie un template dbsuccess.html avec 
 #     return render(request, "index.html", context)
 
 
-import plotly.express as px
-import plotly.graph_objects as go
-from django.shortcuts import render
-from django.db.models import Count, Sum
-from datetime import datetime
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import general_identification_and_parentage, health_parameter_vaccination
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from collections import defaultdict
-import pandas as pd
 
 # @subscription_required
 @login_required(login_url='loginuser')
 def index(request):
     # Vérifier si des données existent pour éviter l'erreur
     population_sexe = list(general_identification_and_parentage.objects.filter(user=request.user).values('gender').annotate(total=Count('id')))
-    
+    user = request.user
+    # Récupérer tous les animaux de l'utilisateur connecté
+    males = efficiency_parameter_male.objects.filter(user=user)
+    females = efficiency_parameter_female.objects.filter(user=user)
+    # Stocker les meilleures combinaisons
+    recommended_pairs = []
+
+    for male in males:
+        for female in females:
+            # Vérifier si le mâle et la femelle ne sont pas de la même lignée (éviter consanguinité)
+            if (
+                male.gip.sire_no != female.gip.sire_no and
+                male.gip.dam_no != female.gip.dam_no and
+                male.gip.grand_sire != female.gip.grand_sire and
+                male.gip.grand_dam != female.gip.grand_dam
+            ):
+                # Vérifier les critères de performance (âge, poids, fertilité)
+                if (
+                    male.sexual_maturity_weight and
+                    female.sexual_maturity_weight and
+                    male.sexual_maturity_weight >= 90 and  # Seuil fictif de poids de maturité
+                    female.sexual_maturity_weight >= 90 and
+                    female.litter_size_weaning >= 8  # Minimum de porcelets au sevrage
+                ):
+                    # Vérifier si le mâle a une bonne qualification (aptitude physique, sperme)
+                    boar_qualification = qualification_boar.objects.filter(gip=male.gip).first()
+                    if boar_qualification and boar_qualification.suitability == "yes":
+                        recommended_pairs.append({
+                            "male_id": male.gip.animal_id,
+                            "female_id": female.gip.animal_id,
+                            "male_weight": male.sexual_maturity_weight,
+                            "female_weight": female.sexual_maturity_weight,
+                            "expected_litter_size": female.litter_size_weaning,
+                        })
+
+
     if not population_sexe:  # Si aucun animal n'est enregistré
         population_sexe = [{'gender': 'Male', 'total': 0}, {'gender': 'Female', 'total': 0}]
 
@@ -337,7 +364,7 @@ def index(request):
     ).values('mois').annotate(total=Count('id')))
 
     if not population_mois:
-        population_mois = [{'mois': '0000-00', 'total': 0}]  # Valeur par défaut
+        population_mois = [{'mois': 'Vide', 'total': 0}]  # Valeur par défaut
 
     fig_evolution_population = px.line(
         population_mois, x='mois', y='total')
@@ -349,7 +376,7 @@ def index(request):
 
     fig_vaccins = px.pie(
         vaccins, names='disease', values='total')
-
+    
     # Vérification pour vaccinations
     vaccinations = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease', 'first_dose', 'booster_dose'))
     
@@ -365,7 +392,7 @@ def index(request):
         ))
         if v['booster_dose']:
             fig_vaccination_doses.add_trace(go.Bar(
-                x=[v['disease']], y=[1], name='Booster dose'
+                x=[v['disease']], y=[1], name='Dose de rappel'
             ))
 
     # Vérification pour total_animals
@@ -385,6 +412,7 @@ def index(request):
         'fig_evolution_population': fig_evolution_population.to_html(),
         'fig_vaccins': fig_vaccins.to_html(),
         'fig_vaccination_doses': fig_vaccination_doses.to_html(),
+        'recommended_pairs': recommended_pairs
     }
 
     return render(request, 'index.html', context)
@@ -1474,19 +1502,6 @@ def allpigs(request):
 
 
 
-import plotly.express as px
-import plotly.io as pio
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import general_identification_and_parentage
-from .forms import datetodate
-import plotly.express as px
-import plotly.io as pio
-import pandas as pd
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import general_identification_and_parentage
-from .forms import datetodate
 
 
 @subscription_required
@@ -2032,9 +2047,7 @@ def tarifs(request):
 
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Subscription
+
 
 @login_required
 def generate_subscription_code(request):
@@ -2083,3 +2096,44 @@ def enter_subscription_code(request):
     return render(request, 'account/account.html')
 
 
+
+@login_required
+def reproduction_recommendation(request):
+    user = request.user
+
+    # Récupérer tous les animaux de l'utilisateur connecté
+    males = efficiency_parameter_male.objects.filter(user=user)
+    females = efficiency_parameter_female.objects.filter(user=user)
+
+    # Stocker les meilleures combinaisons
+    recommended_pairs = []
+
+    for male in males:
+        for female in females:
+            # Vérifier si le mâle et la femelle ne sont pas de la même lignée (éviter consanguinité)
+            if (
+                male.gip.sire_no != female.gip.sire_no and
+                male.gip.dam_no != female.gip.dam_no and
+                male.gip.grand_sire != female.gip.grand_sire and
+                male.gip.grand_dam != female.gip.grand_dam
+            ):
+                # Vérifier les critères de performance (âge, poids, fertilité)
+                if (
+                    male.sexual_maturity_weight and
+                    female.sexual_maturity_weight and
+                    male.sexual_maturity_weight >= 90 and  # Seuil fictif de poids de maturité
+                    female.sexual_maturity_weight >= 90 and
+                    female.litter_size_weaning >= 8  # Minimum de porcelets au sevrage
+                ):
+                    # Vérifier si le mâle a une bonne qualification (aptitude physique, sperme)
+                    boar_qualification = qualification_boar.objects.filter(gip=male.gip).first()
+                    if boar_qualification and boar_qualification.suitability == "yes":
+                        recommended_pairs.append({
+                            "male_id": male.gip.animal_id,
+                            "female_id": female.gip.animal_id,
+                            "male_weight": male.sexual_maturity_weight,
+                            "female_weight": female.sexual_maturity_weight,
+                            "expected_litter_size": female.litter_size_weaning,
+                        })
+
+    return render(request, 'index.html', {"recommended_pairs": recommended_pairs})

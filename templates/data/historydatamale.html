@@ -18,13 +18,13 @@
                     <th>Date de naissance</th>
                     <th>Sexe</th>
                     <th>Race</th>
-                    <th>Numéro de la mère (DAM)</th>
-                    <th>Numéro du père (SIRE)</th>
-                    <th>Great DAM</th>
-                    <th>Grand SIRE</th>
+                    <th>Numéro de la mère</th>
+                    <th>Numéro du père</th>
+                    <th>Numéro de la grand-mère</th>
+                    <th>Numéro du grand-père</th>
                     <th>Taille de la portée à la naissance</th>
                     <th>Couleurs et marques</th>
-                    <th>Anomalies</th>
+                    <th>Anomalies génétiques / troubles</th>
 
                 </tr>
             </thead>
@@ -104,7 +104,7 @@
   </div>
 
 
-  <h2 class="text-center text-success mb-4">qualification</h2>
+  <h2 class="text-center text-success mb-4">Qualification</h2>
 
   
 <div class="table-responsive">
@@ -112,12 +112,12 @@
     
       <thead id="theadthid">
           <tr>
-              <th>Physical Fitness</th>
-              <th>Date Of Onset Of Training</th>
-              <th>Period Of Training</th>
-              <th>Training Score</th>
-              <th>Evaluation Based On Seminal Characteristics</th>
-              <th>Suitability For Insemination</th>
+              <th>Aptitude physique</th>
+              <th>Date de début de l\'entraînement</th>
+              <th>Période d\'entraînement</th>
+              <th>Score d\'entraînement</th>
+              <th>Évaluation basée sur les caractéristiques séminales</th>
+              <th>Aptitude à l\'insémination</th>
               
   
   
@@ -154,21 +154,21 @@
           <thead id="theadthid">
             <tr >
             <th scope="col"> Numéro d'identification </th>
-            <th scope="col"> SOW Number</th>
+            <th scope="col"> Numéro de la truie</th>
             <th scope="col"> Date de service </th>
             <th scope="col"> Nature du Service</th>
-            <th scope="col"> Date Of Farrowing</th>
+            <th scope="col"> Date de mise bas</th>
             <!-- <th scope="col"> Interfarrowing Interval</th> -->
-            <th scope="col"> Parity</th>
-            <th scope="col"> Number of male born</th>
-            <th scope="col"> Number of female born</th>
-            <th scope="col"> Total Number</th>
-            <th scope="col"> Litter Weight At Birth</th>
-            <th scope="col"> Number Of Weaned Male</th>
-            <th scope="col"> Number Of Weaned Female</th>
-            <th scope="col"> Number Of Total Weaned</th>
-            <th scope="col"> Weaning Weight</th>
-            <th scope="col"> Still Birth Or Abnormality</th>   
+            <th scope="col"> Parité</th>
+            <th scope="col"> Nombre de mâles nés</th>
+            <th scope="col"> Nombre de femelles nées</th>
+            <th scope="col"> Nombre total de nés</th>
+            <th scope="col"> Taille de la portée à la naissance</th>
+            <th scope="col"> Nombre de mâles sevrés</th>
+            <th scope="col"> Nombre de femelles sevrées</th>
+            <th scope="col"> Nombre total de sevrés</th>
+            <th scope="col"> Poids au sevrage</th>
+            <th scope="col"> Mort-né ou anomalie</th>   
               </tr>
           </thead>
 
@@ -208,11 +208,11 @@
           <thead id="theadthid">
             <tr >
                   <th scope="col">Numéro de série,</th>
-                  <th scope="col">Disease</th>
-                  <th scope="col">Make</th>
-                  <th scope="col">First Dose</th>
-                  <th scope="col">Booster Dose</th>
-                  <th scope="col">Repeat</th>
+                  <th scope="col">Contre la maladie</th>
+                  <th scope="col">Marque</th>
+                  <th scope="col">Première dose</th>
+                  <th scope="col">Dose de rappel</th>
+                  <!-- <th scope="col">Repeat</th> -->
                   
               </tr>
           </thead>
@@ -227,7 +227,7 @@
             <td>{{ vaccine.make|default:"vide" }}</td>
             <td>{{ vaccine.first_dose|default:"vide" }}</td>
             <td>{{ vaccine.booster_dose|default:"vide" }}</td>
-            <td>{{ vaccine.repeat|default:"vide" }}</td>
+            <!-- <td>{{ vaccine.repeat|default:"vide" }}</td> -->
 
             
           </tr>
@@ -244,10 +244,10 @@
           <thead id="theadthid">
             <tr >
                   <th>Numéro de série</th>
-                  <th>Reason/Symptom</th>
-                  <th>Date of Treatment</th>
-                  <th>Medication</th>
-                  <th>Remarks</th>
+                  <th>Raison/Symptômes</th>
+                  <th>Date du traitement</th>
+                  <th>Médicament</th>
+                  <th>Remarques</th>
                   
               </tr>
           </thead>
@@ -277,9 +277,9 @@
     <table class="table table-bordered table-striped">
         <thead id="theadthid">
             <tr>
-                <th>Cause Of Death</th>
-                <th>Date Of Death</th>
-                <th>Postmortem Findings</th>
+                <th>Cause du décès</th>
+                <th>Date du décès</th>
+                <th>Résultats de l\'autopsie</th>
 
             </tr>
         </thead>
@@ -304,11 +304,11 @@
           <thead id="theadthid">
             <tr >
                   <th scope="col">Numéro de série,</th>
-                  <th scope="col">Treatment</th>
+                  <th scope="col">Traitement</th>
                   <th scope="col">Make</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Remarks</th>
+                  <th scope="col">Date de début</th>
+                  <th scope="col">Date de fin</th>
+                  <th scope="col">Remarques</th>
               </tr>
           </thead>
 
@@ -335,11 +335,11 @@
     <table class="table table-bordered table-striped ">
         <thead id="theadthid">
           <tr>
-              <th>Reason For Sale/Transfer</th>
+              <th>Raison de la vente/transfert</th>
   
-              <th>Date Of Sale/Transfer</th>
-              <th>Weight At Sale/Transfer</th>
-              <th>Revenue Generated</th>
+              <th>Date de vente/transfert</th>
+              <th>Poids à la vente/transfert</th>
+              <th>Revenu généré</th>
   
             </tr>
       </thead>

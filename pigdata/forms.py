@@ -71,18 +71,19 @@ class general_form(forms.ModelForm):
         model=general_identification_and_parentage
         exclude = ['user']        
         labels = {
-            'animal_id':'Identification Number',
-            'dob':'Date Of Birth',
-            'gender':'gender',
-            'breed':'Breed',
-            'dam_no': 'DAM Number',
-            'sire_no': 'SIRE Number',
-            'grand_dam': 'Great DAM',
-            'grand_sire': 'Grand SIRE',
-            'colitter_size_of_birth': 'Colitter Size Of Birth',
-            'color_and_marking':'Colors And Markings',
-            'abnormalities': 'Genetic Abnormalities/Disorder',
-        }
+                'animal_id': 'Numéro d\'identification',
+                'dob': 'Date de naissance',
+                'gender': 'Sexe',
+                'breed': 'Race',
+                'dam_no': 'Numéro de la mère',
+                'sire_no': 'Numéro du père',
+                'grand_dam': 'Numéro de la grand-mère',
+                'grand_sire': 'Numéro du grand-père',
+                'colitter_size_of_birth': 'Taille de la portée à la naissance',
+                'color_and_marking': 'Couleurs et marques',
+                'abnormalities': 'Anomalies génétiques / troubles',
+            }
+
         widgets = {
             'dob': forms.DateInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
@@ -94,13 +95,12 @@ class disposal_form(forms.ModelForm):
     class Meta:
         model=disposal_culling
         exclude = ['user']        
-        labels={
-            'gip': 'Identification Number',
-            'reason': 'Reason For Sale/Transfer',
-            'sale_date': 'Date Of Sale/Transfer',
-            'weight_sale': 'Weight At Sale/Transfer',
-            'revenue':'Revenue Generated'
-            
+        labels = {
+                'gip': 'Numéro d\'identification',
+                'reason': 'Raison de la vente/transfert',
+                'sale_date': 'Date de vente/transfert',
+                'weight_sale': 'Poids à la vente/transfert',
+                'revenue': 'Revenu généré',
         }
         widgets = {
             'sale_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -111,11 +111,12 @@ class death_form(forms.ModelForm):
         model = death
         exclude = ['user'] 
         labels = {
-            'gip': 'Identification Number',
-            'cause_death': 'Cause Of Death',
-            'date_death': 'Date Of Death',
-            'postmortem_findings': 'Post Mortem Findings',
+            'gip': 'Numéro d\'identification',
+            'cause_death': 'Cause du décès',
+            'date_death': 'Date du décès',
+            'postmortem_findings': 'Résultats de l\'autopsie',
         }
+
         widgets = {
             'date_death': forms.TextInput(attrs={
                 'class': 'flatpickr',
@@ -138,13 +139,14 @@ class nutrition_form(forms.ModelForm):
     class Meta:
         model=nutrition_and_feeding
         fields='__all__'
-        labels={
-            'gip': 'Identification Number',
-            'treatment': 'Treatment',
-            'start_date': 'Start Date',
-            'end_date': 'End Date',
-            'remarks': 'Remarks',
-        }
+        labels = {
+                    'gip': 'Numéro d\'identification',
+                    'treatment': 'Traitement',
+                    'start_date': 'Date de début',
+                    'end_date': 'Date de fin',
+                    'remarks': 'Remarques',
+                }
+
         widgets = {
 
             'start_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -195,14 +197,15 @@ class vaccination_form(forms.ModelForm):
         exclude = ['user']        
 
         # fields='__all__'        
-        labels={
-            'gip': 'Identification Number',
-            'disease': 'Against Disease',
-            'make': 'Make',
-            'first_dose': 'First Dose',
-            'booster_dose': 'Booster Dose',
-            'repeat': 'repeat',
+        labels = {
+            'gip': 'Numéro d\'identification',
+            'disease': 'Contre la maladie',
+            'make': 'Marque',
+            'first_dose': 'Première dose',
+            'booster_dose': 'Dose de rappel',
+            # 'repeat': 'Répétition',
         }
+
         widgets = {
             # 'user': forms.HiddenInput(),  # Champ masqué
 
@@ -230,13 +233,14 @@ class vetexam_form(forms.ModelForm):
     class Meta:
         model=health_parameter_vetexam
         fields='__all__'
-        labels={
-            'gip': 'Identification Number',
-            'reason': 'Reason/Symptoms',
-            'date_of_treatment': 'Date of Treatment',
-            'medication': 'Medication',
-            'remarks': 'Remarks',
+        labels = {
+            'gip': 'Numéro d\'identification',
+            'reason': 'Raison/Symptômes',
+            'date_of_treatment': 'Date du traitement',
+            'medication': 'Médicament',
+            'remarks': 'Remarques',
         }
+
         widgets = {
             'date_of_treatment': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
@@ -261,17 +265,17 @@ class efficiency_form_female(forms.ModelForm):
         model=efficiency_parameter_female
         exclude = ['user','weaning_age'] 
         labels={
-            'gip': 'Identification Number',
-            'dow': 'Date Of Weaning',
-            'litter_size_weaning':'Litter Size At Weaning',
-            'weaning_age': 'Age At Weaning',
-            'weaning_weight': 'Weaning Weight',
-            'dos': 'Date of Separation From Male Animal',
-            'dosm': 'Date of Sexual Maturity',
-            'sexual_maturity_weight': 'Weight At Sexual Maturity',
-            'weight_six': 'Weight At Six Months',
-            'weight_eight':'Weight At Eight Months',
-            'conform_at_eight': 'Conformation At Eight Months',
+            'gip': 'Numéro d\'identification',
+            'dow': 'Date de sevrage',
+            'litter_size_weaning':'Taille de la portée au sevrage',
+            'weaning_age': 'Âge au sevrage (en jours)',
+            'weaning_weight': 'Poids au sevrage',
+            'dos': 'Date de séparation du mâle',
+            'dosm': 'Date de maturité sexuelle',
+            'sexual_maturity_weight': 'Poids à la maturité sexuelle',
+            'weight_six': 'Poids à six mois',
+            'weight_eight':'Poids à huit mois',
+            'conform_at_eight': 'Conformation à huit mois',
         }
         widgets = {
         
@@ -300,18 +304,18 @@ class efficiency_form_male(forms.ModelForm):
         model=efficiency_parameter_male
         exclude = ['user','weaning_age'] 
         labels={
-            'gip': 'Identification Number',
-            'dow': 'Date Of Weaning',
-            'litter_size_weaning':'Litter Size At Weaning',
-            'weaning_age': 'Age At Weaning',
-            'weaning_weight': 'Weaning Weight',
-            'dos': 'Date of Separation From Female Animal',
+            'gip': 'Numéro d\'identification',
+            'dow': 'Date de sevrage',
+            'litter_size_weaning':'Taille de la portée au sevrage',
+            'weaning_age': 'Âge au sevrage (en jours)',
+            'weaning_weight': 'Poids au sevrage',
+            'dos': 'Date de séparation du mâle',
             'doc': 'Date of Castration',
-            'dosm': 'Date of Sexual Maturity',
-            'sexual_maturity_weight': 'Weight At Sexual Maturity',
-            'weight_six': 'Weight At Six Months',
-            'weight_eight': 'Weight At Eight Months',
-            'conform_at_eight': 'Conformation At Eight Months',
+            'dosm': 'Date de maturité sexuelle',
+            'sexual_maturity_weight': 'Poids à la maturité sexuelle',
+            'weight_six': 'Poids à six mois',
+            'weight_eight': 'Poids à huit mois',
+            'conform_at_eight': 'Conformation à huit mois',
         }
         widgets = {
             
@@ -341,15 +345,16 @@ class qualification_form(forms.ModelForm):
     class Meta:
         model=qualification_boar
         exclude = ['user'] 
-        labels={
-            'gip': 'Identification Number',
-            'physical_fitness': 'Physical Fitness',
-            'date_of_training': 'Date Of Onset Of Training',
-            'period_of_training': 'Period Of Training',
-            'training_score': 'Training Score',
-            'seminal_characteristics': 'Evaluation Based On Seminal Characteristics',
-            'suitability': 'Suitability For Insemination',
-        }
+        labels = {
+                'gip': 'Numéro d\'identification',
+                'physical_fitness': 'Aptitude physique',
+                'date_of_training': 'Date de début de l\'entraînement',
+                'period_of_training': 'Période d\'entraînement',
+                'training_score': 'Score d\'entraînement',
+                'seminal_characteristics': 'Évaluation basée sur les caractéristiques séminales',
+                'suitability': 'Aptitude à l\'insémination',
+            }
+
         widgets = {
             'date_of_training': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
@@ -377,21 +382,22 @@ class service_form_male(forms.ModelForm):
         exclude = ['born_total', 'total_weaned']        
 
         labels={
-            'gip': 'Identification Number',
-            'sow_no': 'SOW Number',
-            'dos': 'Date de service ',
-            'dof': 'Date de mise bas',
-            'parity': 'Parity',
-            'born_male': 'Number of male born',
-            'born_female': 'Number of male born',
-            'born_total': 'Total Number',
-            'litter_weight_birth': 'Litter Weight At Birth',
-            'weaned_male': 'Number Of Weaned Male',
-            'weaned_female': 'Number Of Weaned Female',
-            'total_weaned': 'Number Of Total Weaned',
-            'weaning_weight': 'Weaning Weight',
-            'still_birth_abnormality': 'Still Birth Or Abnormality',
-        }
+                'gip': 'Numéro d\'identification',
+                'sow_no': 'Numéro de la truie',
+                'dos': 'Date de service',
+                'dof': 'Date de mise bas',
+                'parity': 'Parité',
+                'born_male': 'Nombre de mâles nés',
+                'born_female': 'Nombre de femelles nées',
+                'born_total': 'Nombre total de nés',
+                'litter_weight_birth': 'Taille de la portée à la naissance',
+                'weaned_male': 'Nombre de mâles sevrés',
+                'weaned_female': 'Nombre de femelles sevrées',
+                'total_weaned': 'Nombre total de sevrés',
+                'weaning_weight': 'Poids au sevrage',
+                'still_birth_abnormality': 'Mort-né ou anomalie',
+            }
+
         widgets = {
 
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -414,26 +420,27 @@ class service_form_female(forms.ModelForm):
         fields='__all__'
         exclude = ['born_total', 'total_weaned']        
 
-        labels={
-            'gip': 'Identification Number',
-            'boar_no':'Boar Number',
-            'dos': 'Date de service ',
-            'nos': 'Nature Of Service',
-            'dof': 'Date de mise bas',
-            'dow': 'Date of Weaning',
-            'interfarrowing_interval':'Interfarrowing Interval(interval mise bas)',
-            'parity': 'Parity',
-            'born_male': 'Number of male born',
-            'born_female': 'Number of male born',
-            'born_total': 'Total Number',
-            'litter_weight_birth': 'Litter Weight At Birth',
-            'weaned_male': 'Number Of Weaned Male',
-            'weaned_female': 'Number Of Weaned Female',
-            'total_weaned': 'Number Of Total Weaned',
-            'weaning_weight': 'Weaning Weight',
-            'still_birth_abnormality': 'Still Birth Or Abnormality',
-            'date_of_abortion':'Date Of Abortion',
-        }
+        labels = {
+                    'gip': 'Numéro d’identification',
+                    'boar_no': 'Numéro du verrat',
+                    'dos': 'Date de service',
+                    'nos': 'Nature du service',
+                    'dof': 'Date de mise bas',
+                    'dow': 'Date de sevrage',
+                    'interfarrowing_interval': 'Intervalle entre mises bas',
+                    'parity': 'Parité',
+                    'born_male': 'Nombre de mâles nés',
+                    'born_female': 'Nombre de femelles nées',
+                    'born_total': 'Nombre total de naissance',
+                    'litter_weight_birth': 'Taille de la portée à la naissance',
+                    'weaned_male': 'Nombre de mâles sevrés',
+                    'weaned_female': 'Nombre de femelles sevrées',
+                    'total_weaned': 'Nombre total de sevrés',
+                    'weaning_weight': 'Poids au sevrage',
+                    'still_birth_abnormality': 'Mort-né ou anomalie',
+                    'date_of_abortion': 'Date d’avortement',
+                }
+
         widgets = {
             
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -473,17 +480,17 @@ class general_update_form(forms.ModelForm):
        
 
         labels = {
-            'animal_id': 'Identification Number',
-            'dob': 'Date Of Birth',
-            'gender': 'Gender',
-            'breed': 'Breed',
-            'dam_no': 'DAM Number',
-            'sire_no': 'SIRE Number',
-            'grand_dam': 'Great DAM',
-            'grand_sire': 'Grand SIRE',
+            'animal_id': 'Numéro d\'identification',
+            'dob': 'Date de naissance',
+            'gender': 'Sexe',
+            'breed': 'Race',
+            'dam_no': 'Numéro de la mère',
+            'sire_no': 'Numéro du père',
+            'grand_dam': 'Numéro de la grand-mère',
+            'grand_sire': 'Numéro du grand-père',
             'colitter_size_of_birth': 'Taille de la portée à la naissance',
-            'color_and_marking': 'Colors And Markings',
-            'abnormalities': 'Genetic Abnormalities/Disorder',
+            'color_and_marking': 'Couleurs et marques',
+            'abnormalities': 'Anomalies génétiques',
         }
         widgets = {
             # 'user': forms.HiddenInput(),  # Champ masqué
@@ -513,12 +520,13 @@ class disposal_update_form(forms.ModelForm):
         exclude = ['user']        
 
         labels = {
-            'gip': 'Identification Number',
-            'reason': 'Reason For Sale/Transfer',
-            'sale_date': 'Date Of Sale/Transfer',
-            'weight_sale': 'Weight At Sale/Transfer',
-            'revenue': 'Revenue Generated'
-        }
+                    'gip': 'Numéro d\'identification',
+                    'reason': 'Raison de la vente/transfert',
+                    'sale_date': 'Date de vente/transfert',
+                    'weight_sale': 'Poids à la vente/transfert',
+                    'revenue': 'Revenu généré'
+                }
+
         widgets = {
             'sale_date': forms.TextInput(attrs={
                 'class': 'flatpickr',
@@ -549,12 +557,13 @@ class death_update_form(forms.ModelForm):
         model=death
         exclude = ['user']        
 
-        labels={
-            'gip': 'Identification Number',
-            'cause_death': 'Cause Of Death',
-            'date_death': 'Date Of Death',
-            'postmortem_findings':'Post Mortem Findings'
-        }
+        labels = {
+    'gip': 'Numéro d’identification',
+    'cause_death': 'Cause du décès',
+    'date_death': 'Date du décès',
+    'postmortem_findings': 'Résultats de l’autopsie'
+}
+
         widgets = {
             'date_death': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
@@ -580,13 +589,14 @@ class nutrition_update_form(forms.ModelForm):
         model=nutrition_and_feeding
         fields='__all__'
         # exclude = ["user"]
-        labels={
-            'gip': 'Identification Number',
-            'treatment': 'Treatment',
-            'start_date': 'Start Date',
-            'end_date': 'End Date',
-            'remarks': 'Remarks',
-        }
+        labels = {
+                'gip': 'Numéro d\'identification',
+                'treatment': 'Traitement',
+                'start_date': 'Date de début',
+                'end_date': 'Date de fin',
+                'remarks': 'Remarques',
+            }
+
         widgets = {
             # 'gip': forms.HiddenInput(),  # Champ masqué
 
@@ -638,11 +648,11 @@ class vaccination_update_form(forms.ModelForm):
         model=health_parameter_vaccination
         exclude = ['user']        
         labels={
-            'gip': 'Identification Number',
-            'disease': 'Against Disease',
-            'make': 'Make',
-            'first_dose': 'First Dose',
-            'booster_dose': 'Booster Dose',
+            'gip': 'Numéro d\'identification',
+            'disease': 'Contre la maladie',
+            'make': 'Marque',
+            'first_dose': 'Première dose',
+            'booster_dose': 'Dose de rappel',
         }
         widgets = {
             
@@ -669,13 +679,14 @@ class vetexam_update_form(forms.ModelForm):
     class Meta:
         model=health_parameter_vetexam
         fields='__all__'
-        labels={
-            'gip': 'Identification Number',
-            'reason': 'Reason/Symptoms',
-            'date_of_treatment': 'Date of Treatment',
-            'medication': 'Medication',
-            'remarks': 'Remarks',
-        }
+        labels = {
+    'gip': 'Numéro d\'identification',
+    'reason': 'Raison/Symptômes',
+    'date_of_treatment': 'Date du traitement',
+    'medication': 'Médicament',
+    'remarks': 'Remarques',
+}
+
         widgets = {
             'date_of_treatment': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
 
@@ -703,19 +714,20 @@ class efficiency_update_form_female(forms.ModelForm):
         exclude = ['user', 'animal_id', 'weaning_age'] 
   
 
-        labels={
-            'gip': 'Identification Number',
-            'dow': 'Date Of Weaning',
-            'litter_size_weaning':'Litter Size At Weaning',
-            'weaning_age': 'Age At Weaning',
-            'weaning_weight': 'Weaning Weight',
-            'dos': 'Date of Separation From Male Animal',
-            'dosm': 'Date of Sexual Maturity',
-            'sexual_maturity_weight': 'Weight At Sexual Maturity',
-            'weight_six': 'Weight At Six Months',
-            'weight_eight': 'Weight At Eight Months',
-            'conform_at_eight': 'Conformation At Eight Months',
-        }
+        labels = {
+    'gip': 'Numéro d’identification',
+    'dow': 'Date du sevrage',
+    'litter_size_weaning': 'Taille de la portée au sevrage',
+    'weaning_age': 'Âge au sevrage',
+    'weaning_weight': 'Poids au sevrage',
+    'dos': 'Date de séparation du mâle',
+    'dosm': 'Date de maturité sexuelle',
+    'sexual_maturity_weight': 'Poids à la maturité sexuelle',
+    'weight_six': 'Poids à six mois',
+    'weight_eight': 'Poids à huit mois',
+    'conform_at_eight': 'Conformation à huit mois',
+}
+
         widgets = {
             
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -732,21 +744,21 @@ class efficiency_update_form_male(forms.ModelForm):
 
         exclude = ['user', 'animal_id', 'weaning_age'] 
 
-        labels={
-            'gip': 'Identification Number',
-            'dow': 'Date Of Weaning',
-            'litter_size_weaning':'Litter Size At Weaning',
-            'weaning_age': 'Age At Weaning',
-            'weaning_weight': 'Weaning Weight',
-            'dos': 'Date of Separation From Female Animal',
-            'doc': 'Date of Castration',
-            'dosm': 'Date of Sexual Maturity',
-            'sexual_maturity_weight': 'Weight At Sexual Maturity',
-            'weight_six': 'Weight At Six Months',
-            'weight_eight': 'Weight At Eight Months',
-            'conform_at_eight': 'Conformation At Eight Months',
-            
-        }
+        labels = {
+    'gip': 'Numéro d’identification',
+    'dow': 'Date du sevrage',
+    'litter_size_weaning': 'Taille de la portée au sevrage',
+    'weaning_age': 'Âge au sevrage',
+    'weaning_weight': 'Poids au sevrage',
+    'dos': 'Date de séparation de la femelle',
+    'doc': 'Date de castration',
+    'dosm': 'Date de maturité sexuelle',
+    'sexual_maturity_weight': 'Poids à la maturité sexuelle',
+    'weight_six': 'Poids à six mois',
+    'weight_eight': 'Poids à huit mois',
+    'conform_at_eight': 'Conformation à huit mois',
+}
+
         widgets = {
            
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -783,15 +795,16 @@ class qualification_update_form(forms.ModelForm):
 
         exclude = ['user', 'gip']        
 
-        labels={
-            'gip': 'Identification Number',
-            'physical_fitness': 'Physical Fitness',
-            'date_of_training': 'Date Of Onset Of Training',
-            'period_of_training': "Periode d'entrainement",
-            'training_score': 'Training Score',
-            'seminal_characteristics': 'Evaluation Based On Seminal Characteristics',
-            'suitability': 'Suitability For Insemination',
-        }
+        labels = {
+    'gip': 'Numéro d’identification',
+    'physical_fitness': 'Aptitude physique',
+    'date_of_training': 'Date de début de l’entraînement',
+    'period_of_training': "Période d'entraînement",
+    'training_score': "Score d'entraînement",
+    'seminal_characteristics': 'Évaluation basée sur les caractéristiques séminales',
+    'suitability': 'Aptitude à l’insémination',
+}
+
         widgets = {
             'date_of_training': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
  }
@@ -817,22 +830,23 @@ class service_update_form_male(forms.ModelForm):
         exclude = ['born_total', 'total_weaned']        
        
 
-        labels={
-            'gip': 'Identification Number',
-            'sow_no': 'SOW Number',
-            'dos': 'Date de service ',
-            'dof': 'Date de mise bas',
-            'parity': 'Parity',
-            'born_male': 'Number of male born',
-            'born_female': 'Number of male born',
-            'born_total': 'Total Number',
-            'litter_weight_birth': 'Litter Weight At Birth',
-            'weaned_male': 'Number Of Weaned Male',
-            'weaned_female': 'Number Of Weaned Female',
-            'total_weaned': 'Number Of Total Weaned',
-            'weaning_weight': 'Weaning Weight',
-            'still_birth_abnormality': 'Still Birth Or Abnormality',
-        }
+        labels = {
+    'gip': 'Numéro d’identification',
+    'sow_no': 'Numéro de la truie',
+    'dos': 'Date de service',
+    'dof': 'Date de mise bas',
+    'parity': 'Parité',
+    'born_male': 'Nombre de mâles nés',
+    'born_female': 'Nombre de femelles nées',
+    'born_total': 'Nombre total de naissances',
+    'litter_weight_birth': 'Taille de la portée à la naissance',
+    'weaned_male': 'Nombre de mâles sevrés',
+    'weaned_female': 'Nombre de femelles sevrées',
+    'total_weaned': 'Nombre total de sevrés',
+    'weaning_weight': 'Poids au sevrage',
+    'still_birth_abnormality': 'Mort-né ou anomalie',
+}
+
         widgets = {
            
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -867,26 +881,27 @@ class service_update_form_female(forms.ModelForm):
         fields='__all__'
         exclude = ['born_total', 'total_weaned']        
 
-        labels={
-            'gip': 'Identification Number',
-            'boar_no':'Boar Number',
-            'dos': 'Date de service ',
-            'nos': 'Nature Of Service',
-            'dof': 'Date de mise bas',
-            'dow': 'Date of Weaning',
-            'interfarrowing_interval':'Interfarrowing Interval',
-            'parity': 'Parity',
-            'born_male': 'Number of male born',
-            'born_female': 'Number of male born',
-            'born_total': 'Total Number',
-            'litter_weight_birth': 'Litter Weight At Birth',
-            'weaned_male': 'Number Of Weaned Male',
-            'weaned_female': 'Number Of Weaned Female',
-            'total_weaned': 'Number Of Total Weaned',
-            'weaning_weight': 'Weaning Weight',
-            'still_birth_abnormality': 'Still Birth Or Abnormality',
-            'date_of_abortion':'Date Of Abortion',
-        }
+        labels = {
+    'gip': 'Numéro d’identification',
+    'boar_no': 'Numéro du verrat',
+    'dos': 'Date de service',
+    'nos': 'Nature du service',
+    'dof': 'Date de mise bas',
+    'dow': 'Date de sevrage',
+    'interfarrowing_interval': 'Intervalle entre mises bas',
+    'parity': 'Parité',
+    'born_male': 'Nombre de mâles nés',
+    'born_female': 'Nombre de femelles nées',
+    'born_total': 'Nombre total de naissances',
+    'litter_weight_birth': 'Taille de la portée à la naissance',
+    'weaned_male': 'Nombre de mâles sevrés',
+    'weaned_female': 'Nombre de femelles sevrées',
+    'total_weaned': 'Nombre total de sevrés',
+    'weaning_weight': 'Poids au sevrage',
+    'still_birth_abnormality': 'Mort-né ou anomalie',
+    'date_of_abortion': 'Date de l’avortement',
+}
+
         widgets = {
 
 

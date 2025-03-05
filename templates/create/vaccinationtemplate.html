@@ -28,12 +28,12 @@
           <thead id="theadthid">
             <tr >
                   <th scope="col">Numéro de série</th>
-                  <th scope="col">Disease</th>
-                  <th scope="col">Make</th>
-                  <th scope="col">First Dose</th>
-                  <th scope="col">Booster Dose</th>
-                  <th scope="col">Repeat</th>
-                  <th scope="col">Delete</th>
+                  <th scope="col">Contre la maladie</th>
+                  <th scope="col">Marque</th>
+                  <th scope="col">Première dose</th>
+                  <th scope="col">Dose de rappel</th>
+                  <!-- <th scope="col">Repeat</th> -->
+                  <th scope="col">Supprimer</th>
               </tr>
           </thead>
 
@@ -47,7 +47,7 @@
             <td>{{ vaccine.make }}</td>
             <td>{{ vaccine.first_dose }}</td>
             <td>{{ vaccine.booster_dose }}</td>
-            <td>{{ vaccine.repeat }}</td>
+            <!-- <td>{{ vaccine.repeat }}</td> -->
 
             <td><form action="{% url 'deletevaccination' gip vaccine.pk %}" method="POST">
                 {% csrf_token %}

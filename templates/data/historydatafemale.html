@@ -20,13 +20,13 @@
                         <th>Date de naissance</th>
                         <th>Sexe</th>
                         <th>Race</th>
-                        <th>Numéro de la mère (DAM)</th>
-                        <th>Numéro du père (SIRE)</th>
-                        <th>Great DAM</th>
-                        <th>Grand SIRE</th>
+                        <th>Numéro de la mère</th>
+                        <th>Numéro du père</th>
+                        <th>Numéro de la grand-mère</th>
+                        <th>Numéro du grand-père</th>
                         <th>Taille de la portée à la naissance</th>
                         <th>Couleurs et marques</th>
-                        <th>Anomalies</th>
+                        <th>Anomalies génétiques / troubles</th>
                     </tr>
                 </thead>
                 <tbody id="tbodydata">
@@ -59,7 +59,7 @@
                         <th>Âge au sevrage (en jours)</th>
                         <th>Poids au sevrage</th>
                         <th>Date de séparation du mâle</th>
-                        <th>Date de maturité sexuelle</th>
+                        <th> deDate maturité sexuelle</th>
                         <th>Poids à la maturité sexuelle</th>
                         <th>Poids à six mois</th>
                         <th>Poids à huit mois</th>
@@ -96,25 +96,25 @@
 
           <thead id="theadthid">
             <tr >
-            <th scope="col"> Serial Number</th>
-            <th scope="col"> Numéro d'identification </th>
-            <th scope="col"> Boar Number</th>
+            <th scope="col"> Numéro de serie</th>
+            <th scope="col"> Numéro d’identification </th>
+            <th scope="col"> Numéro du verrat</th>
             <th scope="col"> Date de service </th>
-            <th scope="col"> Nature du Service</th>
-            <th scope="col"> Date Of Farrowing</th>
-            <th scope="col"> Date of Weaning</th>
-            <th scope="col"> Interfarrowing Interval</th>
-            <th scope="col"> Parity</th>
-            <th scope="col"> Number of male born</th>
-            <th scope="col"> Number of female born</th>
-            <th scope="col"> Total Number</th>
-            <th scope="col"> Litter Weight At Birth</th>
-            <th scope="col"> Number Of Weaned Male</th>
-            <th scope="col"> Number Of Weaned Female</th>
-            <th scope="col"> Number Of Total Weaned</th>
-            <th scope="col"> Weaning Weight</th>
-            <th scope="col"> Still Birth Or Abnormality</th>
-            <th scope="col"> Date Of Abortion</th>      
+            <th scope="col"> Nature du service</th>
+            <th scope="col"> Date de mise bas</th>
+            <th scope="col"> Date de sevrage</th>
+            <th scope="col"> Intervalle entre mises bas</th>
+            <th scope="col"> Parité</th>
+            <th scope="col"> Nombre de mâles nés</th>
+            <th scope="col"> Nombre de femelles nées</th>
+            <th scope="col"> Nombre total de naissance</th>
+            <th scope="col"> Taille de la portée à la naissance</th>
+            <th scope="col"> Nombre de mâles sevrés</th>
+            <th scope="col"> Nombre de femelles sevrées</th>
+            <th scope="col"> Nombre total de sevrés</th>
+            <th scope="col"> Poids au sevrage</th>
+            <th scope="col"> Mort-né ou anomalie</th>
+            <th scope="col"> Date d’avortement</th>      
               </tr>
           </thead>
 
@@ -190,11 +190,11 @@
           <thead id="theadthid">
             <tr >
                   <th scope="col">Numéro de série,</th>
-                  <th scope="col">Disease</th>
-                  <th scope="col">Make</th>
-                  <th scope="col">First Dose</th>
-                  <th scope="col">Booster Dose</th>
-                  <th scope="col">Repeat</th>
+                  <th scope="col">Contre la maladie</th>
+                  <th scope="col">Marque</th>
+                  <th scope="col">Première dose</th>
+                  <th scope="col">Dose de rappel</th>
+                  <!-- <th scope="col">Repeat</th> -->
                   
               </tr>
           </thead>
@@ -209,7 +209,7 @@
             <td>{{ vaccine.make|default:"vide" }}</td>
             <td>{{ vaccine.first_dose|default:"vide" }}</td>
             <td>{{ vaccine.booster_dose|default:"vide" }}</td>
-            <td>{{ vaccine.repeat|default:"vide" }}</td>
+            <!-- <td>{{ vaccine.repeat|default:"vide" }}</td> -->
 
             
           </tr>
@@ -228,10 +228,10 @@
           <thead id="theadthid">
             <tr >
                   <th scope="col">Numéro de série,</th>
-                  <th scope="col">Reason/Symptom</th>
-                  <th scope="col">Date of Treatment</th>
-                  <th scope="col">Medication</th>
-                  <th scope="col">Remarks</th>
+                  <th scope="col">Raison/Symptômes</th>
+                  <th scope="col">Date du traitement</th>
+                  <th scope="col">Médicament</th>
+                  <th scope="col">Remarques</th>
                   
               </tr>
           </thead>
@@ -265,11 +265,11 @@
           <thead id="theadthid">
             <tr >
                   <th scope="col">Numéro de série,</th>
-                  <th scope="col">Treatment</th>
-                  <th scope="col">Make</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Remarks</th>
+                  <th scope="col">Traitement</th>
+                  <th scope="col">Marque</th>
+                  <th scope="col">Date de début</th>
+                  <th scope="col">Date de fin</th>
+                  <th scope="col">Remarques</th>
                   
               </tr>
           </thead>

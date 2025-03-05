@@ -107,6 +107,7 @@
                     <div class="card-body">
                         
                         <p class="card-title text-center">Répartition des vaccins par maladie</p>
+                        
                         {{ fig_vaccins|safe }}
                     </div>
                 </div>
@@ -121,7 +122,70 @@
             </div>
         </div>
     </div>
+    {% if recommended_pairs %}
+
+    <div class="container mt-4">
+
+    <h1 class="text-center mb-4">Meilleures Combinaisons de Reproduction</h1>
+
+    <table class="table table-bordered table-striped">
+        <thead id="theadthid">
+            <tr>
+                <th>Mâle</th>
+                <th>Femelle</th>
+                <th>Poids Mâle (kg)</th>
+                <th>Poids Femelle (kg)</th>
+                <th>Taille de portée attendue</th>
+            </tr>
+        </thead>
+
+        {% for pair in recommended_pairs %}
+        <tbody id="tbodydata">
+
+            <tr>
+                <td>{{ pair.male_id|default:"vide" }}</td>
+                <td>{{ pair.female_id|default:"vide" }}</td>
+                <td>{{ pair.male_weight|default:"vide" }}</td>
+                <td>{{ pair.female_weight|default:"vide" }}</td>
+                <td>{{ pair.expected_litter_size|default:"vide" }}</td>
+            </tr>
+
+        </tbody>
+    {% endfor %}
+    </table>
+    {% else %}
+<div class="container mt-4">
+
+    <h1 class="text-center mb-4">Meilleures Combinaisons de Reproduction</h1>
+
+    <table class="table table-bordered table-striped">
+        <thead id="theadthid">
+            <tr>
+                <th>Mâle</th>
+                <th>Femelle</th>
+                <th>Poids Mâle (kg)</th>
+                <th>Poids Femelle (kg)</th>
+                <th>Taille de portée attendue</th>
+            </tr>
+        </thead>
+
+        <tbody id="tbodydata">
+
+            <tr>
+                <td>{{ pair.male_id|default:"vide" }}</td>
+                <td>{{ pair.female_id|default:"vide" }}</td>
+                <td>{{ pair.male_weight|default:"vide" }}</td>
+                <td>{{ pair.female_weight|default:"vide" }}</td>
+                <td>{{ pair.expected_litter_size|default:"vide" }}</td>
+            </tr>
+
+        </tbody>
+    </table>
     
+
+</div>    
+
+{% endif %}
 </div>
 
 <!-- Lien vers le CSS Bootstrap -->
@@ -191,6 +255,12 @@ footer {
     color: #333;
 }
 
+td{
+    border:1px ,solid black;
+}
+table{
+    border-collapse: collapse;
+}
 </style>
 
 {% endblock content %}

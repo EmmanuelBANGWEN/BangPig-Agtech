@@ -70,7 +70,7 @@ urlpatterns=[
     path('documentation/', views.documentation, name='documentation'),
     path('tarifs/', views.tarifs, name='tarifs'),
 
-    # path('reproduction/', views.reproduction_recommendation, name='reproduction_recommendation'),
+    path('shop/', views.shop, name='shop'),
 
     path('entercode/', views.enter_subscription_code, name='enter_subscription_code'),
     path('statut/', views.subscription_status, name='subscription_status'),

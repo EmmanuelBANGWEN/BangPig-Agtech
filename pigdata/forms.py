@@ -642,7 +642,6 @@ class nutrition_update_form(forms.ModelForm):
 #             self.fields['gip'].widget.attrs['readonly'] = True  # Empêcher la modification
 
 
-
 class vaccination_update_form(forms.ModelForm):
     class Meta:
         model=health_parameter_vaccination
@@ -733,6 +732,7 @@ class efficiency_update_form_female(forms.ModelForm):
             'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
+            'gip': forms.HiddenInput(),  # Cacher le champ 'gip'
 
              }
 

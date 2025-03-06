@@ -1,0 +1,234 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Plateforme Agroalimentaire{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="icon" type="image/png" href="{%static 'img/africanlogo.png'%}">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- <header id="header" class="header dark-background d-flex flex-column">
+        <i class="widget header-toggle d-xl-none bi bi-list"></i>
+    <style>
+      .widget {
+        background: linear-gradient(to right, #28a745, #c8f1c8);
+      }</style>
+      </header> -->
+
+      <header class="bg-dark py-3 shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+          <a href="{% url 'home' %}" class="text-white text-decoration-none fs-3 fw-bold">BangPig</a>
+          <nav>
+            {%if user.is_authenticated%}
+            <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm">Home</a>
+            <a href="{% url 'shop' %}" class="btn btn-outline-light btn-sm">Shop</a>
+  
+            <a href="{% url 'logoutuser' %}" class="btn btn-outline-light btn-sm">Logout</a>
+            {%else%}
+            <a href="{% url 'home' %}" class="btn btn-outline-light btn-sm">Home</a>
+  
+            <a href="{% url 'loginuser' %}" class="btn btn-outline-light btn-sm">Connexion</a>
+            <a href="{% url 'registeruser' %}" class="btn btn-outline-light btn-sm">Inscription</a>
+            {%endif%}
+  
+          </nav>
+        </div>
+      </header>
+
+    <main>
+<!-- <style>
+    .btn-success {
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-success:hover {
+transform: scale(1.1);
+box-shadow: 0 5px 15px #28a745;
+}
+
+.btn-success {
+background-color: #28a745;
+color:#28a745
+}
+.text-success {
+color:#28a745
+}
+
+</style> -->
+<body>
+    <section class="container py-5">
+        <!-- Titre principal -->
+        <h1 class="text-center fw-bold text-success">
+            <i>Matériel d'Elevage</i> 
+        </h1>
+        <p class="text-center text-muted">Découvrez notre gamme de produits pour améliorer votre activité</p>
+
+        <!-- Produit 1 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Mangeoire porcelets automatique </i></h2>
+                <p class="text-muted">Faite un services précis et sans gaspillage à vos porcellets
+                </p>
+
+                <!-- <div class="buy_bt mt-3">
+                    <a href="#" class="btn btn-success text-white">
+                        <i class="bi bi-cart"></i> Acheter
+                    </a>
+                </div> -->
+               
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 1">
+            </div>
+            <div class="buy_bt mt-3">
+                <a href="#" class="btn btn-success text-white">
+                    <i class="bi bi-cart"></i> Acheter
+                </a>
+            </div>
+        </div>
+
+        <!-- Produit 2 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Pipette porcs</h2>
+                <p class="text-muted">Reduisez les contaminations et les pertes d'eau dans vos batiments</p>
+
+                <!-- <p class="text-muted">- Jus de fruits naturels, sans conservateurs.
+                </p> -->
+                <!-- <p class="text-muted">- Vins et spiritueux de qualité supérieure. -->
+                <!-- </p> -->
+                <!-- <p class="text-muted">- Chocolaterie artisanale: Tablettes de chocolat, beurre de cacao. -->
+                <!-- </p> -->
+                <!-- <p class="text-muted">- Charcuterie fine: Poisson frais et fumé, poulet frais et fumé.</p> -->
+             
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 2">
+            </div>
+            <div class="buy_bt mt-3 ">
+                <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+            </div>
+        </div>
+
+        <!-- Produit 3 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Boucles d'identification</h2>
+                <p class="text-muted">Identifiez, Enregistrez vos animaux pour un suivi moderne</p>
+                
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 3">
+            </div>
+            <div class="buy_bt mt-3">
+                <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+            </div>
+        </div>
+
+        <!-- Produit 4 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Pince d'identification</h2>
+                <p class="text-muted">Placez vos boucles d'identification</p>
+               
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 4">
+            </div>
+            <div class="buy_bt mt-3">
+                <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+            </div>
+        </div>
+
+        <!-- Produit 5 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Cages Porcs</h2>
+                <p class="text-muted">Contentionnez vos animaux pour un meilleur suivi</p>
+                <!-- <div class="buy_bt mt-3">
+                    <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+                </div> -->
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 5">
+            </div>
+            <div class="buy_bt mt-3">
+                <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+            </div>
+        </div>
+
+        <!-- Produit 6 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Balance pour pesées animaux </h2>
+                <p class="text-muted">Pesez vos animaux de manière efficacce </p>
+                
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 6">
+            </div>
+            <div class="buy_bt mt-3 rigth">
+                <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+            </div>
+        </div><!-- Produit 6 -->
+        <div class="row align-items-center mt-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-success">Thermo-Hydromètre de salle </h2>
+                <p class="text-muted">Controlez la temperature et l'humidité de votre salle</p>
+                
+            </div>
+            <div class="col-md-6">
+                <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 6">
+            </div>
+            <div class="buy_bt mt-3 rigth">
+                <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000, // Durée des animations
+        once: true, // Animation déclenchée une seule fois
+      });
+    </script>
+    
+
+
+    <footer class="mt-5 text-center">
+      <p>&copy; 2025 BangPig - La solution digitale pour votre élevage <p> Made by
+        <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a></p></p>
+      <!-- <div class="copyright">
+          © 2025 made by
+          <a target="_blank" href="https://www.emmanuelbangwen.com/">Emmanuel Bangwen</a>
+        </div> -->
+  </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        flatpickr(".flatpickr", {});
+        
+        const elements = document.querySelectorAll(".scroll-animation");
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        }, { threshold: 0.1 });
+
+        elements.forEach(element => observer.observe(element));
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

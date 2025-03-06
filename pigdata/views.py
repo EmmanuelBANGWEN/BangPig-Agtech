@@ -2097,43 +2097,49 @@ def enter_subscription_code(request):
 
 
 
-@login_required
-def reproduction_recommendation(request):
-    user = request.user
+# @login_required
+# def reproduction_recommendation(request):
+#     user = request.user
 
-    # Récupérer tous les animaux de l'utilisateur connecté
-    males = efficiency_parameter_male.objects.filter(user=user)
-    females = efficiency_parameter_female.objects.filter(user=user)
+#     # Récupérer tous les animaux de l'utilisateur connecté
+#     males = efficiency_parameter_male.objects.filter(user=user)
+#     females = efficiency_parameter_female.objects.filter(user=user)
 
-    # Stocker les meilleures combinaisons
-    recommended_pairs = []
+#     # Stocker les meilleures combinaisons
+#     recommended_pairs = []
 
-    for male in males:
-        for female in females:
-            # Vérifier si le mâle et la femelle ne sont pas de la même lignée (éviter consanguinité)
-            if (
-                male.gip.sire_no != female.gip.sire_no and
-                male.gip.dam_no != female.gip.dam_no and
-                male.gip.grand_sire != female.gip.grand_sire and
-                male.gip.grand_dam != female.gip.grand_dam
-            ):
-                # Vérifier les critères de performance (âge, poids, fertilité)
-                if (
-                    male.sexual_maturity_weight and
-                    female.sexual_maturity_weight and
-                    male.sexual_maturity_weight >= 90 and  # Seuil fictif de poids de maturité
-                    female.sexual_maturity_weight >= 90 and
-                    female.litter_size_weaning >= 8  # Minimum de porcelets au sevrage
-                ):
-                    # Vérifier si le mâle a une bonne qualification (aptitude physique, sperme)
-                    boar_qualification = qualification_boar.objects.filter(gip=male.gip).first()
-                    if boar_qualification and boar_qualification.suitability == "yes":
-                        recommended_pairs.append({
-                            "male_id": male.gip.animal_id,
-                            "female_id": female.gip.animal_id,
-                            "male_weight": male.sexual_maturity_weight,
-                            "female_weight": female.sexual_maturity_weight,
-                            "expected_litter_size": female.litter_size_weaning,
-                        })
+#     for male in males:
+#         for female in females:
+#             # Vérifier si le mâle et la femelle ne sont pas de la même lignée (éviter consanguinité)
+#             if (
+#                 male.gip.sire_no != female.gip.sire_no and
+#                 male.gip.dam_no != female.gip.dam_no and
+#                 male.gip.grand_sire != female.gip.grand_sire and
+#                 male.gip.grand_dam != female.gip.grand_dam
+#             ):
+#                 # Vérifier les critères de performance (âge, poids, fertilité)
+#                 if (
+#                     male.sexual_maturity_weight and
+#                     female.sexual_maturity_weight and
+#                     male.sexual_maturity_weight >= 90 and  # Seuil fictif de poids de maturité
+#                     female.sexual_maturity_weight >= 90 and
+#                     female.litter_size_weaning >= 8  # Minimum de porcelets au sevrage
+#                 ):
+#                     # Vérifier si le mâle a une bonne qualification (aptitude physique, sperme)
+#                     boar_qualification = qualification_boar.objects.filter(gip=male.gip).first()
+#                     if boar_qualification and boar_qualification.suitability == "yes":
+#                         recommended_pairs.append({
+#                             "male_id": male.gip.animal_id,
+#                             "female_id": female.gip.animal_id,
+#                             "male_weight": male.sexual_maturity_weight,
+#                             "female_weight": female.sexual_maturity_weight,
+#                             "expected_litter_size": female.litter_size_weaning,
+#                         })
 
-    return render(request, 'index.html', {"recommended_pairs": recommended_pairs})
+#     return render(request, 'index.html', {"recommended_pairs": recommended_pairs})
+
+
+
+def shop(request):
+    return render(request, 'shop.html')
+

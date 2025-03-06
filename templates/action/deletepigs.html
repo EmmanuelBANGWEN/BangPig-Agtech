@@ -35,6 +35,30 @@
                 {% for i in animals %}
                     <div class="list-group-item d-flex justify-content-between align-items-center">
                         <a href="{% url 'history' i.animal_id %}" class="animal-link">{{ i.animal_id }}</a>
+                        
+                        <span class="badge {% if i.gender == 'Male' %} bg-primary {% else %}  bg-pink {% endif %}">
+                            {% if i.gender == 'Male' %}
+                                ♂ Male
+                            {% else %}
+                                ♀ Female
+                            {% endif %}
+                        </span>
+                        <style>.bg-primary {
+                            background-color: #007bff !important;
+                            color: white;
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                        }
+                        
+                        .bg-pink {
+                            background-color: #e91e63 !important;
+                            color: white;
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                        }
+                        </style>
+
+
                         <form method="GET" action="{% url 'delete' i.animal_id %}" class="d-inline">
                             {% csrf_token %}
                             <button class="btn btn-danger btn-sm btn-animated" type="submit">Supprimer</button>

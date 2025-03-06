@@ -30,14 +30,39 @@
 
         <div class="col-md-8">
             <h5 class="text-center mb-4">Numéros d'identifications des Animaux</h5>
+            
             <div class="list-group">
                 {% for i in animals %}
                 <div class="list-group-item d-flex justify-content-between align-items-center">
-
+            
                     <!-- Lien vers l'historique de l'animal, stylisé comme un bouton -->
                     <a href="{% url 'history' i.animal_id %}" class="animal-link">
-                         {{ i.animal_id }}
+                        {{ i.animal_id }}
                     </a>
+            
+                    <!-- Affichage du genre avec une icône -->
+                    <span class="badge {% if i.gender == 'Male' %} bg-primary {% else %}  bg-pink {% endif %}">
+                        {% if i.gender == 'Male' %}
+                            ♂ Male
+                        {% else %}
+                            ♀ Female
+                        {% endif %}
+                    </span>
+                    <style>.bg-primary {
+                        background-color: #007bff !important;
+                        color: white;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                    }
+                    
+                    .bg-pink {
+                        background-color: #e91e63 !important;
+                        color: white;
+                        padding: 5px 10px;
+                        border-radius: 5px;
+                    }
+                    </style>
+            
                     <!-- Formulaire de mise à jour pour chaque animal -->
                     <form method="POST" action="{% url 'update' %}" class="d-inline">
                         {% csrf_token %}
@@ -45,9 +70,9 @@
                         <button class="btn btn-danger btn-sm btn-animated" type="submit">Modifier</button>
                     </form>
                 </div>
-
                 {% endfor %}
             </div>
+            
 
 
             <!-- Bouton retour -->

@@ -28,7 +28,7 @@
           <nav>
             {%if user.is_authenticated%}
             <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm">Home</a>
-            <a href="{% url 'shop' %}" class="btn btn-outline-light btn-sm">Shop</a>
+            <!-- <a href="{% url 'shop' %}" class="btn btn-outline-light btn-sm">Shop</a> -->
   
             <a href="{% url 'logoutuser' %}" class="btn btn-outline-light btn-sm">Logout</a>
             {%else%}
@@ -72,9 +72,9 @@ color:#28a745
 
         <!-- Produit 1 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Mangeoire porcelets automatique </i></h2>
-                <p class="text-muted">Faite un services précis et sans gaspillage à vos porcellets
+                <p class="text-muted">Offrez un service précis et sans gaspillage à vos porcellets
                 </p>
 
                 <!-- <div class="buy_bt mt-3">
@@ -84,10 +84,10 @@ color:#28a745
                 </div> -->
                
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 1">
             </div>
-            <div class="buy_bt mt-3">
+            <div class="buy_bt mt-3 ">
                 <a href="#" class="btn btn-success text-white">
                     <i class="bi bi-cart"></i> Acheter
                 </a>
@@ -96,9 +96,9 @@ color:#28a745
 
         <!-- Produit 2 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Pipette porcs</h2>
-                <p class="text-muted">Reduisez les contaminations et les pertes d'eau dans vos batiments</p>
+                <p class="text-muted">Réduisez les contaminations et les pertes d'eau dans vos batiments</p>
 
                 <!-- <p class="text-muted">- Jus de fruits naturels, sans conservateurs.
                 </p> -->
@@ -109,7 +109,7 @@ color:#28a745
                 <!-- <p class="text-muted">- Charcuterie fine: Poisson frais et fumé, poulet frais et fumé.</p> -->
              
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 2">
             </div>
             <div class="buy_bt mt-3 ">
@@ -119,12 +119,12 @@ color:#28a745
 
         <!-- Produit 3 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Boucles d'identification</h2>
                 <p class="text-muted">Identifiez, Enregistrez vos animaux pour un suivi moderne</p>
                 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 3">
             </div>
             <div class="buy_bt mt-3">
@@ -134,12 +134,12 @@ color:#28a745
 
         <!-- Produit 4 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Pince d'identification</h2>
                 <p class="text-muted">Placez vos boucles d'identification</p>
                
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 4">
             </div>
             <div class="buy_bt mt-3">
@@ -149,14 +149,14 @@ color:#28a745
 
         <!-- Produit 5 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Cages Porcs</h2>
                 <p class="text-muted">Contentionnez vos animaux pour un meilleur suivi</p>
                 <!-- <div class="buy_bt mt-3">
                     <a href="#" class="btn btn-success text-white"><i class="bi bi-cart"></i> Acheter</a>
                 </div> -->
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 5">
             </div>
             <div class="buy_bt mt-3">
@@ -166,12 +166,12 @@ color:#28a745
 
         <!-- Produit 6 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Balance pour pesées animaux </h2>
-                <p class="text-muted">Pesez vos animaux de manière efficacce </p>
+                <p class="text-muted">Pesez vos animaux de manière efficace </p>
                 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 6">
             </div>
             <div class="buy_bt mt-3 rigth">
@@ -179,12 +179,12 @@ color:#28a745
             </div>
         </div><!-- Produit 6 -->
         <div class="row align-items-center mt-5">
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <h2 class="fw-bold text-success">Thermo-Hydromètre de salle </h2>
-                <p class="text-muted">Controlez la temperature et l'humidité de votre salle</p>
+                <p class="text-muted">Contrôlez la température et l'humidité de votre salle</p>
                 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-aos="fade-up">
                 <img src="{% static 'assets/img/pig.png' %}" class="img-fluid rounded shadow" alt="Produit 6">
             </div>
             <div class="buy_bt mt-3 rigth">

@@ -153,7 +153,7 @@ def delete(request, animal_id):
 @subscription_required
 @login_required(login_url='loginuser')
 def deletepigs(request):              #Affiche une page où les animaux dun user sont listés et permettent de choisir ceux à supprimer.
-    animals=general_identification_and_parentage.objects.filter(user=request.user)
+    animals=general_identification_and_parentage.objects.filter(user=request.user).order_by('animal_id')
     context={
         'animals':animals,
         'tablename':'Supprimer Un Porc',
@@ -370,6 +370,7 @@ def index(request):
         population_mois, x='mois', y='total')
 
     # Vérification pour vaccins
+    # Affiche les differents vaccins par maladie dans la ferme et le nombre de porcs concernés
     vaccins = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease').annotate(total=Count('id')))
     if not vaccins:
         vaccins = [{'disease': 'Aucun', 'total': 0}]
@@ -378,6 +379,7 @@ def index(request):
         vaccins, names='disease', values='total')
     
     # Vérification pour vaccinations
+    # Affiche les vaccins(maladies) puis les porcs ayant obtenus la premiere dose  du vaccin et/ou la dose de rappel
     vaccinations = list(health_parameter_vaccination.objects.filter(user=request.user).values('disease', 'first_dose', 'booster_dose'))
     
     fig_vaccination_doses = go.Figure()

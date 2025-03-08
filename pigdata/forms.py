@@ -71,14 +71,14 @@ class general_form(forms.ModelForm):
         model=general_identification_and_parentage
         exclude = ['user']        
         labels = {
-                'animal_id': 'Numéro d\'identification',
+                'animal_id': "Numéro d'identification",
                 'dob': 'Date de naissance',
                 'gender': 'Sexe',
                 'breed': 'Race',
-                'dam_no': 'Numéro de la mère',
-                'sire_no': 'Numéro du père',
-                'grand_dam': 'Numéro de la grand-mère',
-                'grand_sire': 'Numéro du grand-père',
+                'dam_no': "Numéro d'identification de la mère",
+                'sire_no': "Numéro d'identification du père",
+                'grand_dam': "Numéro d'identification de la grand-mère",
+                'grand_sire': "Numéro d'identification du grand-père",
                 'colitter_size_of_birth': 'Taille de la portée à la naissance',
                 'color_and_marking': 'Couleurs et marques',
                 'abnormalities': 'Anomalies génétiques / troubles',
@@ -96,7 +96,7 @@ class disposal_form(forms.ModelForm):
         model=disposal_culling
         exclude = ['user']        
         labels = {
-                'gip': 'Numéro d\'identification',
+                'gip': "Numéro d'identification",
                 'reason': 'Raison de la vente/transfert',
                 'sale_date': 'Date de vente/transfert',
                 'weight_sale': 'Poids à la vente/transfert',
@@ -111,7 +111,7 @@ class death_form(forms.ModelForm):
         model = death
         exclude = ['user'] 
         labels = {
-            'gip': 'Numéro d\'identification',
+            'gip': "Numéro d'identification",
             'cause_death': 'Cause du décès',
             'date_death': 'Date du décès',
             'postmortem_findings': 'Résultats de l\'autopsie',
@@ -140,7 +140,7 @@ class nutrition_form(forms.ModelForm):
         model=nutrition_and_feeding
         fields='__all__'
         labels = {
-                    'gip': 'Numéro d\'identification',
+                    'gip': "Numéro d'identification",
                     'treatment': 'Traitement',
                     'start_date': 'Date de début',
                     'end_date': 'Date de fin',
@@ -198,8 +198,8 @@ class vaccination_form(forms.ModelForm):
 
         # fields='__all__'        
         labels = {
-            'gip': 'Numéro d\'identification',
-            'disease': 'Contre la maladie',
+            'gip': "Numéro d'identification",
+            'disease': 'Maladie(Vaccin)',
             'make': 'Marque',
             'first_dose': 'Première dose',
             'booster_dose': 'Dose de rappel',
@@ -234,7 +234,7 @@ class vetexam_form(forms.ModelForm):
         model=health_parameter_vetexam
         fields='__all__'
         labels = {
-            'gip': 'Numéro d\'identification',
+            'gip': "Numéro d'identification",
             'reason': 'Raison/Symptômes',
             'date_of_treatment': 'Date du traitement',
             'medication': 'Médicament',
@@ -265,7 +265,7 @@ class efficiency_form_female(forms.ModelForm):
         model=efficiency_parameter_female
         exclude = ['user','weaning_age'] 
         labels={
-            'gip': 'Numéro d\'identification',
+            'gip': "Numéro d'identification",
             'dow': 'Date de sevrage',
             'litter_size_weaning':'Taille de la portée au sevrage',
             'weaning_age': 'Âge au sevrage (en jours)',
@@ -304,7 +304,7 @@ class efficiency_form_male(forms.ModelForm):
         model=efficiency_parameter_male
         exclude = ['user','weaning_age'] 
         labels={
-            'gip': 'Numéro d\'identification',
+            'gip': "Numéro d'identification",
             'dow': 'Date de sevrage',
             'litter_size_weaning':'Taille de la portée au sevrage',
             'weaning_age': 'Âge au sevrage (en jours)',
@@ -346,7 +346,7 @@ class qualification_form(forms.ModelForm):
         model=qualification_boar
         exclude = ['user'] 
         labels = {
-                'gip': 'Numéro d\'identification',
+                'gip': "Numéro d'identification",
                 'physical_fitness': 'Aptitude physique',
                 'date_of_training': 'Date de début de l\'entraînement',
                 'period_of_training': 'Période d\'entraînement',
@@ -382,7 +382,7 @@ class service_form_male(forms.ModelForm):
         exclude = ['born_total', 'total_weaned']        
 
         labels={
-                'gip': 'Numéro d\'identification',
+                'gip': "Numéro d'identification",
                 'sow_no': 'Numéro de la truie',
                 'dos': 'Date de service',
                 'dof': 'Date de mise bas',
@@ -480,14 +480,14 @@ class general_update_form(forms.ModelForm):
        
 
         labels = {
-            'animal_id': 'Numéro d\'identification',
+            'animal_id': "Numéro d'identification",
             'dob': 'Date de naissance',
             'gender': 'Sexe',
             'breed': 'Race',
-            'dam_no': 'Numéro de la mère',
-            'sire_no': 'Numéro du père',
-            'grand_dam': 'Numéro de la grand-mère',
-            'grand_sire': 'Numéro du grand-père',
+            'dam_no': "Numéro d'identification de la mère",
+            'sire_no': "Numéro d'identification du père",
+            'grand_dam': "Numéro d'identification de la grand-mère",
+            'grand_sire': "Numéro d'identification du grand-père",
             'colitter_size_of_birth': 'Taille de la portée à la naissance',
             'color_and_marking': 'Couleurs et marques',
             'abnormalities': 'Anomalies génétiques',
@@ -520,7 +520,7 @@ class disposal_update_form(forms.ModelForm):
         exclude = ['user']        
 
         labels = {
-                    'gip': 'Numéro d\'identification',
+                    'gip': "Numéro d'identification",
                     'reason': 'Raison de la vente/transfert',
                     'sale_date': 'Date de vente/transfert',
                     'weight_sale': 'Poids à la vente/transfert',
@@ -590,7 +590,7 @@ class nutrition_update_form(forms.ModelForm):
         fields='__all__'
         # exclude = ["user"]
         labels = {
-                'gip': 'Numéro d\'identification',
+                'gip': "Numéro d'identification",
                 'treatment': 'Traitement',
                 'start_date': 'Date de début',
                 'end_date': 'Date de fin',
@@ -647,8 +647,8 @@ class vaccination_update_form(forms.ModelForm):
         model=health_parameter_vaccination
         exclude = ['user']        
         labels={
-            'gip': 'Numéro d\'identification',
-            'disease': 'Contre la maladie',
+            'gip': "Numéro d'identification",
+            'disease': 'Maladie(Vaccin)',
             'make': 'Marque',
             'first_dose': 'Première dose',
             'booster_dose': 'Dose de rappel',
@@ -679,7 +679,7 @@ class vetexam_update_form(forms.ModelForm):
         model=health_parameter_vetexam
         fields='__all__'
         labels = {
-    'gip': 'Numéro d\'identification',
+    'gip': "Numéro d'identification",
     'reason': 'Raison/Symptômes',
     'date_of_treatment': 'Date du traitement',
     'medication': 'Médicament',

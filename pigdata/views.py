@@ -115,10 +115,10 @@ def subscription_required(view_func):
 
 
 #---------------------------------------------------------------------------------------------------------------------------------------
-@subscription_required
+# @subscription_required
 def dataentry(request):  #entrer les donnees
     return render(request, "action/dataentry.html", context={'tablename':'Que Voulez-Vous faire ?'})
-@subscription_required
+# @subscription_required
 def report(request):  
     return render(request, "others/report.html", context={'tablename':'Mes Enregistrements'})
 
@@ -137,7 +137,7 @@ def report(request):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def delete(request, animal_id):
     try:
@@ -150,7 +150,7 @@ def delete(request, animal_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def deletepigs(request):              #Affiche une page où les animaux dun user sont listés et permettent de choisir ceux à supprimer.
     animals=general_identification_and_parentage.objects.filter(user=request.user).order_by('animal_id')
@@ -278,7 +278,7 @@ def delete_nutrition(request, animal_id, pk):
 
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def dbsuccess(request):    #dbsuccess : Renvoie un template dbsuccess.html avec un contexte indiquant que l'opération a été un succès.
     return render(request, "action/dbsuccess.html", context={'tablename':'Success'})
@@ -424,7 +424,7 @@ def index(request):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 
 def create_general(request):
@@ -453,7 +453,7 @@ def create_general(request):
 #En cas de succès, l'utilisateur est redirigé vers create_efficiency pour saisir des paramètres d'efficacité.
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def create_efficiency(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -510,7 +510,7 @@ def create_efficiency(request, animal_id):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def create_qualification(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -541,7 +541,7 @@ def create_qualification(request, animal_id):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def create_service(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -590,7 +590,7 @@ def create_service(request, animal_id):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def vaccination(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -617,7 +617,7 @@ def vaccination(request, animal_id):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def vetexam(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -642,7 +642,7 @@ def vetexam(request, animal_id):
 
     return render(request, "create/vetexamtemplate.html", context)
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def create_nutrition(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -667,7 +667,7 @@ def create_nutrition(request, animal_id):
 
     return render(request, "create/nutrition_template.html", context)
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def deathview(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -688,7 +688,7 @@ def deathview(request, animal_id):
 
     return render(request, "create/create_death.html", context)
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def create_disposal(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -712,7 +712,7 @@ def create_disposal(request, animal_id):
 
 
 # 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 # def create_economics(request, animal_id):
 #     # Utilisation de get_object_or_404 pour récupérer l'animal ou renvoyer une erreur 404 si l'animal n'existe pas
@@ -749,13 +749,13 @@ def create_disposal(request, animal_id):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def successupdate(request):
     return render(request,"update/successupdate.html", context={'tablename':'Update Successful'})
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def update(request):
     animal_id = request.POST.get('animal_id') or request.GET.get('animal_id')
@@ -783,7 +783,7 @@ def update(request):
 # Update general information
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def update_general(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -892,8 +892,8 @@ def update_nutrition(request, animal_id):
 
 # # Update economics information
 # 
-@subscription_required
-@login_required(login_url='loginuser')
+# @subscription_required
+# @login_required(login_url='loginuser')
 # def update_economics(request, animal_id):
 #     # Utilisation de get_object_or_404 pour une gestion d'erreur plus propre
 #     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -1423,7 +1423,7 @@ def update_vetexam(request, animal_id):
 
 
 
-@subscription_required
+# @subscription_required
 @login_required(login_url='loginuser')
 def history(request, animal_id):
     # Récupérer l'animal de l'utilisateur actuel
@@ -1505,23 +1505,28 @@ def allpigs(request):
 
 
 
-
 @subscription_required
 @login_required(login_url='loginuser')
 def pigletborn(request):
     graph_json = None
-    if request.method == 'POST':
-        form = datetodate(request.POST)
-        if form.is_valid():
-            fromdate = form.cleaned_data['from_date']
-            todate = form.cleaned_data['to_date']
+    graph_json2 = None
+    totalcount = 0
+    malecount = 0
+    femalecount = 0
 
-            # Filtrer les données en fonction des dates et de l'utilisateur
-            allborn = general_identification_and_parentage.objects.filter(
-                dob__range=(fromdate, todate),
-                user=request.user
-            )
+    form = datetodate(request.POST or None)
 
+    if request.method == 'POST' and form.is_valid():
+        fromdate = form.cleaned_data['from_date']
+        todate = form.cleaned_data['to_date']
+
+        # Filtrer les données en fonction des dates et de l'utilisateur
+        allborn = general_identification_and_parentage.objects.filter(
+            dob__range=(fromdate, todate),
+            user=request.user
+        )
+
+        if allborn.exists():  # Vérifier s'il y a des données avant de créer les DataFrame
             # Compter le nombre total de porcelets nés
             totalcount = allborn.count()
             malecount = allborn.filter(gender='Male').count()
@@ -1539,11 +1544,9 @@ def pigletborn(request):
                 birth_count, 
                 x='dob', 
                 y='Nombre de porcelets', 
-                color_discrete_sequence=['green', 'red'],
+                color_discrete_sequence=['green'],
                 title="Nombre de porcelets nés par jour",
                 labels={'dob': 'Date', 'Nombre de porcelets': 'Nombre de porcelets nés'},
-                # markers=True,
-
             )
 
             # Ajouter un histogramme pour la répartition des genres
@@ -1560,21 +1563,21 @@ def pigletborn(request):
             graph_json = pio.to_html(fig, full_html=False)
             graph_json2 = pio.to_html(fig2, full_html=False)
 
-            context = {
-                'tablename': 'Nombre de porcelets nés',
-                'malecount': malecount,
-                'femalecount': femalecount,
-                'totalcount': totalcount,
-                'form': form,
-                'graph_json': graph_json,  # Courbe des naissances
-                'graph_json2': graph_json2  # Histogramme des genres
-            }
-            return render(request, "data/pigletborn.html", context)
+        else:
+            # Afficher un message si aucune naissance n'a été enregistrée
+            graph_json = "<p style='color: red;'>Aucune naissance enregistrée pour cette période.</p>"
+            graph_json2 = "<p style='color: red;'>Pas encore de données de répartition des genres.</p>"
 
-    else:
-        form = datetodate()
-
-    return render(request, "data/pigletborn.html", {'form': form, 'graph_json': graph_json})
+    context = {
+        'tablename': 'Nombre de porcelets nés',
+        'malecount': malecount,
+        'femalecount': femalecount,
+        'totalcount': totalcount,
+        'form': form,
+        'graph_json': graph_json,
+        'graph_json2': graph_json2
+    }
+    return render(request, "data/pigletborn.html", context)
 
 
 
@@ -1582,6 +1585,8 @@ def pigletborn(request):
 @login_required(login_url='loginuser')
 def pigletweaned(request):
     graph_json = None
+    graph_json2 = None
+    
     if request.method == 'POST':
         form = datetodate(request.POST)
         if form.is_valid():
@@ -1590,71 +1595,70 @@ def pigletweaned(request):
 
             # Filtrer par utilisateur connecté et date de sevrage
             allweanedmale = efficiency_parameter_male.objects.filter(
-                dow__range=(fromdate, todate),
-                user=request.user  # Filtrage par utilisateur
+                dow__range=(fromdate, todate), user=request.user
             )
             allweanedfemale = efficiency_parameter_female.objects.filter(
-                dow__range=(fromdate, todate),
-                user=request.user  # Filtrage par utilisateur
+                dow__range=(fromdate, todate), user=request.user
             )
 
             totalcount = allweanedmale.count() + allweanedfemale.count()
             malecount = allweanedmale.count()
             femalecount = allweanedfemale.count()
 
-            # maleweight = sum(pig.weaning_weight for pig in allweanedmale)
-            # femaleweight = sum(pig.weaning_weight for pig in allweanedfemale)
+            # Création des DataFrames avec vérification
             df = pd.DataFrame.from_records(allweanedmale.values('dow'))
             df2 = pd.DataFrame.from_records(allweanedfemale.values('dow'))
-            df['dow'] = pd.to_datetime(df['dow'])  # Convertir en format datetime
-            df2['dow'] = pd.to_datetime(df['dow'])  # Convertir en format datetime
-            weaned_count = df.groupby('dow').size().reset_index(name='Nombre de porcelets')
-            weaned_count2 = df2.groupby('dow').size().reset_index(name='Nombre de porcelets')
             
-                        # Ajouter une colonne 'Genre' pour différencier les groupes
-            weaned_count['Genre'] = 'Mâles'
-            weaned_count2['Genre'] = 'Femelles'
+            if not df.empty:
+                df['dow'] = pd.to_datetime(df['dow'])
+                weaned_count = df.groupby('dow').size().reset_index(name='Nombre de porcelets')
+                weaned_count['Genre'] = 'Mâles'
+            else:
+                weaned_count = pd.DataFrame(columns=['dow', 'Nombre de porcelets', 'Genre'])
+            
+            if not df2.empty:
+                df2['dow'] = pd.to_datetime(df2['dow'])
+                weaned_count2 = df2.groupby('dow').size().reset_index(name='Nombre de porcelets')
+                weaned_count2['Genre'] = 'Femelles'
+            else:
+                weaned_count2 = pd.DataFrame(columns=['dow', 'Nombre de porcelets', 'Genre'])
 
             # Fusionner les deux DataFrames
             df_final = pd.concat([weaned_count, weaned_count2])
 
-            # Créer le graphique avec une ligne pour chaque genre
-            fig = px.line(
-                df_final, 
-                x='dow', 
-                y='Nombre de porcelets', 
-                color='Genre',  # Séparer les données par couleur
-                color_discrete_sequence=['green', 'red'],
-                title="Nombre de porcelets sevrés par jour",
-                labels={'dow': 'Date', 'Nombre de porcelets': 'Nombre de porcelets sevrés'},
-                # markers=True
-            )
-        
+            # Vérifier s'il y a des données avant de générer les graphiques
+            if not df_final.empty:
+                fig = px.line(
+                    df_final, 
+                    x='dow', 
+                    y='Nombre de porcelets', 
+                    color='Genre',
+                    color_discrete_sequence=['green', 'red'],
+                    title="Nombre de porcelets sevrés par jour",
+                    labels={'dow': 'Date', 'Nombre de porcelets': 'Nombre de porcelets sevrés'},
+                )
+                graph_json = pio.to_html(fig, full_html=False)
 
-
-            fig2 = px.bar(
-                x=['Mâles', 'Femelles'], 
-                y=[malecount, femalecount], 
-                title="Répartition des porcelets nés par genre",
-                labels={'x': 'Genre', 'y': 'Nombre'},
-                color=['Mâles', 'Femelles'], 
-                color_discrete_sequence=['green', 'red']
-            )
-
-            graph_json = pio.to_html(fig, full_html=False)
-            graph_json2 = pio.to_html(fig2, full_html=False)
+            if malecount > 0 or femalecount > 0:
+                fig2 = px.bar(
+                    x=['Mâles', 'Femelles'], 
+                    y=[malecount, femalecount], 
+                    title="Répartition des porcelets sevrés par genre",
+                    labels={'x': 'Genre', 'y': 'Nombre'},
+                    color=['Mâles', 'Femelles'], 
+                    color_discrete_sequence=['green', 'red']
+                )
+                graph_json2 = pio.to_html(fig2, full_html=False)
 
             context = {
                 'tablename': 'Porcelets sevrés',
                 'malecount': malecount,
                 'femalecount': femalecount,
                 'totalcount': totalcount,
-                # 'maleweight': maleweight,
-                # 'femaleweight': femaleweight,
                 'form': form,
                 'graph_json': graph_json,
                 'graph_json2': graph_json2,
-                
+                'message': "Aucune donnée disponible pour cette période." if totalcount == 0 else ""
             }
             return render(request, "data/pigletweaned.html", context)
 
@@ -1665,9 +1669,10 @@ def pigletweaned(request):
         'malecount': 'aucune entrée',
         'femalecount': 'aucune entrée',
         'totalcount': 'aucune entrée',
-        'maleweight': 'aucune entrée',
-        'femaleweight': 'aucune entrée',
-        'form': form
+        'form': form,
+        'graph_json': None,
+        'graph_json2': None,
+        'message': "Aucune donnée disponible. Veuillez entrer une période."
     }
     return render(request, "data/pigletweaned.html", context)
 
@@ -1750,33 +1755,34 @@ def pigmortality(request):
     }
     return render(request, "data/pigmortality.html", context)
 
-
 @subscription_required
 @login_required(login_url='loginuser')
 def revenue_received(request):
     graph_json = None
     graph_json2 = None
-    if request.method == 'POST':
-        form = datetodate(request.POST)
-        if form.is_valid():
-            fromdate = form.cleaned_data['from_date']
-            todate = form.cleaned_data['to_date']
+    total = 0  # Initialiser le total à 0
+    form = datetodate(request.POST or None)
 
-            # Filtrer les ventes par utilisateur et par date
-            revenues = disposal_culling.objects.filter(
-                sale_date__range=(fromdate, todate),
-                user=request.user
-            )
+    if request.method == 'POST' and form.is_valid():
+        fromdate = form.cleaned_data['from_date']
+        todate = form.cleaned_data['to_date']
 
+        # Filtrer les ventes par utilisateur et par date
+        revenues = disposal_culling.objects.filter(
+            sale_date__range=(fromdate, todate),
+            user=request.user
+        )
+
+        # Vérifier si des données existent
+        if revenues.exists():
             # Calcul du total des revenus
             total = revenues.aggregate(Sum('revenue'))['revenue__sum'] or 0
 
-            # Convertir les données en DataFrame Pandas
+            # Graphique 1 : Nombre de ventes par jour
             df = pd.DataFrame.from_records(revenues.values('sale_date'))
             df['sale_date'] = pd.to_datetime(df['sale_date'])
-
-            # Graphique 1 : Nombre de ventes par jour
             sales_count = df.groupby('sale_date').size().reset_index(name='Nombre de ventes')
+
             fig = px.line(
                 sales_count,
                 x='sale_date',
@@ -1784,7 +1790,6 @@ def revenue_received(request):
                 color_discrete_sequence=['green'],
                 title="Nombre de ventes par jour",
                 labels={'sale_date': 'Date', 'Nombre de ventes': 'Nombre de ventes'},
-                # markers=True,
             )
             graph_json = pio.to_html(fig, full_html=False)
 
@@ -1792,6 +1797,7 @@ def revenue_received(request):
             df2 = pd.DataFrame.from_records(revenues.values('sale_date', 'revenue'))
             df2['sale_date'] = pd.to_datetime(df2['sale_date'])
             revenue_sum = df2.groupby('sale_date')['revenue'].sum().reset_index()
+
             fig2 = px.line(
                 revenue_sum,
                 x='sale_date',
@@ -1799,30 +1805,22 @@ def revenue_received(request):
                 color_discrete_sequence=['blue'],
                 title="Revenus générés par jour",
                 labels={'sale_date': 'Date', 'revenue': 'Revenu total (€)'},
-                # markers=True,
             )
             graph_json2 = pio.to_html(fig2, full_html=False)
 
-            context = {
-                'tablename': 'Revenus générés',
-                'form': form,
-                'total': total,
-                'graph_json': graph_json,  # Nombre de ventes
-                'graph_json2': graph_json2,  # Montant des ventes
-            }
-            return render(request, "data/revenuereceived.html", context)
+        else:
+            # Si aucun revenu, message affiché à la place des graphiques
+            graph_json = "<p style='color: red;'>Aucune vente enregistrée pour cette période.</p>"
+            graph_json2 = "<p style='color: red;'>Aucun revenu généré pour cette période.</p>"
 
-    # Formulaire vide au chargement initial
-    form = datetodate()
     context = {
         'tablename': 'Revenus générés',
         'form': form,
-        'total': None,
-        'graph_json': None,
-        'graph_json2': None,
+        'total': total,
+        'graph_json': graph_json,
+        'graph_json2': graph_json2,
     }
     return render(request, "data/revenuereceived.html", context)
-
 
 @subscription_required
 @login_required(login_url='loginuser')

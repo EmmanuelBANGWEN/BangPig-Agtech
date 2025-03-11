@@ -682,7 +682,7 @@ def deathview(request, animal_id):
             return redirect('create_nutrition', animal_id=animal_id)
 
     context = {
-        'tablename': 'Information About Death Of Pig',
+        'tablename': 'Information sur la mort du porc',
         'form': form,
     }
 
@@ -1995,7 +1995,7 @@ def searchdelete(request):
             # results = Post.published_posts.annotate(
             #                                         similarity=TrigramSimilarity("title", query),
             #                                         ).filter(similarity__gt=0.1).order_by("-similarity")
-            results = general_identification_and_parentage.objects.filter(animal_id=query)
+            results = general_identification_and_parentage.objects.filter(animal_id=query, user=request.user)
             
 
     return render(request, 'others/searchdelete.html', {
@@ -2023,7 +2023,7 @@ def searchupdate(request):
             # results = Post.published_posts.annotate(
             #                                         similarity=TrigramSimilarity("title", query),
             #                                         ).filter(similarity__gt=0.1).order_by("-similarity")
-            results = general_identification_and_parentage.objects.filter(animal_id=query)
+            results = general_identification_and_parentage.objects.filter(animal_id=query, user=request.user)
             
 
     return render(request, 'others/searchupdate.html', {

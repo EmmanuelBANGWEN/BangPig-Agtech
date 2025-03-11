@@ -44,22 +44,22 @@
         <thead class="thead-dark">
             <tr >
             <!-- <th scope="col"> Numéro d'identification </th> -->
-            <th scope="col"> SOW Number</th>
-            <th scope="col"> Date de service </th>
+            <th scope="col"> Numéro de la truie</th>
+            <th scope="col"> Date de service(Accouplement) </th>
             <th scope="col"> Nature du Service</th>
-            <th scope="col"> Date Of Farrowing</th>
-            <th scope="col"> Interfarrowing Interval</th>
-            <th scope="col"> Parity</th>
-            <th scope="col"> Number of male born</th>
-            <th scope="col"> Number of female born</th>
-            <th scope="col"> Total Number</th>
-            <th scope="col"> Litter Weight At Birth</th>
-            <th scope="col"> Number Of Weaned Male</th>
-            <th scope="col"> Number Of Weaned Female</th>
-            <th scope="col"> Number Of Total Weaned</th>
-            <th scope="col"> Weaning Weight</th>
-            <th scope="col"> Still Birth Or Abnormality</th>
-            <th scope="col"> Delete</th>   
+            <!-- <th scope="col"> Date Of Farrowing</th>
+            <th scope="col"> Interfarrowing Interval</th> -->
+            <!-- <th scope="col"> Parité</th> -->
+            <th scope="col"> Nombre de mâles nés</th>
+            <th scope="col"> Nombre de femelles nées</th>
+            <th scope="col"> Nombre total de naissance</th>
+            <th scope="col"> Taille de la portée à la naissance</th>
+            <th scope="col"> Nombre de mâles sevrés</th>
+            <th scope="col"> Nombre de femelles sevrées</th>
+            <th scope="col"> Nombre total de sevré</th>
+            <th scope="col"> Poids au sevrage</th>
+            <th scope="col"> Mort-né ou anomalie</th>
+            <th scope="col"> Supprimer</th>   
               </tr>
           </thead>
 
@@ -73,7 +73,7 @@
             <td>{{ service.sow_no }}</td>
             <td>{{ service.dos }}</td>
             <td>{{ service.nos }}</td>
-            <td>{{ service.dof }}</td>
+            <!-- <td>{{ service.dof }}</td> -->
             <td>{{ service.parity }}</td>
             <td>{{ service.born_male }}</td>
             <td>{{ service.born_female }}</td>

@@ -151,6 +151,7 @@ class nutrition_form(forms.ModelForm):
 
             'start_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'end_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
+            'gip': forms.HiddenInput(),  # Champ masqué
 
         }
     def __init__(self, *args, user=None, **kwargs):
@@ -207,7 +208,7 @@ class vaccination_form(forms.ModelForm):
         }
 
         widgets = {
-            # 'user': forms.HiddenInput(),  # Champ masqué
+            'gip': forms.HiddenInput(),  # Champ masqué
 
             'first_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
             'booster_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
@@ -243,6 +244,7 @@ class vetexam_form(forms.ModelForm):
 
         widgets = {
             'date_of_treatment': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD','type': 'date'}),
+            'gip': forms.HiddenInput(),  # Champ masqué
 
         }
 
@@ -310,7 +312,7 @@ class efficiency_form_male(forms.ModelForm):
             'weaning_age': 'Âge au sevrage (en jours)',
             'weaning_weight': 'Poids au sevrage',
             'dos': 'Date de séparation du mâle',
-            'doc': 'Date of Castration',
+            'doc': 'Date de Castration',
             'dosm': 'Date de maturité sexuelle',
             'sexual_maturity_weight': 'Poids à la maturité sexuelle',
             'weight_six': 'Poids à six mois',
@@ -384,9 +386,9 @@ class service_form_male(forms.ModelForm):
         labels={
                 'gip': "Numéro d'identification",
                 'sow_no': 'Numéro de la truie',
-                'dos': 'Date de service',
+                'dos': 'Date de service(Accouplement)',
                 'dof': 'Date de mise bas',
-                'parity': 'Parité',
+                # 'parity': 'Parité',
                 'born_male': 'Nombre de mâles nés',
                 'born_female': 'Nombre de femelles nées',
                 'born_total': 'Nombre total de nés',
@@ -423,12 +425,12 @@ class service_form_female(forms.ModelForm):
         labels = {
                     'gip': 'Numéro d’identification',
                     'boar_no': 'Numéro du verrat',
-                    'dos': 'Date de service',
+                    'dos': 'Date de service(Accouplement)',
                     'nos': 'Nature du service',
                     'dof': 'Date de mise bas',
                     'dow': 'Date de sevrage',
                     'interfarrowing_interval': 'Intervalle entre mises bas',
-                    'parity': 'Parité',
+                    # 'parity': 'Parité',
                     'born_male': 'Nombre de mâles nés',
                     'born_female': 'Nombre de femelles nées',
                     'born_total': 'Nombre total de naissance',
@@ -833,9 +835,9 @@ class service_update_form_male(forms.ModelForm):
         labels = {
     'gip': 'Numéro d’identification',
     'sow_no': 'Numéro de la truie',
-    'dos': 'Date de service',
+    'dos': 'Date de service(Accouplement)',
     'dof': 'Date de mise bas',
-    'parity': 'Parité',
+    # 'parity': 'Parité',
     'born_male': 'Nombre de mâles nés',
     'born_female': 'Nombre de femelles nées',
     'born_total': 'Nombre total de naissances',
@@ -884,12 +886,12 @@ class service_update_form_female(forms.ModelForm):
         labels = {
     'gip': 'Numéro d’identification',
     'boar_no': 'Numéro du verrat',
-    'dos': 'Date de service',
+    'dos': 'Date de service(Accouplement)',
     'nos': 'Nature du service',
     'dof': 'Date de mise bas',
     'dow': 'Date de sevrage',
     'interfarrowing_interval': 'Intervalle entre mises bas',
-    'parity': 'Parité',
+    # 'parity': 'Parité',
     'born_male': 'Nombre de mâles nés',
     'born_female': 'Nombre de femelles nées',
     'born_total': 'Nombre total de naissances',

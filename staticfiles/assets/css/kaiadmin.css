@@ -548,11 +548,11 @@ body {
       display: list-item; }
       .sidebar .nav > .nav-item.active > a, .sidebar[data-background-color="white"] .nav > .nav-item.active > a {
         background: rgba(0, 0, 0, 0.03);
-        color: #2A2F5B !important; }
+        color: #c7c8cf !important; }
         .sidebar .nav > .nav-item.active > a:before, .sidebar[data-background-color="white"] .nav > .nav-item.active > a:before {
           background: #1d7af3; }
         .sidebar .nav > .nav-item.active > a p, .sidebar[data-background-color="white"] .nav > .nav-item.active > a p {
-          color: #2A2F5B !important;
+          color: #c7c8cf !important;
           font-weight: 600; }
       .sidebar .nav > .nav-item.active:hover > a:before, .sidebar[data-background-color="white"] .nav > .nav-item.active:hover > a:before {
         background: #1d7af3; }

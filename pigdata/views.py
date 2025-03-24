@@ -51,18 +51,6 @@ def logoutuser(request):
     logout(request)  # Déconnexion de l'utilisateur
     return redirect('loginuser')  # Redirection vers la page de connexion
 
-# def registeruser(request):
-#     if request.user.is_authenticated:
-#        return redirect('index')  # Redirection si l'utilisateur est déjà connecté
-#     form = CreateUserForm()  # Création d'un formulaire d'inscription
-#     if request.method == 'POST':
-#         form = CreateUserForm(request.POST)  # Récupération des données soumises
-#         if form.is_valid():
-#             form.save()  # Enregistrement du nouvel utilisateur
-#             return redirect('loginuser')  # Redirection vers la page de connexion
-#     context = {'form': form, 'tablename': 'Register'}
-#     return render(request, "account/register.html", context)
-
 
 
 from django.contrib.auth import authenticate, login
@@ -137,7 +125,7 @@ def report(request):
 
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def delete(request, animal_id):
     try:
@@ -150,7 +138,7 @@ def delete(request, animal_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def deletepigs(request):              #Affiche une page où les animaux dun user sont listés et permettent de choisir ceux à supprimer.
     animals=general_identification_and_parentage.objects.filter(user=request.user).order_by('animal_id')
@@ -283,31 +271,6 @@ def delete_nutrition(request, animal_id, pk):
 def dbsuccess(request):    #dbsuccess : Renvoie un template dbsuccess.html avec un contexte indiquant que l'opération a été un succès.
     return render(request, "action/dbsuccess.html", context={'tablename':'Success'})
 
-# 
-# @subscription_required
-# @login_required(login_url='loginuser')
-# def index(request):
-#     # Total des animaux enregistrés
-#     total_animals = general_identification_and_parentage.objects.filter(user=request.user).count()
-    
-#     # Nombre de femelles
-#     total_females = general_identification_and_parentage.objects.filter(user=request.user, gender='Female').count()
-    
-#     # Nombre de mâles
-#     total_males = general_identification_and_parentage.objects.filter(user=request.user, gender='Male').count()
-    
-#     # Nombre de porcelets (hypothèse : âge < 6 mois)
-#     six_months_ago = date.today() - timedelta(days=6*30)
-#     total_piglets = general_identification_and_parentage.objects.filter(user=request.user, dob__gte=six_months_ago).count()
-    
-#     context = {
-#         'total_animals': total_animals,
-#         'total_females': total_females,
-#         'total_males': total_males,
-#         'total_piglets': total_piglets,
-#     }
-#     return render(request, "index.html", context)
-
 
 
 # @subscription_required
@@ -424,7 +387,9 @@ def index(request):
 
 
 
-# @subscription_required
+
+
+@subscription_required
 @login_required(login_url='loginuser')
 
 def create_general(request):
@@ -453,7 +418,7 @@ def create_general(request):
 #En cas de succès, l'utilisateur est redirigé vers create_efficiency pour saisir des paramètres d'efficacité.
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def create_efficiency(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -510,7 +475,7 @@ def create_efficiency(request, animal_id):
 
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def create_qualification(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -541,7 +506,7 @@ def create_qualification(request, animal_id):
 
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def create_service(request, animal_id):
     animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
@@ -590,7 +555,7 @@ def create_service(request, animal_id):
 
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def vaccination(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -617,7 +582,7 @@ def vaccination(request, animal_id):
 
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def vetexam(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -642,7 +607,7 @@ def vetexam(request, animal_id):
 
     return render(request, "create/vetexamtemplate.html", context)
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def create_nutrition(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -667,7 +632,7 @@ def create_nutrition(request, animal_id):
 
     return render(request, "create/nutrition_template.html", context)
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def deathview(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -688,7 +653,7 @@ def deathview(request, animal_id):
 
     return render(request, "create/create_death.html", context)
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def create_disposal(request, animal_id):
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
@@ -755,7 +720,7 @@ def successupdate(request):
     return render(request,"update/successupdate.html", context={'tablename':'Update Successful'})
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def update(request):
     animal_id = request.POST.get('animal_id') or request.GET.get('animal_id')
@@ -1423,7 +1388,7 @@ def update_vetexam(request, animal_id):
 
 
 
-# @subscription_required
+@subscription_required
 @login_required(login_url='loginuser')
 def history(request, animal_id):
     # Récupérer l'animal de l'utilisateur actuel
@@ -2095,48 +2060,6 @@ def enter_subscription_code(request):
 
     return render(request, 'account/account.html')
 
-
-
-# @login_required
-# def reproduction_recommendation(request):
-#     user = request.user
-
-#     # Récupérer tous les animaux de l'utilisateur connecté
-#     males = efficiency_parameter_male.objects.filter(user=user)
-#     females = efficiency_parameter_female.objects.filter(user=user)
-
-#     # Stocker les meilleures combinaisons
-#     recommended_pairs = []
-
-#     for male in males:
-#         for female in females:
-#             # Vérifier si le mâle et la femelle ne sont pas de la même lignée (éviter consanguinité)
-#             if (
-#                 male.gip.sire_no != female.gip.sire_no and
-#                 male.gip.dam_no != female.gip.dam_no and
-#                 male.gip.grand_sire != female.gip.grand_sire and
-#                 male.gip.grand_dam != female.gip.grand_dam
-#             ):
-#                 # Vérifier les critères de performance (âge, poids, fertilité)
-#                 if (
-#                     male.sexual_maturity_weight and
-#                     female.sexual_maturity_weight and
-#                     male.sexual_maturity_weight >= 90 and  # Seuil fictif de poids de maturité
-#                     female.sexual_maturity_weight >= 90 and
-#                     female.litter_size_weaning >= 8  # Minimum de porcelets au sevrage
-#                 ):
-#                     # Vérifier si le mâle a une bonne qualification (aptitude physique, sperme)
-#                     boar_qualification = qualification_boar.objects.filter(gip=male.gip).first()
-#                     if boar_qualification and boar_qualification.suitability == "yes":
-#                         recommended_pairs.append({
-#                             "male_id": male.gip.animal_id,
-#                             "female_id": female.gip.animal_id,
-#                             "male_weight": male.sexual_maturity_weight,
-#                             "female_weight": female.sexual_maturity_weight,
-#                             "expected_litter_size": female.litter_size_weaning,
-#                         })
-
-#     return render(request, 'index.html', {"recommended_pairs": recommended_pairs})
 
 
 

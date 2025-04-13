@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-# from . import views_api
+from . import views_api
 from django.urls import path, re_path
 from django.views.generic import TemplateView
 

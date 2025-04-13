@@ -33,8 +33,8 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'crispy_forms',
     'pigdata.apps.PigdataConfig',
-    'rest_framework'
-    'pwa'
+    'rest_framework',
+    'pwa',
 ]
 
 

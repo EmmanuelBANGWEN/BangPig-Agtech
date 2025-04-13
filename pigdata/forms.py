@@ -385,7 +385,7 @@ class service_form_male(forms.ModelForm):
 
         labels={
                 'gip': "Numéro d'identification",
-                'sow_no': 'Numéro de la truie',
+                'sow_no': 'Identifiant de la truie',
                 'dos': 'Date de service(Accouplement)',
                 'dof': 'Date de mise bas',
                 # 'parity': 'Parité',
@@ -424,7 +424,7 @@ class service_form_female(forms.ModelForm):
 
         labels = {
                     'gip': 'Numéro d’identification',
-                    'boar_no': 'Numéro du verrat',
+                    'boar_no': 'Identifiant du verrat',
                     'dos': 'Date de service(Accouplement)',
                     'nos': 'Nature du service',
                     'dof': 'Date de mise bas',
@@ -834,7 +834,7 @@ class service_update_form_male(forms.ModelForm):
 
         labels = {
     'gip': 'Numéro d’identification',
-    'sow_no': 'Numéro de la truie',
+    'sow_no': 'Identifiant de la truie',
     'dos': 'Date de service(Accouplement)',
     'dof': 'Date de mise bas',
     # 'parity': 'Parité',
@@ -885,7 +885,7 @@ class service_update_form_female(forms.ModelForm):
 
         labels = {
     'gip': 'Numéro d’identification',
-    'boar_no': 'Numéro du verrat',
+    'boar_no': 'Identifiant du verrat',
     'dos': 'Date de service(Accouplement)',
     'nos': 'Nature du service',
     'dof': 'Date de mise bas',

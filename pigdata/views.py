@@ -43,8 +43,8 @@ def loginuser(request):
             else:
                 messages.error(request, 'username or password is incorrect')
 
-    context={'form': form
-    ,'tablename':'Login'}
+    context={'form': form,
+            'tablename':'Login'}
     return render(request, "account/login.html", context)
 
 def logoutuser(request):
@@ -1422,6 +1422,7 @@ def history(request, animal_id):
             'qualification': animal_qualification_boar,
             'services': animal_service_record
         }
+        
         return render(request, "data/historydatamale.html", context)
 
     elif animal.gender == 'Female':
@@ -1453,6 +1454,7 @@ def history(request, animal_id):
             'total_weaned_weight': total_weaned_weight,
             'preweaning_mortality': preweaning_mortality,
         }
+
         return render(request, "data/historydatafemale.html", context)
 
 # @subscription_required

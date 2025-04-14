@@ -3,6 +3,7 @@ from . import views
 from . import views_api
 from django.urls import path, re_path
 from django.views.generic import TemplateView
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 urlpatterns=[
@@ -82,6 +83,7 @@ urlpatterns=[
 
 # _____API_____________API____________API_________________API_______________API__________________API______________API_____________API________________API___________API_____API_______________API_____________API_________________API________
 
+    path('api-token-auth/', obtain_auth_token),
 
     path('api/', views_api.HomeAPIView.as_view(), name='homeapi'),
     path('api/home/', views_api.index_api, name='indexapi'),

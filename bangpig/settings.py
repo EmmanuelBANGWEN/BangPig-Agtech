@@ -36,11 +36,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'pwa',
     'corsheaders',
-    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
+    # 'rest_framework.authtoken',
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -49,6 +53,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+    
+
 }
 
 MIDDLEWARE = [
@@ -66,6 +72,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Pour test local uniquement
 
 ROOT_URLCONF = 'bangpig.urls'
 
@@ -188,3 +196,13 @@ PWA_APP_SPLASH_SCREEN = 'static/assets/img/icon-512.png'  # Image d'écran de d�
 PWA_APP_START_URL = 'home/'  # URL de démarrage de votre PWA
 PWA_APP_DISPLAY = 'standalone'  # Mode d'affichage
 
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1000000),  # Durée du access token (par défaut 5 minutes)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=790000),  # Durée du refresh token
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}

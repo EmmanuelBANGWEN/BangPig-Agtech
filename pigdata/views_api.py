@@ -28,7 +28,7 @@ from rest_framework.views import APIView
 from django.db import IntegrityError
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([AllowAny])  # Permet l'accès à tout le monde
 def api_loginuser(request):
     if request.user.is_authenticated:
@@ -101,7 +101,7 @@ def delete_api(request, animal_id):
     
     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
     animal.delete()
-    return Response({"message": "L'animal a été supprimé avec succès."}, status=status.HTTP_200_OK)
+    return Response({"message": f"L'animal {animal_id} a été supprimé avec succès."}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])  # L'utilisateur doit être connecté
@@ -259,33 +259,31 @@ def api_create_general(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-@method_decorator(login_required(login_url='loginuser'), name='dispatch')
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# @method_decorator(login_required(login_url='loginuser'), name='dispatch')
 class CreateEfficiencyAPI(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, animal_id):
-        # Vérifier si l'animal appartient bien à l'utilisateur
         animal = general_identification_and_parentage.objects.filter(animal_id=animal_id, user=request.user).first()
         if not animal:
             return Response({'error': 'Animal not found'}, status=status.HTTP_404_NOT_FOUND)
 
         gender = animal.gender
-        serializer_class = EfficiencyParameterMaleSerializer if gender == 'Male' else EfficiencyFemaleSerializer
+        serializer_class = EfficiencyParameterMaleSerializer if gender == 'Male' else EfficiencyParameterFemaleSerializer
         serializer = serializer_class(data=request.data)
 
         if serializer.is_valid():
             instance = serializer.save(user=request.user, gip=animal)
 
-            # Calcul automatique de weaning_age si dow est renseigné
-            if instance.dow:
+            if instance.dow and animal.dob:
                 instance.weaning_age = (instance.dow - animal.dob).days
                 instance.save()
 
             return Response({'message': 'Efficiency parameters saved successfully'}, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 # API pour récupérer la liste des animaux
@@ -531,7 +529,7 @@ class UpdateGeneralAPIView(APIView):
         serializer = GeneralIdentificationAndParentageSerializer(animal, data=request.data, partial=True)  # partial=True pour la mise à jour
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "Animal updated successfully."}, status=status.HTTP_200_OK)
+            return Response({"detail": "Animal general updated successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -565,35 +563,28 @@ class UpdateNutritionAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_animal(self, animal_id, user):
-        return general_identification_and_parentage.objects.filter(animal_id=animal_id, user=user).first()
+        try:
+            return general_identification_and_parentage.objects.get(animal_id=animal_id, user=user)
+        except general_identification_and_parentage.DoesNotExist:
+            return None
 
     def get_nutrition_instance(self, animal):
-        return nutrition_and_feeding.objects.filter(gip=animal)
+        # Création automatique s’il n’existe pas (comme dans Disposal)
+        nutrition_instance, created = nutrition_and_feeding.objects.get_or_create(gip=animal)
+        return nutrition_instance
 
-    def get(self, request, animal_id):
-    #Récupérer les informations nutritionnelles d'un animal.
+    def put(self, request, animal_id):
         animal = self.get_animal(animal_id, request.user)
         if not animal:
-            return Response({"detail": "Animal non trouvé."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "Animal not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        nutritions = self.get_nutrition_instance(animal)
-        serializer = NutritionAndFeedingSerializer(nutritions, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        nutrition_instance = self.get_nutrition_instance(animal)
+        serializer = NutritionAndFeedingSerializer(nutrition_instance, data=request.data, partial=True)
 
-    def post(self, request, animal_id):
-        #Ajouter ou mettre à jour une entrée nutritionnelle pour un animal
-        animal = self.get_animal(animal_id, request.user)
-        if not animal:
-            return Response({"detail": "Animal non trouvé."}, status=status.HTTP_404_NOT_FOUND)
-
-        request.data['gip'] = animal.id  # Associer l'animal
-        serializer = NutritionAndFeedingSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"detail": "Nutrition mise à jour avec succès."}, status=status.HTTP_201_CREATED)
+            serializer.save(user=request.user)  # Associer à l'utilisateur connecté
+            return Response({"detail": "Nutrition updated successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
@@ -618,7 +609,7 @@ def update_efficiency_api(request, animal_id):
     if serializer.is_valid():
         try:
             serializer.save()
-            return Response({"message": "Mise à jour réussie", "data": serializer.data}, status=status.HTTP_200_OK)
+            return Response({"message": "Mise à jour efficiency réussie", "data": serializer.data}, status=status.HTTP_200_OK)
         except IntegrityError as e:
             return Response({"error": f"Erreur d'intégrité : {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
     
@@ -704,39 +695,39 @@ def update_service_api(request, animal_id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def update_health_parameter_api(request, animal_id, model_type):
+# @api_view(['GET', 'PUT'])
+# @permission_classes([IsAuthenticated])
+# def update_health_parameter_api(request, animal_id, model_type):
     
-    #API pour récupérer et mettre à jour les paramètres de santé d'un animal.
-    #- model_type: 'vet_exam' ou 'vaccination'
+#     #API pour récupérer et mettre à jour les paramètres de santé d'un animal.
+#     #- model_type: 'vet_exam' ou 'vaccination'
     
-    animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
+#     animal = get_object_or_404(general_identification_and_parentage, animal_id=animal_id, user=request.user)
 
-    # Vérifier le type de modèle demandé
-    if model_type == 'vet_exam':
-        model_class = health_parameter_vetexam
-        serializer_class = VetExamSerializer
-    elif model_type == 'vaccination':
-        model_class = health_parameter_vaccination
-        serializer_class = VaccinationSerializer
-    else:
-        return Response({"error": "Invalid model type"}, status=status.HTTP_400_BAD_REQUEST)
+#     # Vérifier le type de modèle demandé
+#     if model_type == 'vet_exam':
+#         model_class = health_parameter_vetexam
+#         serializer_class = VetExamSerializer
+#     elif model_type == 'vaccination':
+#         model_class = health_parameter_vaccination
+#         serializer_class = VaccinationSerializer
+#     else:
+#         return Response({"error": "Invalid model type"}, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == 'GET':
-        health_parameters = model_class.objects.filter(gip=animal)
-        serializer = serializer_class(health_parameters, many=True)
-        return Response(serializer.data)
+#     if request.method == 'GET':
+#         health_parameters = model_class.objects.filter(gip=animal)
+#         serializer = serializer_class(health_parameters, many=True)
+#         return Response(serializer.data)
 
-    elif request.method == 'POST':
-        serializer = serializer_class(data=request.data)
-        if serializer.is_valid():
-            instance = serializer.save(gip=animal, user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     elif request.method == 'PUT':
+#         serializer = serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             instance = serializer.save(gip=animal, user=request.user)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def update_vaccination_api(request, animal_id):
     
@@ -749,7 +740,7 @@ def update_vaccination_api(request, animal_id):
         serializer = VaccinationSerializer(vaccinations, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    elif request.method == 'PUT':
         serializer = VaccinationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(gip=animal, user=request.user)
@@ -757,7 +748,7 @@ def update_vaccination_api(request, animal_id):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'PUT'])
 @permission_classes([IsAuthenticated])
 def update_vetexam_api(request, animal_id):
     
@@ -770,7 +761,7 @@ def update_vetexam_api(request, animal_id):
         serializer = VetExamSerializer(vet_exams, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    elif request.method == 'PUT':
         serializer = VetExamSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(gip=animal, user=request.user)
@@ -855,12 +846,11 @@ class AllPigs(APIView):
         })
 
     def post(self, request):
-        serializer = general_identification_and_parentage(data=request.data)
+        serializer = GeneralIdentificationAndParentageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)  # Associe l'utilisateur connecté à l'objet
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 
@@ -1143,20 +1133,19 @@ def revenue_received_api(request):
 
     return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
+from .serializers import SelectPigsSerializer  # Assure-toi d’importer le bon
 
 class SelectPigsAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        # Sérialiser les données d'entrée
-        form = GeneralIdentificationAndParentageSerializer(data=request.data)
-        if form.is_valid():
-            n = form.cleaned_data['task']
-            num = form.cleaned_data['amount']
+        serializer = SelectPigsSerializer(data=request.data)
+        if serializer.is_valid():
+            n = serializer.validated_data['task']
+            num = serializer.validated_data['amount']
             male = []
             female = []
 
-            # Filtrage par utilisateur connecté
             if n == '1':
                 animals = general_identification_and_parentage.objects.filter(
                     colitter_size_of_birth__lt=num,
@@ -1186,7 +1175,6 @@ class SelectPigsAPIView(APIView):
                     user=request.user
                 )
 
-            # Traitement des résultats
             if n in ['1', '2']:
                 male = [i.animal_id for i in animals if i.gender == 'Male']
                 female = [i.animal_id for i in animals if i.gender != 'Male']
@@ -1194,15 +1182,14 @@ class SelectPigsAPIView(APIView):
                 male = [i.gip for i in maleanimals]
                 female = [i.gip for i in femaleanimals]
 
-            data = {
+            return Response({
                 'male': male,
                 'female': female,
                 'malelen': len(male),
                 'femalelen': len(female)
-            }
-            return Response(data, status=status.HTTP_200_OK)
-        
-        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DiseaseAPIView(APIView):
@@ -1346,6 +1333,8 @@ class SearchUpdateAPIView(APIView):
 
 
 class HomeAPIView(APIView):
+    permission_classes = [AllowAny]
+
     def get(self, request, *args, **kwargs):
         return Response({
             'message': 'Bienvenue sur la page d\'accueil de Bangri!'
@@ -1354,7 +1343,7 @@ class HomeAPIView(APIView):
 class DocumentationAPIView(APIView):
     def get(self, request, *args, **kwargs):
         return Response({
-            'message': 'Consultez la documentation ici: [lien vers la documentation]'
+            'message': f"Bonjour {request.user.username}, vous êtes sur la documentation."
         }, status=status.HTTP_200_OK)
 
 

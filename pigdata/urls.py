@@ -4,7 +4,10 @@ from . import views_api
 from django.urls import path, re_path
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns=[
     path('', views.home, name='home'),
@@ -69,8 +72,8 @@ urlpatterns=[
     path('account/', views.account, name='account'),
     path('help/', views.help, name='help'),
 
-    path('search/', views.searchdelete, name='searchdelete'),
-    path('searchall/', views.searchupdate, name='searchupdate'),
+    path('search_delete/', views.searchdelete, name='searchdelete'),
+    path('search_update/', views.searchupdate, name='searchupdate'),
 
     path('documentation/', views.documentation, name='documentation'),
     path('tarifs/', views.tarifs, name='tarifs'),
@@ -81,13 +84,66 @@ urlpatterns=[
     path('statut/', views.subscription_status, name='subscription_status'),
     path('generate/', views.generate_subscription_code, name='generate_subscription_code'),
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # _____API_____________API____________API_________________API_______________API__________________API______________API_____________API________________API___________API_____API_______________API_____________API_________________API________
 
-    path('api-token-auth/', obtain_auth_token),
+    # path('api-token-auth/', obtain_auth_token),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('api/', views_api.HomeAPIView.as_view(), name='homeapi'),
     path('api/home/', views_api.index_api, name='indexapi'),
     path('api/login/', views_api.api_loginuser, name='loginuserapi'),
+    # path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+
     path('api/register/', views_api.api_registeruser, name='registeruserapi'),
     path('api/logout/', views_api.api_logoutuser, name='logoutuserapi'),
     path('api/dataentry/', views_api.dataentry_api, name='dataentryapi'),
@@ -102,11 +158,11 @@ urlpatterns=[
     path('api/vaccination/<str:animal_id>',views_api.vaccination_api, name='vaccinationapi'),
     path('api/vetexam/<str:animal_id>', views_api.vetexam_api, name='vetexamapi'),
     path('api/create/disposal/<str:animal_id>', views_api.create_disposal_api, name='create_disposalapi'),
-    path('api/nutrition/<str:animal_id>', views_api.create_nutrition_api, name='create_nutritionapi'),
+    path('api/create/nutrition/<str:animal_id>', views_api.create_nutrition_api, name='create_nutritionapi'),
     # path('create/economics/<str:animal_id>', views_api.create_economics, name='create_economicsapi'),
     path('api/create/efficiency/<str:animal_id>', views_api.CreateEfficiencyAPI.as_view(), name='create_efficiencyapi'),
     path('api/create/qualification/<str:animal_id>', views_api.CreateQualificationAPI.as_view(), name='create_qualificationapi'),
-    path('api/service/<str:animal_id>', views_api.CreateServiceAPI.as_view(), name='create_serviceapi'),
+    path('api/create/service/<str:animal_id>', views_api.CreateServiceAPI.as_view(), name='create_serviceapi'),
 
 
 
@@ -124,7 +180,7 @@ urlpatterns=[
     path('api/update/vetexam/<str:animal_id>', views_api.update_vetexam_api, name='update_vetexamapi'),
     path('api/update/service/<str:animal_id>', views_api.update_service_api, name='update_serviceapi'),
     path('api/update/nutrition/<str:animal_id>', views_api.UpdateNutritionAPIView.as_view(), name='update_nutritionapi'),
-    path('api/update_health_parameter/<int:animal_id>/', views_api.update_health_parameter_api, name='update_health_parameterapi'),
+    # path('api/update_health_parameter/<int:animal_id>/', views_api.update_health_parameter_api, name='update_health_parameterapi'),
 
 
     path('api/report/history/<str:animal_id>', views_api.AnimalHistory.as_view(), name='historyapi'),
@@ -147,8 +203,8 @@ urlpatterns=[
     path('api/account/', views_api.AccountAPIView.as_view(), name='accountapi'),
     path('api/help/', views_api.HelpAPIView.as_view(), name='helpapi'),
 
-    path('api/search/', views_api.SearchDeleteAPIView.as_view(), name='searchdeleteapi'),
-    path('api/searchall/', views_api.SearchUpdateAPIView.as_view(), name='searchupdateapi'),
+    path('api/search_delete/', views_api.SearchDeleteAPIView.as_view(), name='searchdeleteapi'),
+    path('api/search_update/', views_api.SearchUpdateAPIView.as_view(), name='searchupdateapi'),
 
     path('api/documentation/', views_api.DocumentationAPIView.as_view(), name='documentationapi'),
     # path('api/tarifs/', views_api.TarifsAPIView.as_view(), name='tarifsapi'),
@@ -182,3 +238,31 @@ urlpatterns=[
 
 
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+| Catégorie                                | Nombres approx. |
+| ---------------------------------------- | --------------- |
+| Accueil, login, register, logout         | 5               |
+| CRUD animaux, dataentry, report          | 10              |
+| Create (death, general, etc.)            | 7               |
+| Update (general, efficiency, etc.)       | 9               |
+| Reports (history, piglet, revenue, etc.) | 7               |
+| Delete endpoints                         | 6               |
+| Account, help, search                    | 5               |
+| Documentation, abonnement, etc.          | 6               |
+| **Total**                                | **55** ✅        |
+
+'''

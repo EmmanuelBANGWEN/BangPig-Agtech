@@ -36,12 +36,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class SelectPigsSerializer(serializers.Serializer):
+    task = serializers.ChoiceField(choices=['1', '2', '3', '4'])
+    amount = serializers.IntegerField()
+
+
 class GeneralIdentificationAndParentageSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    # user = UserSerializer(read_only=True)
 
     class Meta:
         model = general_identification_and_parentage
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class HealthParameterVaccinationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,51 +73,64 @@ class VaccinationSerializer(serializers.ModelSerializer):
     class Meta:
         model = health_parameter_vaccination
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
+
 
 class DeathSerializer(serializers.ModelSerializer):
     class Meta:
         model = death
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
+
 
 class VetExamSerializer(serializers.ModelSerializer):
     class Meta:
         model = health_parameter_vetexam
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
+
 
 class EfficiencyParameterMaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = efficiency_parameter_male
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class EfficiencyParameterFemaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = efficiency_parameter_female
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class QualificationBoarSerializer(serializers.ModelSerializer):
     class Meta:
         model = qualification_boar
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class NutritionSerializer(serializers.ModelSerializer):
     class Meta:
         model = nutrition_and_feeding
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class DisposalSerializer(serializers.ModelSerializer):
     class Meta:
         model = disposal_culling
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class ServiceRecordMaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = service_record_male
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class ServiceRecordFemaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = service_record_female
         fields = '__all__'
+        read_only_fields = ['user', 'gip']  # Très important ! Cela permettra à DRF de ne plus attendre gip dans les données envoyées
 
 class LifetimeLitterCharacterSerializer(serializers.ModelSerializer):
     class Meta:

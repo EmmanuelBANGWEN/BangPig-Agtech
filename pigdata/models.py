@@ -39,13 +39,23 @@ class health_parameter_vaccination(models.Model):
     booster_dose=models.DateField(blank=True,null=True)
     repeat=models.DateField(blank=True,null=True)
     
+    # def __str__(self):
+    #     return f"{self.gip}"
+
 class health_parameter_vetexam(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     reason=models.TextField(blank=True)
     date_of_treatment=models.DateField(blank=True,null=True)
     medication=models.TextField(blank=True)
     remarks=models.TextField(blank=True)
-    
+       
+    # def __str__(self):
+    #     return f"{self.gip}"
+
+
 class disposal_culling(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -54,15 +64,25 @@ class disposal_culling(models.Model):
     sale_date=models.DateField(blank=True,null=True)
     weight_sale=models.IntegerField(blank=True, null=True)
     revenue=models.IntegerField(blank=True, null=True)
-    
+           
+    # def __str__(self):
+    #     return f"{self.gip}"
+
+        
 class nutrition_and_feeding(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     treatment=models.TextField(blank=True)
     make=models.TextField(blank=True)
     start_date=models.DateField(blank=True,null=True)
     end_date=models.DateField(blank=True,null=True)
     remarks=models.TextField(blank=True)
-    
+           
+    # def __str__(self):
+    #     return f"{self.gip}"
+
+        
 # class economics(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -77,7 +97,11 @@ class death(models.Model):
     date_death=models.DateField(blank=True,null=True)
     postmortem_findings=models.TextField(blank=True)
     cause_death=models.TextField(blank=True)
+       
+    # def __str__(self):
+    #     return f"{self.gip}  ({self.date_death})"
 
+        
 class efficiency_parameter_male(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -93,7 +117,11 @@ class efficiency_parameter_male(models.Model):
     weight_six=models.IntegerField(blank=True, null=True)
     weight_eight=models.IntegerField(blank=True, null=True)
     conform_at_eight=models.TextField(blank=True, null=True)
+       
+    # def __str__(self):
+    #     return f"{self.gip}"
 
+        
 class efficiency_parameter_female(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -108,7 +136,11 @@ class efficiency_parameter_female(models.Model):
     weight_six=models.IntegerField(blank=True, null=True)
     weight_eight=models.IntegerField(blank=True, null=True)
     conform_at_eight=models.TextField(blank=True, null=True)
+       
+    # def __str__(self):
+    #     return f"{self.gip}"
 
+        
 class qualification_boar(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -119,9 +151,15 @@ class qualification_boar(models.Model):
     training_score=models.CharField(max_length=10,choices=(('Poor','Poor'),('Good','Good'),('Very Good','Very Good'), ('Excellent','Excellent')), default='Good')
     seminal_characteristics=models.CharField(max_length=10,choices=(('Poor','Poor'),('Good','Good'),('Very Good','Very Good'),('Excellent','Excellent')), default='Good')
     suitability=models.CharField(max_length=10,choices=(('yes','yes'), ('no','no')), default='no')
-    
+           
+    # def __str__(self):
+    #     return f"{self.gip}"
+
+        
 
 class service_record_male(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     sow_no=models.CharField(max_length=20, blank=True)
     dos=models.DateField(blank=True,null=True)
@@ -136,8 +174,14 @@ class service_record_male(models.Model):
     total_weaned=models.IntegerField(blank=True, null=True)
     weaning_weight=models.IntegerField(blank=True, null=True)
     still_birth_abnormality=models.IntegerField(blank=True, null=True)
+       
+    # def __str__(self):
+    #     return f"{self.gip}"
 
+        
 class service_record_female(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     parity=models.IntegerField(blank=True, null=True)
     boar_no=models.CharField(max_length=20, blank=True)
@@ -156,14 +200,22 @@ class service_record_female(models.Model):
     total_weaned=models.IntegerField(blank=True, null=True)
     weaning_weight=models.IntegerField(blank=True, null=True)
     date_of_abortion=models.DateField(blank=True,null=True)
+       
+    # def __str__(self):
+    #     return f"{self.gip}"
 
+        
 class lifetime_litter_character(models.Model):
     no_litter_born=models.IntegerField(blank=True, null=True)
     litter_weight_birth=models.IntegerField(blank=True, null=True)
     no_weaning=models.IntegerField(blank=True, null=True)
     weight_weaning=models.IntegerField(blank=True, null=True)
     preweaning_mortality=models.IntegerField(blank=True, null=True)
-    
+           
+    def __str__(self):
+        return f"{self.gip}"
+
+        
 
 from django.db import models
 
